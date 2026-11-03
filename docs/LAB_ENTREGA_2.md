@@ -1,3 +1,5 @@
+> Estado historico da entrega 2. O roteiro atual esta em [LAB_PERSISTENTE.md](LAB_PERSISTENTE.md).
+
 # Entrega 2 — aplicativo ficticio dedicado e controlador visivel
 
 > Somente laboratorio. Este nao e um instalador nem um programa para monitorar
@@ -6,7 +8,7 @@
 ## Objetivos implementados
 
 - Aplicativo WinForms em projeto .NET 8 com executavel dedicado
-  \`SyntheticTaskApp.exe\`; campos e operacoes exclusivamente ficticios.
+  `SyntheticTaskApp.exe`; campos e operacoes exclusivamente ficticios.
 - Controlador Tkinter Windows com quatro acoes visiveis: abrir aplicativo,
   iniciar voluntariamente, pausar/retomar e encerrar.
 - Estado inicial desativado; abertura do aplicativo nao habilita observacao.
@@ -20,12 +22,12 @@
 
 No terminal PowerShell, na raiz deste repositorio, com .NET SDK 8 e Python 3.11+:
 
-\`\`\`powershell
+```powershell
 dotnet build .\tools\SyntheticTaskApp\SyntheticTaskApp.csproj -c Release
 python -m pip install -e .
 python -m unittest discover -s tests -v
 python -m observador.lab_controller
-\`\`\`
+```
 
 1. Verifique que o controlador inicia com "DESATIVADO".
 2. Clique em "Abrir aplicativo ficticio": nenhuma captura deve ocorrer.

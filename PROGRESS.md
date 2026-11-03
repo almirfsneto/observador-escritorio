@@ -56,3 +56,45 @@ Commit posterior desta entrega registra apenas documentacao/evidencias e manifes
 **Verificacao ainda necessaria:** executar novos jobs CI e registrar resultado; exercitar interface, foco e campo de senha em Windows interativo; medir latencia do PowerShell e cobertura de controles. Nao alegar testes interativos ou instalacao. A API de UIA segue experimental.
 
 **Proximo passo:** acompanhar CI do PR e, em computador de teste, executar o roteiro `docs/LAB_ENTREGA_2.md`; manter proibida captura da equipe ate gates do piloto.
+
+## Entrega 3 — revisao e captura persistente — 2026-11-03
+
+**Revisado:** PR1 em 15e1e6d e PR2 em 598e8e6, documentos obrigatorios e codigo/testes.
+Achados e correcoes em docs/REVIEW_PRS_1_2.md. Mudancas empilhadas sobre PR2, sem
+merge, deploy ou alteracao de maquinas reais. Revisao independente ainda pendente.
+
+**Implementado:** provider .NET UIA persistente, vinculo PID/caminho/criacao,
+assinaturas foco/Invoke/Toggle, IDs efemeros de controles, pausa por geracoes,
+filas e timeline limitadas, perdas visiveis, heartbeat/EOF/watchdog monotono e
+limpeza dos filhos. Endurecimento de metadata e caminhos; roteiro manual corrigido.
+
+**Validacao local:** 40 testes descobertos, 35 executados com sucesso no Linux e
+5 testes Windows explicitamente skipped. Compilacao cruzada dos dois projetos
+.NET 8 aprovada, zero warnings/erros. Acrescentados testes nativos de protocolo e
+ensaio automatizado UIA de fixture para CI Windows. Resultados remotos pendentes.
+
+**Proximo passo nesta execucao:** publicar PR empilhado e conferir CI, corrigir
+falhas e registrar se o runner permite ensaio sintetico UIA; depois avancar fila
+SQLite limitada/retencao sem habilitar coleta real. Teste humano Windows permanece
+pendente; nenhuma alegacao de validacao manual ou de aptidao para piloto.
+
+### Evidencia da entrega 3 e correcoes do laboratorio
+
+[CI 41711041111](https://github.com/almirfsneto/observador-escritorio/actions/runs/41711041111),
+commit `c4ca6cf8f81b8d6921e0a910829786d646fc4d26`: quatro jobs Ubuntu/Windows x
+Python 3.11/3.12 aprovados. Windows executou os 42 testes, sem skips; ensaio UIA
+real automatizado sobre fixture WPF recebeu 30 Invoke / dois controles / 60 eventos
+(foco+acao), zero descartes nativos/Python, em ambos os Pythons. Campo de senha
+excluido. Linux: 37 executados e cinco Windows skipped.
+
+Falhas iniciais levaram a correcoes de pipes Windows no encerramento, leitura/
+escrita/watchdog em threads dedicadas, cache minimo de eventos UIA, consulta de
+foco permitida fora do callback e prontidao de janela. O WinForms foi mantido para
+registrar limitacao de Invoke; WPF usa controles padrao. Timeouts de CI foram
+limitados a 10 minutos. Nenhum dado real foi usado. Commit posterior melhora
+probe de foreground, teardown e exige exatamente 30 acoes sem perda/duplicacao.
+
+**Gate humano ainda aberto:** executar controlador visivel em Windows 10 e 11
+com fixture, verificar pausa/fim/expiracao, acesso local e overhead. O ensaio
+acima e automacao de desktop no runner, nao aceite manual de uma pessoa. Nao
+instalar, coletar de pessoas, fazer deploy ou integrar PRs sem autorizacao.

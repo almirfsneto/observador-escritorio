@@ -20,7 +20,8 @@ def discover_patterns(events: list[Event], min_count: int = 2, min_steps: int = 
             sessions[(ev.device_id, ev.session_id)].append(ev)
     candidates: dict[tuple, list[float]] = defaultdict(list)
     for group in sessions.values():
-        group.sort(key=lambda e: (_timestamp(e), e.event_id))
+        # UIA callbacks can share a clock tick. UUID ordering would invent their order.
+        group.sort(key=lambda e: (_timestamp(e), e.metadata.get('source_sequence', 0), e.event_id))
         for i in range(len(group)):
             for n in range(min_steps, max_steps + 1):
                 segment = group[i:i+n]
