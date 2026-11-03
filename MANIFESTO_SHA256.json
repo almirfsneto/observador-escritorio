@@ -210,8 +210,8 @@
     },
     {
       "path": "tests/test_native_windows.py",
-      "size_bytes": 3998,
-      "sha256": "7528fe74f4cf179c5abb98f10edb6b9453275082b484256d2065aab46b15a15b"
+      "size_bytes": 4612,
+      "sha256": "ebcb6e5c1095405797155a91bcf463bbbdcd4dcb0dcd56831f24f61866c3a6c2"
     },
     {
       "path": "tests/test_store.py",

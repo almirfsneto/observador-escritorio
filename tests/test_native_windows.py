@@ -58,10 +58,20 @@ class NativeProtocolTest(unittest.TestCase):
         self.assertFalse(session.writer.is_alive())
 
     def test_native_expires_without_controller_commands(self):
-        session = self.launch(seconds=6)
-        self.wait_for(lambda: session.process.poll() is not None, timeout=10)
-        self.assertEqual(session.process.returncode, 0)
-        self.assertFalse(session.check())
+        # Keep stdin open and do not create NativeSession: its own expiry/kill
+        # fallback must not mask a broken native watchdog or observation deadline.
+        process = subprocess.Popen([str(self.executable), '--protocol-test', str(self.fixture.pid),
+                                    sys.executable, str(creation_ticks(self.fixture.pid)),
+                                    (datetime.now(timezone.utc) + timedelta(seconds=6)).isoformat()],
+                                   stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        try:
+            self.assertEqual(process.wait(timeout=10), 0)
+        finally:
+            if process.poll() is None:
+                process.kill()
+                process.wait(timeout=3)
+            process.stdin.close()
+            process.stdout.close()
 
     def test_rejects_different_creation_time(self):
         result = subprocess.run([str(self.executable), '--protocol-test', str(self.fixture.pid),
