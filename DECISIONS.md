@@ -60,3 +60,7 @@
 - **Evidencia:** CI no commit c4ca6cf recebeu 30/30 Invoke em dois botoes WPF, sem descartes de fila e com exclusao de senha, em Python 3.11 e 3.12. Isso nao demonstra captura de cliques WinForms nem outros aplicativos.
 - **Arquitetura:** notificacao global de foco solicita apenas PID em cache; somente depois de filtrar a instancia uma thread MTA consulta papel, flag de senha e RuntimeId. Eventos de acao sao restritos a subtree e usam cache dessas propriedades, evitando consultas reentrantes no callback. Filas e geracoes continuam limitadas.
 - **Alternativas:** tratar ausencia de Invoke como ausencia de trabalho, ler nomes/valores para inferir cliques ou usar hooks globais. Rejeitadas por qualidade e privacidade. Validacao humana Windows 10/11 e medicao de overhead/perda seguem pendentes.
+
+## D-014 - Aceite do controlador separado de testes nativos e de aceite humano
+- **Decisao:** testar Tk visivel com loop de mensagens ativo, provider real, fixture padrao e SQLite temporario, preservando estado inicial desativado, ACK de pausa e limpeza de filhos. Caminhos sao injetaveis para testes do wheel; o comando normal mantem defaults do checkout e nao aceita outros apps pela CLI.
+- **Evidencia e limite:** 55 testes Windows aprovados na matriz 3.11/3.12; captura UIA isolada 30/30 Invoke e caminho UI/escritor exercitado. Variacao de foco e latencia de provedores nao sao causalidade nem qualidade universal. O aceite humano em Windows 10/11 continua sendo a proxima dependencia, conforme VALIDACAO_MANUAL_WINDOWS.md.

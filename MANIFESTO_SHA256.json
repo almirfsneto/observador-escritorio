@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 6744,
-      "sha256": "fe5de400d888c504a403f99310665440d59b436eba5d2e08affc1331d9dd5088"
+      "size_bytes": 7474,
+      "sha256": "d36722e2194951d94eb4464d45a4d5c9862521ee28a5c85ca5a1e78f7160c811"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 8675,
-      "sha256": "e412616f416546df41ffce7a63118148cf59eed1e0000d140d8d8e92adced048"
+      "size_bytes": 10683,
+      "sha256": "718f8ac1e91f594b43b80f2f4919a640150f86a7f65137df6f5a9c1b8b17bc9f"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 3676,
-      "sha256": "a79cc50e22287abc84401a0555207c236622328397c5165f111d697badd1dc44"
+      "size_bytes": 3735,
+      "sha256": "16ef5235ac10704f925ae9f1b8521cb3a825bf09db175726071043c1af92256e"
     },
     {
       "path": "SECURITY.md",
@@ -90,8 +90,8 @@
     },
     {
       "path": "docs/LAB_PERSISTENTE.md",
-      "size_bytes": 3813,
-      "sha256": "456d47a140cf404b8e1fb3c977a92653f44080c9af92f55150bb9acf25e3b8a8"
+      "size_bytes": 4132,
+      "sha256": "41b983c4b868858e9ec1800fda7a99729333719a26b71ef19de2512b3f09f382"
     },
     {
       "path": "docs/LAB_QUEUE.md",

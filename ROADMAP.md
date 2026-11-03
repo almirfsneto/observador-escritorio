@@ -57,6 +57,6 @@
 - [x] Provider UIA persistente, instancia PID/criacao/caminho, foco/Invoke/Toggle e IDs efemeros.
 - [x] Buffers limitados, geracoes de pausa, expiração monotona e encerramento dos processos possuidos.
 - [x] Fila SQLite opt-in sintetica com cota do banco, TTL, limite de linhas e saude.
-- [ ] Concluir evidencia CI Windows do ensaio UIA e registrar contagens/limites.
+- [x] Evidencia CI Windows de UIA, controlador, fila e mineracao sintetica registrada em PROGRESS.md (55 testes Windows; 30/30 Invoke WPF).
 - [ ] Aceite humano do controlador em Windows 10/11 e medicao de overhead/perda.
 - [ ] ACL/cifragem, cota total incluindo auxiliares, screenshots e demais gates de piloto.

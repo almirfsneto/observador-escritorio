@@ -63,3 +63,8 @@ valores como atalho para completar essa cobertura.
 A caixa de gravacao local inicia desmarcada. Se habilitada, aplica limites e
 retencao descritos em [LAB_QUEUE.md](LAB_QUEUE.md); a UI mostra gravados,
 descartados e expurgados e pausa em erro. O modo padrao continua somente memoria.
+
+O teste automatizado do controlador mantem o loop Tk ativo durante os estimulos,
+verifica inicio desativado, pausa com ACK, ausencia de novos eventos aceitos durante
+pausa, escrita assíncrona e encerramento de filhos. Isso ainda nao e o aceite
+humano: siga [VALIDACAO_MANUAL_WINDOWS.md](VALIDACAO_MANUAL_WINDOWS.md).

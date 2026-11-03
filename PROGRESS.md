@@ -107,8 +107,8 @@ projecao restrita a eventos ficticios, expurgo/secure_delete, escritor dedicado,
 buffer limitado e contagem de perdas/expurgos. Erro de armazenamento pausa o
 ensaio. Sem rede, dados reais, instalacao, deploy ou merge.
 
-**Validacao local:** 54 testes descobertos, 49 executados com sucesso no Linux,
-5 especificos de Windows skipped. Testados quota cheia, integrity_check apos
+**Validacao local:** 55 testes descobertos, 49 executados com sucesso no Linux,
+6 especificos de Windows skipped. Testados quota cheia, integrity_check apos
 rollback, lock externo/recuperacao, retencao/reinicio, idempotencia, buffer e
 encerramento. Teste Windows agora integra UIA → projecao → SQLite → mineracao de
 sequencias; resultado remoto ainda a conferir. Docs em LAB_QUEUE.md.
@@ -119,3 +119,34 @@ nao garante entrega/ordem de todos eventos; horarios sao do callback. Nao apto a
 piloto. PR4 sera empilhado sobre PR3 e permanecera em rascunho.
 
 **Atualizacao final da entrega 3:** CI do head `59dc69aba64645c94ab25416ab80be7e9d30acf8` aprovada em Ubuntu/Windows e Python 3.11/3.12: [run 41712520509](https://github.com/almirfsneto/observador-escritorio/actions/runs/41712520509). Inclui 44 testes, confirmacao de pausa por ACK, timeout de comando e expiracao nativa testada sem fallback Python. PRs 1/2 revisados com correcoes no [PR3](https://github.com/almirfsneto/observador-escritorio/pull/3); fila no [PR4](https://github.com/almirfsneto/observador-escritorio/pull/4), todos em rascunho e sem merge.
+
+### Evidencia final da entrega 4 e estado para retomada
+
+[CI 41713966909](https://github.com/almirfsneto/observador-escritorio/actions/runs/41713966909),
+commit `0142e9b2bf2c5cd824d2e1531d9bfe59d2b1d679`: quatro jobs aprovados
+Ubuntu/Windows x Python 3.11/3.12. Windows executou 55 testes sem skips; Linux
+executou 49 e pulou seis dependentes de Windows. O ensaio UIA WPF capturou
+exatamente 30 Invoke em dois controles / 60 eventos, zero descartes de fila e
+senha excluida. A projecao percorreu SQLite e detector de sequencias.
+
+O controlador Tk visivel foi exercitado automaticamente: desativado por padrao,
+inicio explicito, ACK de pausa, contador estavel durante interacoes pausadas,
+retomada, buffer de texto limitado e encerramento dos filhos/escritor. Gravou
+58 eventos em Python 3.11 e 60 em 3.12, zero descartes de fila; ambas as execucoes
+confirmaram banco igual ao total gravado e filhos encerrados. Foco pode ser
+coalescido pelo provedor: zero descarte de fila nao prova entrega de todo foco.
+Um teste posterior tambem exige exatamente 30 Invoke no caminho da UI/escritor.
+
+Resolucao de dependencias preservou testes de desktop e manifestos; a falha do
+harness que bloqueava o loop Tk durante ativacao de foreground foi corrigida.
+Uma execucao antiga presa em cancelamento terminou cancelada; novas execucoes
+ficaram limitadas a dez minutos. Fonte e wheel verificados localmente; nenhum
+observador rodou em computadores reais da equipe. Nao ha trabalho continuo apos
+esta execucao, nem merge/deploy/instalacao autorizados.
+
+**Proxima tarefa que depende de intervencao humana:** executar
+`docs/VALIDACAO_MANUAL_WINDOWS.md` em ambiente Windows 10 e 11 dedicado, registrar
+somente versoes/hashes/contagens e verificar responsividade, isolamento de segunda
+instancia, pausa, fim e custo. CI usa desktop sintetico automatizado e nao e esse
+aceite. Depois do relatorio, revisar cobertura por aplicativo, cifragem/ACL,
+cota total de disco e gates de piloto. Manter PRs 1/2/3/4 em rascunho ate revisao.
