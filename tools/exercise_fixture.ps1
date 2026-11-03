@@ -16,13 +16,20 @@ public static class FixtureDesktop {
  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
 }
 '@
-    $handle = $target.MainWindowHandle
+    $startup = [Diagnostics.Stopwatch]::StartNew()
+    do {
+        $target.Refresh()
+        $handle = $target.MainWindowHandle
+        if ($handle -ne [IntPtr]::Zero) { break }
+        Start-Sleep -Milliseconds 50
+    } while ($startup.ElapsedMilliseconds -lt 8000 -and -not $target.HasExited)
     $null = [FixtureDesktop]::SetForegroundWindow($handle)
     Start-Sleep -Milliseconds 200
     if ($handle -eq [IntPtr]::Zero -or [FixtureDesktop]::GetForegroundWindow() -ne $handle) {
         '{"status":"blocked","reason":"foreground_unavailable"}'
         exit 0
     }
+    if ($Phase -eq 'probe') { '{"status":"ok"}'; exit 0 }
     $root = [System.Windows.Automation.AutomationElement]::FromHandle($handle)
     $all = $root.FindAll([System.Windows.Automation.TreeScope]::Descendants,
                         [System.Windows.Automation.Condition]::TrueCondition)

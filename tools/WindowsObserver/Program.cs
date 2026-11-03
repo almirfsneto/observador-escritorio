@@ -49,8 +49,9 @@ internal sealed class Observer : IDisposable
         toggleHandler = (sender, _) => Capture(sender, "toggle");
     }
 
-    internal void Subscribe()
+    internal void Subscribe(Action<string> checkpoint)
     {
+        checkpoint("fixture_window_unavailable");
         // Input-idle is not guaranteed for all UIA providers. Bind the owned window.
         var startup = Stopwatch.StartNew();
         while (startup.ElapsedMilliseconds < 3000 && !target.HasExited) {
@@ -58,15 +59,20 @@ internal sealed class Observer : IDisposable
             if (target.MainWindowHandle != IntPtr.Zero) break;
             Thread.Sleep(50);
         }
+        if (target.MainWindowHandle == IntPtr.Zero) throw new InvalidOperationException();
+        checkpoint("uia_root_failed");
         root = AutomationElement.FromHandle(target.MainWindowHandle);
         if (root is null) throw new InvalidOperationException();
         // Global focus notifications cache only PID. Other properties are requested
         // on a separate MTA thread after the owned-process check, never on strangers.
         var focusCache = new CacheRequest();
         focusCache.Add(AutomationElement.ProcessIdProperty);
+        checkpoint("focus_subscription_failed");
         using (focusCache.Activate()) Automation.AddAutomationFocusChangedEventHandler(focusHandler);
         using var cachedEvents = captureCache.Activate();
+        checkpoint("invoke_subscription_failed");
         Automation.AddAutomationEventHandler(InvokePattern.InvokedEvent, root, TreeScope.Subtree, invokeHandler);
+        checkpoint("toggle_subscription_failed");
         Automation.AddAutomationPropertyChangedEventHandler(root, TreeScope.Subtree, toggleHandler,
             TogglePattern.ToggleStateProperty);
         new Thread(() => {
@@ -214,10 +220,11 @@ internal static class Program
                     while (watchdog.Elapsed < maximum && DateTime.UtcNow < expires && !target.HasExited)
                         Thread.Sleep(100);
                 } catch (InvalidOperationException) { return; }
-                Environment.Exit(0);
+                Thread.Sleep(1000); // Allow normal teardown; bound a stuck COM release.
+                Process.GetCurrentProcess().Kill();
             }) { IsBackground = true }.Start();
             stage = "subscription_failed";
-            if (!synthetic) observer.Subscribe();
+            if (!synthetic) observer.Subscribe(value => stage = value);
             observer.Ready();
             new Thread(() => {
                 try { observer.Writer(); } catch (IOException) { Environment.Exit(0); }

@@ -7,7 +7,7 @@ import sys
 import time
 import unittest
 
-from observador.native_session import NativeSession
+from observador.native_session import NativeSession, creation_ticks
 
 
 @unittest.skipUnless(sys.platform == 'win32', 'Windows desktop automation requires Windows')
@@ -19,7 +19,21 @@ class DesktopAutomationTest(unittest.TestCase):
         fixture = subprocess.Popen([str(target)])
         session = None
         try:
-            time.sleep(1)
+            expected_ticks = creation_ticks(fixture.pid)
+            def exercise(phase):
+                result = subprocess.run(
+                    ['powershell.exe', '-NoProfile', '-NonInteractive', '-File',
+                     str(root / 'tools/exercise_fixture.ps1'), '-TargetPid', str(fixture.pid),
+                     '-StartTicks', str(expected_ticks), '-TargetPath', str(target), '-Phase', phase],
+                    text=True, capture_output=True, timeout=15)
+                self.assertEqual(result.returncode, 0, 'Synthetic UI exercise failed')
+                data = json.loads(result.stdout)
+                if data['status'] == 'blocked':
+                    self.skipTest('Hosted runner has no usable foreground desktop; manual Windows validation required')
+                self.assertEqual(data['status'], 'ok')
+            # Establish a real owned foreground window before subscribing, rather
+            # than treating cold GUI startup as a collection/provider failure.
+            exercise('probe')
             session = NativeSession(fixture, target, datetime.now(timezone.utc) + timedelta(seconds=40),
                                     executable=observer)
             deadline = time.monotonic() + 8
@@ -28,17 +42,6 @@ class DesktopAutomationTest(unittest.TestCase):
             self.assertTrue(session.stream.ready, f'Native UIA subscription failed: {session.stream.health} '
                             f'HRESULT={session.stream.native_error}')
             session.set_active(True)
-            def exercise(phase):
-                result = subprocess.run(
-                    ['powershell.exe', '-NoProfile', '-NonInteractive', '-File',
-                     str(root / 'tools/exercise_fixture.ps1'), '-TargetPid', str(fixture.pid),
-                     '-StartTicks', str(session.expected_ticks), '-TargetPath', str(target), '-Phase', phase],
-                    text=True, capture_output=True, timeout=15)
-                self.assertEqual(result.returncode, 0, 'Synthetic UI exercise failed')
-                data = json.loads(result.stdout)
-                if data['status'] == 'blocked':
-                    self.skipTest('Hosted runner has no usable foreground desktop; manual Windows validation required')
-                self.assertEqual(data['status'], 'ok')
             exercise('burst')
             time.sleep(.5)
             self.assertFalse(session.stream.stopped, (session.stream.health, session.stream.protocol_failure))

@@ -100,7 +100,9 @@ class LabStream:
                 elif kind == 'event':
                     self._event(data)
                 elif kind == 'error' and set(data) == {'kind', 'code', 'hresult'} and type(data['hresult']) is int and data['code'] in {
-                        'invalid_config', 'subscription_failed', 'backend_failure'}:
+                        'invalid_config', 'subscription_failed', 'backend_failure',
+                        'fixture_window_unavailable', 'uia_root_failed', 'focus_subscription_failed',
+                        'invoke_subscription_failed', 'toggle_subscription_failed'}:
                     self.native_error = data['hresult']
                     self.stop(data['code'])
                 else:
