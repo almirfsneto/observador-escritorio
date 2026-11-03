@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 22406,
-      "sha256": "1d1c1f7e45a5903d4be67e8a2b3d919aeacb05204509d3f8cbe08b14aaa9a592"
+      "size_bytes": 23163,
+      "sha256": "8e4ab718b7657ab75ea93154cc38497af66d68a892f18b2765f1d091b7458300"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -165,8 +165,8 @@
     },
     {
       "path": "docs/WEB_EXTENSION.md",
-      "size_bytes": 3602,
-      "sha256": "59b362db1ededdec6b3d8b67dd583a318a77c709481e48f1173f4c4ca5f1d3ec"
+      "size_bytes": 3628,
+      "sha256": "e64709c1134ecd6fa35c36502be3a657b831fb0a52ea55dc2fd2feaff556612a"
     },
     {
       "path": "docs/WINDOWS_COVERAGE.md",
