@@ -15,9 +15,13 @@ class AcceptanceLauncherTest(unittest.TestCase):
         try:
             with tempfile.TemporaryDirectory(prefix='synthetic launcher ') as temporary:
                 os.chdir(temporary)
-                with patch('observador.acceptance_wizard.main') as main:
-                    runpy.run_path(str(repository / 'tools/validar_laboratorio.py'), run_name='__main__')
-                main.assert_called_once_with(repository)
+                try:
+                    with patch('observador.acceptance_wizard.main') as main:
+                        runpy.run_path(str(repository / 'tools/validar_laboratorio.py'), run_name='__main__')
+                    main.assert_called_once_with(repository)
+                finally:
+                    # Windows keeps the current directory open: leave before removing it.
+                    os.chdir(previous_directory)
         finally:
             os.chdir(previous_directory)
             sys.path[:] = previous_path

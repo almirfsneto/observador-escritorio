@@ -235,8 +235,8 @@
     },
     {
       "path": "tests/test_acceptance_launcher.py",
-      "size_bytes": 1378,
-      "sha256": "0a67d0507bb3fac461f1f9f933c93ccaaffdb3907083854973e16c7fdcc28cab"
+      "size_bytes": 1575,
+      "sha256": "f24772f5eb80d89476f844b94a64bcba9a69ff8c367097a3082df88ffdb54168"
     },
     {
       "path": "tests/test_acceptance_metrics.py",
