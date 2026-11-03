@@ -1,0 +1,44 @@
+# Observador Escritorio - Base de desenvolvimento para Codex
+
+**Estado: scaffolding funcional, NAO e um observador Windows instalado ou concluido.**
+
+Este repositório inicia um projeto de descoberta de tarefas repetitivas em computadores Windows utilizados por uma equipe informada sobre o piloto. O núcleo entregue já valida eventos sintéticos, persiste em SQLite, exporta JSONL e detecta sequências repetidas. A instrumentação do Windows, a extensão do navegador e a centralização dos dez computadores ainda devem ser desenvolvidas e testadas.
+
+## Objetivo
+
+Descobrir microtarefas que podem ser simplificadas ou automatizadas, a partir de eventos de interações profissionais (aplicativo ativo, elemento de UI, operações de arquivos, erros e capturas selecionadas), correlacionando-as sem gravar vídeo contínuo.
+
+## Início rápido
+
+Requer Python 3.11+.
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -e .
+python -m observador demo --db demo.sqlite3
+python -m observador analyze --db demo.sqlite3 --out analise.json
+python -m unittest discover -s tests -v
+```
+
+O modo `demo` usa apenas eventos fictícios. **Nenhuma ação de usuário é capturada por este código inicial.**
+
+## Codex
+
+Leia `AGENTS.md`, `SPEC.md`, `SECURITY.md` e `ROADMAP.md`. Abra `PROMPT_INICIAL_CODEX_OBSERVADOR.txt` e use-o como primeira tarefa do Codex. Registre progresso em `PROGRESS.md`, decisões em `DECISIONS.md` e mantenha a suíte de testes verde.
+
+## Cuidados
+
+- Proibidos: captura secreta, interceptação de senhas, coleta contínua do texto digitado, exposição de dados de clientes ou transferência automática de material bruto a provedores de IA.
+- Exigir: ciência dos participantes, operação restrita a expediente/aplicações autorizadas, sinalização visível, pausa, retenção curta e revisão humana antes da exportação à IA.
+- O piloto não deve instalar ferramentas nas dez máquinas automaticamente nem alterar sistemas de produção.
+
+## Conteúdo
+
+- `src/observador`: modelo de evento, SQLite, descoberta simples de padrões, CLI.
+- `tests`: testes do núcleo inicial.
+- `samples`: dados sintéticos.
+- `docs`: arquitetura e checklist de piloto.
+- `.github/workflows`: CI Linux/Windows.
+
+Licenças de projetos terceiros devem ser verificadas antes de importar qualquer código, inclusive DeskMate, SmartRPA e OpenAdapt. O código deste scaffold é novo; não inclui fontes dos projetos citados.

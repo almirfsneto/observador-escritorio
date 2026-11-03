@@ -1,0 +1,142 @@
+{
+  "package": "OBSERVADOR_ESCRITORIO_CODEX_V0_1_RECRIADO",
+  "date": "2026-11-03",
+  "note": "Pacote novo reconstruido; nao e o mesmo arquivo binario da entrega anterior",
+  "files": [
+    {
+      "path": ".github/workflows/tests.yml",
+      "size_bytes": 525,
+      "sha256": "3e2cabf3825b81429ab6452dbdc813885a4daa1ea1901f6832980409f69d7958"
+    },
+    {
+      "path": ".gitignore",
+      "size_bytes": 140,
+      "sha256": "c320b58101ca2ac166e9667a79f728d56a34dc7430b5e767fd70db48253a82c7"
+    },
+    {
+      "path": "AGENTS.md",
+      "size_bytes": 3838,
+      "sha256": "67c47e32a357f8124aa2a14ba1522c77105ac4c1a8c0e83828d4bb14f5c5dc12"
+    },
+    {
+      "path": "DECISIONS.md",
+      "size_bytes": 876,
+      "sha256": "44b5db6c3ae9385313e12672dcbb58b697c9841d30d339217c3ae70fa052d0ac"
+    },
+    {
+      "path": "PROGRESS.md",
+      "size_bytes": 657,
+      "sha256": "5e8df491021d76df3c51821aa0efed3890fcbeb06e2945a00e8d80cd18573b21"
+    },
+    {
+      "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
+      "size_bytes": 2771,
+      "sha256": "3df46636a53c4ec7d36f24bafb4e5adc827012f504a8986c7b7e1703cb411e60"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 2459,
+      "sha256": "b53ea77e461bf68641bd3eb1ccc1a8b5b8ca2cd847b38ccf3d6b3a0e9916566d"
+    },
+    {
+      "path": "ROADMAP.md",
+      "size_bytes": 1914,
+      "sha256": "4ab7b2b1769cf3ace1b467aa7f1082ae9bc1e39785a102e62bdbe68a4ac4a8a1"
+    },
+    {
+      "path": "SECURITY.md",
+      "size_bytes": 2048,
+      "sha256": "9e60832806f2d35432e72e9fa139c2d42a6d7385c1a928ad7de1ea6ceda72a78"
+    },
+    {
+      "path": "SPEC.md",
+      "size_bytes": 2715,
+      "sha256": "2920c6e2e47fa62d03bc6d1d5b3b34776014f6f32f15e96f1f325c5222261ea7"
+    },
+    {
+      "path": "docs/ARQUITETURA.md",
+      "size_bytes": 1489,
+      "sha256": "84543d673c2b94bbd3e031e4653730bcd08bf9ea46f252f4d0f2c0d79164e241"
+    },
+    {
+      "path": "docs/COMO_INICIAR_EM_10_MINUTOS.md",
+      "size_bytes": 1185,
+      "sha256": "5bcbb86d3bbd70374fce3547b5688cef3fb02b3ad3be26fd5272018a62058b0a"
+    },
+    {
+      "path": "docs/DATA_RETENTION.md",
+      "size_bytes": 649,
+      "sha256": "af8ef1f4d2a77e32c8422e546651f530905eb6ab0f3b416c206ec631a1d5b2fa"
+    },
+    {
+      "path": "docs/EVENT_SCHEMA.md",
+      "size_bytes": 1072,
+      "sha256": "10fea2ba7cd254b27ad7600f2960483e5525802879d7f20c6bcc4367bcd0bee6"
+    },
+    {
+      "path": "docs/GUIA_DE_AUDITORIA_IA.md",
+      "size_bytes": 504,
+      "sha256": "0b69608005cb899aaf56ffd65509bf12653277ed24be10b2075f9d3e7fc7db1a"
+    },
+    {
+      "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
+      "size_bytes": 923,
+      "sha256": "0e1604a195d538758d9b4edf8cbac9da54159c26166dede1b007e953a1db55e1"
+    },
+    {
+      "path": "docs/RESUMO_ENTREGA.md",
+      "size_bytes": 766,
+      "sha256": "57d0de53587bcec7657ce0ca2880abbe8693904974252b9e792a3ee4dd3a80c9"
+    },
+    {
+      "path": "pyproject.toml",
+      "size_bytes": 351,
+      "sha256": "44691a3210aaf3272ad95dbb477bfdf03a5330a57cd7c9831ef7c49381c2ba0e"
+    },
+    {
+      "path": "src/observador/__init__.py",
+      "size_bytes": 97,
+      "sha256": "7a0eed49bbaabc039c97639e26d33df0b37fa4a3f08a79c4e818230cb2f10330"
+    },
+    {
+      "path": "src/observador/__main__.py",
+      "size_bytes": 1680,
+      "sha256": "d6aebba822c2803c558dea28edd0267af737cb1bd8b892a857ac94c89c263d83"
+    },
+    {
+      "path": "src/observador/discovery.py",
+      "size_bytes": 2210,
+      "sha256": "187ae477c2ed825a1be13bc5fd183a7b7a9af3085c1fe265ed2016267a2638bf"
+    },
+    {
+      "path": "src/observador/events.py",
+      "size_bytes": 2270,
+      "sha256": "8bc9d30758e1618b97e4ddc6bb933857b8b3860aa16b3236eb7007e6313a942a"
+    },
+    {
+      "path": "src/observador/sample.py",
+      "size_bytes": 1392,
+      "sha256": "7e705a4bc195fc634b81abe930f629cbaaa27b367879c126bd78ea9c2e22359c"
+    },
+    {
+      "path": "src/observador/store.py",
+      "size_bytes": 1890,
+      "sha256": "37fa65d0d92a4ccb634e3b425cc0106f9a703b5cf995f98387d9718e932823dd"
+    },
+    {
+      "path": "tests/test_discovery.py",
+      "size_bytes": 534,
+      "sha256": "6abce2f38c2bfa59a00ec0d363ca53603438da46f83100a15c007000518053e1"
+    },
+    {
+      "path": "tests/test_events.py",
+      "size_bytes": 789,
+      "sha256": "be4b2e594d335c9a790e71671bd8f23369dc3cd6fe63021ae9f3086d883c24d1"
+    },
+    {
+      "path": "tests/test_store.py",
+      "size_bytes": 990,
+      "sha256": "da07f9d28b449324c7525193635d6dae30599aedea8173066a84e77544287f94"
+    }
+  ]
+}
