@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 4909,
-      "sha256": "a1dc30d81b71e55e29f20e4a769632936aed6e0d3818c8991fa89d6bdb911945"
+      "size_bytes": 6015,
+      "sha256": "b5f6301b69239e8490563de778877de46ec4aaedb6d2b6ffec4ddbf51ba282c5"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 5645,
-      "sha256": "e15f340c10c2d7f2b9789a2e770644c759037ff564009fc629528a7ec1d4b721"
+      "size_bytes": 6967,
+      "sha256": "446c5ec22e4c803f0d4f5fae80907c0e480423f625d1be63200c4264646ba9a7"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -225,8 +225,8 @@
     },
     {
       "path": "tests/test_windows_desktop.py",
-      "size_bytes": 3812,
-      "sha256": "96c8a1877e2a9bf465c2d16abafd68ae4d66a95f1ad752df3bc1f1b43c75d55a"
+      "size_bytes": 3820,
+      "sha256": "a7e2dbde344a16c4fc2c512a1682d269eb6dd21cfd0459e63b8ea5d5f8570e40"
     },
     {
       "path": "tools/SyntheticTaskApp/Program.cs",

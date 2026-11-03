@@ -51,7 +51,7 @@ class DesktopAutomationTest(unittest.TestCase):
                   'distinct_controls': len({event.target for event in invokes}),
                   'native_dropped': session.stream.native_dropped, 'python_dropped': session.stream.dropped,
                   'callbacks': session.stream.native_callbacks, 'total_events': len(events)}))
-            self.assertGreaterEqual(len(invokes), 20, 'Rapid synthetic invokes were lost')
+            self.assertEqual(len(invokes), 30, 'Synthetic actions must not be lost or duplicated')
             self.assertGreaterEqual(len({event.target for event in invokes}), 2)
             self.assertNotIn('PROCESSO-FICTICIO', json.dumps([event.to_dict() for event in events]))
             self.assertNotIn('SENHA-FICTICIA', json.dumps([event.to_dict() for event in events]))

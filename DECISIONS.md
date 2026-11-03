@@ -49,3 +49,9 @@
 ## D-011 - Endurecer contrato de metadata e caminhos
 - **Decisao:** valores de metadata enumerados/faixas numericas, sem objetos arbitrarios; rejeitar NaN, booleano como numero e caminhos screenshot Windows/UNC enraizados.
 - **Risco:** entradas antigas fora dos dominios agora falham explicitamente. Campos textuais gerais continuam exigindo projecao fechada: validar schema nao equivale a anonimizar qualquer dado externo.
+
+## D-013 - Cobertura UIA por provedor, cache minimo e evidencia real sintetica
+- **Decisao:** manter WinForms para explicitar limite observado (foco recebido, nenhum Invoke nesse caminho) e usar controles WPF padrao para o ensaio de acoes. Nenhuma instrumentacao especial emite eventos para o observador.
+- **Evidencia:** CI no commit c4ca6cf recebeu 30/30 Invoke em dois botoes WPF, sem descartes de fila e com exclusao de senha, em Python 3.11 e 3.12. Isso nao demonstra captura de cliques WinForms nem outros aplicativos.
+- **Arquitetura:** notificacao global de foco solicita apenas PID em cache; somente depois de filtrar a instancia uma thread MTA consulta papel, flag de senha e RuntimeId. Eventos de acao sao restritos a subtree e usam cache dessas propriedades, evitando consultas reentrantes no callback. Filas e geracoes continuam limitadas.
+- **Alternativas:** tratar ausencia de Invoke como ausencia de trabalho, ler nomes/valores para inferir cliques ou usar hooks globais. Rejeitadas por qualidade e privacidade. Validacao humana Windows 10/11 e medicao de overhead/perda seguem pendentes.
