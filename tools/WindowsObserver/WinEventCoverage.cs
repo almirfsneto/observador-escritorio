@@ -67,7 +67,7 @@ internal static class WinEventCoverage
         Console.WriteLine(JsonSerializer.Serialize(new {
             kind="coverage_result", invoked, state_changes=stateChanges, distinct_button_handles=controls.Count,
             excluded, dropped, elapsed_ms=elapsed.ElapsedMilliseconds,
-            callback_delivery_peak_ms=deliveryPeak,
+            callback_delivery_peak_ms=invoked+stateChanges>0 ? (uint?)deliveryPeak : null,
             probe_cpu_ms=Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds,
             probe_peak_working_set_bytes=Process.GetCurrentProcess().PeakWorkingSet64,
             interpretation="accessibility_notifications_only_not_user_intent"

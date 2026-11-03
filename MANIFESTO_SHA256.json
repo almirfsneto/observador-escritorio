@@ -170,8 +170,8 @@
     },
     {
       "path": "docs/WINDOWS_COVERAGE.md",
-      "size_bytes": 2907,
-      "sha256": "c63a7be4576bedd2aae71411e854e12f2f01f331403757486d1728955a508bc7"
+      "size_bytes": 2957,
+      "sha256": "f06f3484a2f3d5814ccd47b1b38b1dc798c204b4949f87aded0d3f3bd0d5565a"
     },
     {
       "path": "docs/WINDOWS_LAB.md",
@@ -400,8 +400,8 @@
     },
     {
       "path": "tests/test_windows_coverage.py",
-      "size_bytes": 4647,
-      "sha256": "1487d7343d7f5347c322e47a51a4bff3d80a712a5076d5b580de02aaf334942e"
+      "size_bytes": 4803,
+      "sha256": "febfc8590747da58703b819891ceb1f4873ccae5fb0b667f6541665d3cac8340"
     },
     {
       "path": "tests/test_windows_desktop.py",
@@ -440,8 +440,8 @@
     },
     {
       "path": "tools/WindowsObserver/WinEventCoverage.cs",
-      "size_bytes": 4758,
-      "sha256": "68ffcaa85e8dad6191998cf6124e20080c336ae1d7d5e658ed2c4a36ed7d9c1a"
+      "size_bytes": 4797,
+      "sha256": "7f0d4cbceafc52eb160a691f431e70ec88ad32cb7e30880d2acc79af866e04e0"
     },
     {
       "path": "tools/WindowsObserver/WindowsObserver.csproj",
