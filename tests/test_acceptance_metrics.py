@@ -1,11 +1,32 @@
 from types import SimpleNamespace
+from datetime import datetime, timedelta, timezone
 import unittest
 from observador.acceptance_metrics import OwnedSampler
 from observador.acceptance_report import empty_session
-from observador.acceptance_session import SessionRecorder
+from observador.acceptance_session import SessionRecorder, termination_for_stop
+from observador.stream import LabStream
 
 
 class MetricsTest(unittest.TestCase):
+    def test_stop_reason_distinguishes_exit_backend_and_both_expiry_clocks(self):
+        now = [datetime(2026, 11, 3, tzinfo=timezone.utc)]
+        elapsed = [0.0]
+        stream = LabStream(now[0] + timedelta(minutes=15), clock=lambda: now[0], monotonic=lambda: elapsed[0])
+        fixture = SimpleNamespace(poll=lambda: None)
+        session = SimpleNamespace(stream=stream)
+        self.assertEqual(termination_for_stop(fixture, None), 'not_started')
+        self.assertEqual(termination_for_stop(fixture, session), 'operator_stop')
+        stream.stop('backend_timeout')
+        self.assertEqual(termination_for_stop(fixture, session), 'backend_error')
+        elapsed[0] = 900
+        now[0] -= timedelta(hours=1)  # Monotonic expiry survives a backwards wall clock.
+        self.assertEqual(termination_for_stop(fixture, session), 'expired')
+        elapsed[0] = 0
+        now[0] = stream.expires_at
+        self.assertEqual(termination_for_stop(fixture, session), 'expired')
+        fixture.poll = lambda: 0
+        self.assertEqual(termination_for_stop(fixture, session), 'fixture_exit')
+
     def test_samples_only_registered_handles_and_cpu_is_delta_not_machine_enumeration(self):
         opened = []
         class Probe:

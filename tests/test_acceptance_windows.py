@@ -80,6 +80,7 @@ class WindowsAcceptanceTest(unittest.TestCase):
                 self.assertEqual(report['human_gate'], 'PENDENTE_REVISAO_HUMANA')
                 self.assertFalse(report['pilot_authorized'])
                 data = report['sessions'][0]
+                self.assertEqual(data['termination'], 'operator_stop')
                 self.assertTrue(data['children_stopped'])
                 for role in ('controller', 'fixture', 'provider', 'fixture_secondary'):
                     metric = data['metrics']['processes'][role]

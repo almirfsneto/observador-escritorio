@@ -8,6 +8,18 @@ from .acceptance_report import empty_session
 from .lab_controller import LaboratoryWindow
 
 
+def termination_for_stop(fixture, session):
+    """Classify before the base controller changes every stream into stopped."""
+    if fixture and fixture.poll() is not None:
+        return 'fixture_exit'
+    if session is None:
+        return 'not_started'
+    stream = session.stream
+    if stream.clock() >= stream.expires_at or stream.monotonic() >= stream.deadline:
+        return 'expired'
+    return 'backend_error' if stream.stopped else 'operator_stop'
+
+
 class SessionRecorder:
     def __init__(self, *, clock=time.monotonic):
         self.data = empty_session()
@@ -113,10 +125,6 @@ class AcceptanceLaboratory(LaboratoryWindow):
             if self.session:
                 stream = self.session.stream
                 self.recorder.observe(stream)
-                if stream.stopped:
-                    reason = ('fixture_exit' if self.fixture and self.fixture.poll() is not None else
-                              'expired' if not stream.alive() and stream.clock() >= stream.expires_at else 'backend_error')
-                    self.recorder.data['termination'] = reason
             with self.sampling_lock:
                 if not self.sampling_closed:
                     self.sampler.sample()
@@ -128,8 +136,10 @@ class AcceptanceLaboratory(LaboratoryWindow):
     def stop(self):
         if self.finished:
             return
-        if not self.finished and self.recorder.data['termination'] == 'not_started':
-            self.recorder.data['termination'] = 'operator_stop' if self.session else 'not_started'
+        if self.session:
+            self.recorder.observe(self.session.stream)
+        if self.recorder.data['termination'] == 'not_started':
+            self.recorder.data['termination'] = termination_for_stop(self.fixture, self.session)
         if hasattr(self, 'secondary_btn'):
             self.secondary_btn.config(state=self.tk.DISABLED)
         super().stop()

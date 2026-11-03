@@ -20,8 +20,8 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 9274,
-      "sha256": "3b68cfdae8d23f909a8b6ddb6d36823ac83559072a8e72738615e675c70eea1e"
+      "size_bytes": 10093,
+      "sha256": "b7a52799be6f63447c10365773ef2fa0440c6fb52373960a4a044b3385f5bbc5"
     },
     {
       "path": "PROGRESS.md",
@@ -165,8 +165,8 @@
     },
     {
       "path": "src/observador/acceptance_session.py",
-      "size_bytes": 7497,
-      "sha256": "ad1e6698aa9557c014fbb8239ecb865f695694c14dd481bc09502613f3a73b72"
+      "size_bytes": 7690,
+      "sha256": "3f80728d332fd1b777db14e99dcb8f9baeb0fff5adfad570df3863b0b8de5adc"
     },
     {
       "path": "src/observador/acceptance_wizard.py",
@@ -240,8 +240,8 @@
     },
     {
       "path": "tests/test_acceptance_metrics.py",
-      "size_bytes": 3062,
-      "sha256": "877c272c356e395eeacfe38948e91a30ef64d6e65efcdc0f7605021b959e061b"
+      "size_bytes": 4273,
+      "sha256": "7651e0ce59ddcca0507e9b102cb88dc6a064429aace1f80cf564c01b5b68a921"
     },
     {
       "path": "tests/test_acceptance_prepare.py",
@@ -255,8 +255,8 @@
     },
     {
       "path": "tests/test_acceptance_windows.py",
-      "size_bytes": 5224,
-      "sha256": "c95f76958555c61b40755e9feb00fa4346cd3cca6d8f0ca6363432c78ad437b1"
+      "size_bytes": 5295,
+      "sha256": "29b8810acc339699a6f04cd676e4f46514d6469c42db06a8bbde44e215b5d643"
     },
     {
       "path": "tests/test_cli.py",

@@ -74,3 +74,8 @@
 - **Decisão:** CPU por delta e RAM por Win32, apenas no controlador e filhos fictícios explicitamente registrados, sem enumeração de processos, nomes, títulos ou conteúdo. Amostra de 500 ms e pico OS de vida inteira são identificados; início/pausa medidos até ACK observado na UI, separados da percepção humana.
 - **Confiabilidade:** comandos de preparação/teste usam Job Object kill-on-close só para seus descendentes; buffers de saída bruta limitados em memória e nunca exportados. Artefatos são rechecados antes de cada lançamento/início. Toplevel usa o mesmo interpretador Tk e cancela timers ao fechar.
 - **Limites:** falhas de medição não viram zero, amostragem perde picos; não há prova instrumentada de ausência de tráfego de todo o sistema. ACL/cota total ficam fora do escopo da Issue 5, conforme solicitado.
+
+## D-017 - Resultado automático vigente e ACK observado
+- **Decisão:** invalidar o PASSOU anterior antes de cada nova execução automática; timeout/erro deixa FALHOU com contagens desconhecidas. Timeout encerra apenas o comando próprio e permite nova tentativa, enquanto fechamento do assistente cancela permanentemente o runner.
+- **Evidência:** teste regressivo cobre sucesso anterior seguido de interrupção e tentativa após timeout; integração aguarda o ACK também ser registrado pelo loop Tk antes de consultar a métrica.
+- **Motivo:** a primeira CI desta entrega encontrou uma corrida no teste de pausa, que consultava o contador antes do tick da instrumentação; receber o ACK no stream e observar sua medida no controlador são instantes distintos. Nenhum teste automático promove aceite humano.
