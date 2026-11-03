@@ -43,6 +43,8 @@ internal sealed class Observer : IDisposable
 
     internal void Subscribe()
     {
+        if (!target.WaitForInputIdle(3000)) throw new InvalidOperationException();
+        target.Refresh();
         root = AutomationElement.FromHandle(target.MainWindowHandle);
         if (root is null) throw new InvalidOperationException();
         Automation.AddAutomationFocusChangedEventHandler(focusHandler);
@@ -54,7 +56,8 @@ internal sealed class Observer : IDisposable
     private bool Alive() => !target.HasExited && DateTime.UtcNow < expires && lifetime.Elapsed < budget;
     private void Send(object value) { if (!output.TryAdd(value)) Interlocked.Increment(ref dropped); }
     internal void Writer() { foreach (var item in output.GetConsumingEnumerable()) Console.WriteLine(JsonSerializer.Serialize(item)); }
-    internal void Ready() => Send(new { kind = "ready", pid = target.Id, start_ticks = target.StartTime.ToUniversalTime().Ticks });
+    internal void Ready() => Console.WriteLine(JsonSerializer.Serialize(new {
+        kind = "ready", pid = target.Id, start_ticks = target.StartTime.ToUniversalTime().Ticks }));
     internal void Health() => Send(new { kind = "health", dropped = Interlocked.Read(ref dropped), generation });
     internal bool IsAlive() => Alive();
 
@@ -158,8 +161,8 @@ internal static class Program
                 Environment.Exit(0);
             });
             if (!synthetic) observer.Subscribe();
-            var writer = Task.Run(observer.Writer);
             observer.Ready();
+            var writer = Task.Run(observer.Writer);
             var input = Task.Run(Console.ReadLine);
             var timer = Stopwatch.StartNew();
             while (observer.IsAlive())
