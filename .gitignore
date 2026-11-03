@@ -5,3 +5,7 @@ build/
 dist/
 *.sqlite3*
 *.jsonl
+
+# Synthetic WinForms fixture build output
+**/bin/
+**/obj/

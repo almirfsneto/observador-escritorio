@@ -48,3 +48,11 @@ os quatro jobs Ubuntu/Windows x Python 3.11/3.12 concluiram com sucesso, incluin
 os 19 testes por job e parsing PowerShell nos jobs Windows. Sao testes de nucleo,
 mocks e sintaxe; nao houve ensaio de captura UIA em desktop Windows interativo.
 Commit posterior desta entrega registra apenas documentacao/evidencias e manifesto.
+
+## Entrega 2 — laboratorio de interface visivel — 2026-11-03
+
+**Implementado na branch `codex/visible-windows-laboratory`:** projeto WinForms .NET 8 com executavel de teste dedicado; janela Tkinter visivel e inicialmente desativada; fluxo manual abrir/iniciar/pausar/retomar/encerrar; apenas aplicacao ficticia na allowlist; expiracao de quinze minutos; contagem de foco na memoria, sem dados reais, arquivo, rede nem screenshot; CI passa a compilar o fixture nos jobs Windows; testes sinteticos de validacao da allowlist e validade temporal.
+
+**Verificacao ainda necessaria:** executar novos jobs CI e registrar resultado; exercitar interface, foco e campo de senha em Windows interativo; medir latencia do PowerShell e cobertura de controles. Nao alegar testes interativos ou instalacao. A API de UIA segue experimental.
+
+**Proximo passo:** acompanhar CI do PR e, em computador de teste, executar o roteiro `docs/LAB_ENTREGA_2.md`; manter proibida captura da equipe ate gates do piloto.
