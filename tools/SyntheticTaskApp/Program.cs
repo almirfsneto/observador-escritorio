@@ -59,8 +59,8 @@ internal sealed class FictionalForm : Form
             Location = new Point(20, 197),
             AutoSize = true
         };
-        var save = new Button { Text = "Salvar ficticio", Location = new Point(20, 238), Width = 160 };
-        var review = new Button { Text = "Revisar ficticio", Location = new Point(195, 238), Width = 160 };
+        var save = new Button { Name = "synthetic_save", Text = "Salvar ficticio", Location = new Point(20, 238), Width = 160 };
+        var review = new Button { Name = "synthetic_review", Text = "Revisar ficticio", Location = new Point(195, 238), Width = 160 };
         _status = new Label
         {
             Text = "Nenhuma operacao efetuada.",

@@ -43,11 +43,11 @@ class DesktopAutomationTest(unittest.TestCase):
             self.assertFalse(session.stream.stopped, (session.stream.health, session.stream.protocol_failure))
             events = session.stream.drain(limit=256)
             invokes = [event for event in events if event.action == 'invoke']
-            self.assertGreaterEqual(len(invokes), 20, 'Rapid synthetic invokes were lost')
-            self.assertGreaterEqual(len({event.target for event in invokes}), 2)
             print('SYNTHETIC_UIA_COUNTS', json.dumps({'invokes': len(invokes),
                   'distinct_controls': len({event.target for event in invokes}),
                   'native_dropped': session.stream.native_dropped, 'python_dropped': session.stream.dropped}))
+            self.assertGreaterEqual(len(invokes), 20, 'Rapid synthetic invokes were lost')
+            self.assertGreaterEqual(len({event.target for event in invokes}), 2)
             self.assertNotIn('PROCESSO-FICTICIO', json.dumps([event.to_dict() for event in events]))
             self.assertNotIn('SENHA-FICTICIA', json.dumps([event.to_dict() for event in events]))
             exercise('password')

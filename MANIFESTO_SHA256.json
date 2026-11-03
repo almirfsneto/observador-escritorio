@@ -5,8 +5,8 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 1291,
-      "sha256": "93645c44741da003541d63051c4db000cb362159e735745d791d7fc7e682d0d9"
+      "size_bytes": 1314,
+      "sha256": "987c13401040b7c1cf6565979245c603894aadee6891598bb459c13518faa7b5"
     },
     {
       "path": ".gitignore",
@@ -226,12 +226,12 @@
     {
       "path": "tests/test_windows_desktop.py",
       "size_bytes": 3387,
-      "sha256": "849d654eb0b40321d5e24f19ef01b10d47289123faaa65653469e476555c8033"
+      "sha256": "759879750e7becc2cb789491da0e7f21890804ea03033ee43c12457f28b48d0f"
     },
     {
       "path": "tools/SyntheticTaskApp/Program.cs",
-      "size_bytes": 2544,
-      "sha256": "0f6c88d256a189ba8f91b53718c7f56575e22c2e34edaf2093069322de657d1f"
+      "size_bytes": 2596,
+      "sha256": "1fa7cf13e1f38b06658ec316f5eda1d0a2cb0b4c19d70fbefa73ccdc8ab86347"
     },
     {
       "path": "tools/SyntheticTaskApp/SyntheticTaskApp.csproj",
@@ -250,8 +250,8 @@
     },
     {
       "path": "tools/exercise_fixture.ps1",
-      "size_bytes": 2321,
-      "sha256": "68a5991c7c2b01dd2b6dee1edafe0c6cd1a13e12807407165bee314abf2116a7"
+      "size_bytes": 2503,
+      "sha256": "bcdc494b0307dbc454fca2145e14c421d27d83c38c823d73b54470f4853a9793"
     },
     {
       "path": "tools/synthetic_windows_app.ps1",

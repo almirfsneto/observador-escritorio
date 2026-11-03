@@ -30,7 +30,9 @@ public static class FixtureDesktop {
     $password = $null
     foreach ($element in $all) {
         if ($element.Current.IsPassword) { $password = $element; continue }
-        if ($element.Current.ControlType -eq [System.Windows.Automation.ControlType]::Button) {
+        # Select only the two known fixture buttons, never caption/minimize/close buttons.
+        if ($element.Current.ControlType -eq [System.Windows.Automation.ControlType]::Button -and
+            $element.Current.AutomationId -in @('synthetic_save', 'synthetic_review')) {
             $buttons += $element
         }
     }
