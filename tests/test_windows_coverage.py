@@ -53,6 +53,8 @@ class ComparativeCoverageTest(unittest.TestCase):
                 diagnostic = json.loads(output)
                 self.assertEqual(probe.returncode, 0)
                 self.assertEqual(diagnostic['kind'], 'coverage_result')
+                if diagnostic['invoked'] + diagnostic['state_changes'] == 0:
+                    self.assertIsNone(diagnostic['callback_delivery_peak_ms'])
                 invokes = [event for event in events if event.action == 'invoke']
                 if project == 'SyntheticWpfTaskApp':
                     self.assertEqual(len(invokes), 30)

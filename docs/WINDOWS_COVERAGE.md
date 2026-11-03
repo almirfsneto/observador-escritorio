@@ -39,5 +39,6 @@ Windows 10/11 e benchmark de custo em máquina dedicada continuam pendentes.
 
 Evidência CI 41741819622: WPF 30 Invoke/30 estímulos, WinForms 0/30; probe
 conservador não aceitou notificações em ambos (objetos não suportados excluídos).
-Não há ganho de cobertura comprovado. `callback_delivery_peak_ms=0` com zero
-notificações significa nenhuma amostra, não latência medida igual a zero.
+Não há ganho de cobertura comprovado. Sem notificações aceitas,
+`callback_delivery_peak_ms` agora é null: nenhuma amostra. A rodada original
+mostrava zero; isso não demonstrava latência igual a zero.
