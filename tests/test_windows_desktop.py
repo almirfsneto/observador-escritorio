@@ -45,7 +45,8 @@ class DesktopAutomationTest(unittest.TestCase):
             invokes = [event for event in events if event.action == 'invoke']
             print('SYNTHETIC_UIA_COUNTS', json.dumps({'invokes': len(invokes),
                   'distinct_controls': len({event.target for event in invokes}),
-                  'native_dropped': session.stream.native_dropped, 'python_dropped': session.stream.dropped}))
+                  'native_dropped': session.stream.native_dropped, 'python_dropped': session.stream.dropped,
+                  'callbacks': session.stream.native_callbacks, 'total_events': len(events)}))
             self.assertGreaterEqual(len(invokes), 20, 'Rapid synthetic invokes were lost')
             self.assertGreaterEqual(len({event.target for event in invokes}), 2)
             self.assertNotIn('PROCESSO-FICTICIO', json.dumps([event.to_dict() for event in events]))

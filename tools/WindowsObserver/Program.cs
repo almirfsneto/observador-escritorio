@@ -28,6 +28,7 @@ internal sealed class Observer : IDisposable
     private AutomationElement? root;
     private bool enabled;
     private long generation, sequence, dropped;
+    private long focusSeen, invokeSeen, toggleSeen, excluded, errors;
     private readonly bool synthetic;
 
     internal Observer(Process target, DateTime expires, bool synthetic = false)
@@ -58,7 +59,9 @@ internal sealed class Observer : IDisposable
     internal void Writer() { foreach (var item in output.GetConsumingEnumerable()) Console.WriteLine(JsonSerializer.Serialize(item)); }
     internal void Ready() => Console.WriteLine(JsonSerializer.Serialize(new {
         kind = "ready", pid = target.Id, start_ticks = target.StartTime.ToUniversalTime().Ticks }));
-    internal void Health() => Send(new { kind = "health", dropped = Interlocked.Read(ref dropped), generation });
+    internal void Health() => Send(new { kind = "health", dropped = Interlocked.Read(ref dropped), generation,
+        callbacks = new { focus = Interlocked.Read(ref focusSeen), invoke = Interlocked.Read(ref invokeSeen),
+            toggle = Interlocked.Read(ref toggleSeen), excluded = Interlocked.Read(ref excluded), errors = Interlocked.Read(ref errors) } });
     internal bool IsAlive() => Alive();
 
     internal bool Command(string line)
@@ -87,13 +90,18 @@ internal sealed class Observer : IDisposable
         {
             long token;
             lock (gate) { if (!enabled || !Alive()) return; token = generation; }
+            if (action == "focus") Interlocked.Increment(ref focusSeen);
+            else if (action == "invoke") Interlocked.Increment(ref invokeSeen);
+            else Interlocked.Increment(ref toggleSeen);
             if (sender is not AutomationElement element) return;
             // Filter the process before requesting any control properties.
-            if ((int)element.GetCurrentPropertyValue(AutomationElement.ProcessIdProperty) != target.Id) return;
+            if ((int)element.GetCurrentPropertyValue(AutomationElement.ProcessIdProperty) != target.Id) {
+                Interlocked.Increment(ref excluded); return;
+            }
             GetWindowThreadProcessId(GetForegroundWindow(), out uint foreground);
-            if (foreground != target.Id) return;
+            if (foreground != target.Id) { Interlocked.Increment(ref excluded); return; }
             var password = element.GetCurrentPropertyValue(AutomationElement.IsPasswordProperty);
-            if (password is not bool secret || secret) return;
+            if (password is not bool secret || secret) { Interlocked.Increment(ref excluded); return; }
             var type = element.GetCurrentPropertyValue(AutomationElement.ControlTypeProperty) as ControlType;
             if (type is null) return;
             // Runtime IDs contain provider integers, not control text. Salt prevents cross-session linkage.
@@ -105,7 +113,7 @@ internal sealed class Observer : IDisposable
                 SendEvent(action, type.Id, id);
             }
         }
-        catch { Interlocked.Increment(ref dropped); } // Never emit native exception data.
+        catch { Interlocked.Increment(ref errors); Interlocked.Increment(ref dropped); } // No native exception data.
     }
 
     private void SendEvent(string action, int role, string id) => Send(new {

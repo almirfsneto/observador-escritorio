@@ -27,6 +27,7 @@ class LabStream:
         self.health = 'paused'
         self.dropped = 0
         self.native_dropped = 0
+        self.native_callbacks = {}
         self.invalid = 0
         self.last_sequence = 0
         self.sequence_gaps = 0
@@ -78,10 +79,15 @@ class LabStream:
                         raise ValueError()
                     # Process identity is checked by NativeSession before this call.
                     self.ready = True
-                elif kind == 'health' and set(data) == {'kind', 'generation', 'dropped'}:
+                elif kind == 'health' and set(data) == {'kind', 'generation', 'dropped', 'callbacks'}:
                     if (type(data['dropped']) is not int or data['dropped'] < 0
                             or type(data['generation']) is not int):
                         raise ValueError()
+                    counters = data['callbacks']
+                    if (not isinstance(counters, dict) or set(counters) != {'focus', 'invoke', 'toggle', 'excluded', 'errors'}
+                            or any(type(value) is not int or value < 0 for value in counters.values())):
+                        raise ValueError()
+                    self.native_callbacks = counters
                     self.native_dropped = max(self.native_dropped, data['dropped'])
                 elif kind == 'ack' and set(data) == {'kind', 'generation', 'active'}:
                     if type(data['active']) is not bool or type(data['generation']) is not int:
