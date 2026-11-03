@@ -207,4 +207,8 @@ def main():
     print(json.dumps({'candidates':len(report['candidates']),'capture_real':False,'pilot_authorized':False}))
 
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    try:
+        main()
+    except (ValueError,OSError):
+        raise SystemExit('Relatório não criado: confirme parâmetros e destino novo fora de Git. Nenhum detalhe bruto foi salvo.') from None

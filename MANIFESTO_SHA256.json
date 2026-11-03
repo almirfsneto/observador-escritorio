@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 4404,
-      "sha256": "5177a7c08a733b1fca005d336ebd644628ecf36623724b6dbb594af2112f1e40"
+      "size_bytes": 5440,
+      "sha256": "635c844dcb83bd521a6ecfe1da83d4d0fac18af91884ffb294548a30275b2b49"
     },
     {
       "path": "SECURITY.md",
@@ -147,6 +147,11 @@
       "path": "docs/RESUMO_ENTREGA.md",
       "size_bytes": 766,
       "sha256": "57d0de53587bcec7657ce0ca2880abbe8693904974252b9e792a3ee4dd3a80c9"
+    },
+    {
+      "path": "docs/RETOMADA_AUTONOMA.md",
+      "size_bytes": 3702,
+      "sha256": "2120362bddcf455bff1fcd772e0294c9b2b29e858d12e89fe51154e5b91a5752"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -290,8 +295,8 @@
     },
     {
       "path": "src/observador/task_discovery.py",
-      "size_bytes": 11485,
-      "sha256": "0c4bf62b30b0ce7775dc317bbed01d883ad603d2cf7275c532776df377989f2b"
+      "size_bytes": 11679,
+      "sha256": "976770174559340e26518e0abb0fbb973b9443d538af87163052b40be0535b26"
     },
     {
       "path": "src/observador/web_events.py",
@@ -400,8 +405,8 @@
     },
     {
       "path": "tests/test_task_discovery.py",
-      "size_bytes": 3301,
-      "sha256": "f8dbf47a8ced140e7e8334094c4b46476c392e7ca569b90b9db2732c00ee670d"
+      "size_bytes": 4275,
+      "sha256": "88963aee5be54654da12b5be3c465f0c900819c2db87089ea15847af3a1e6290"
     },
     {
       "path": "tests/test_web_contract.py",

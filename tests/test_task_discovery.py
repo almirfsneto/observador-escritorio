@@ -2,6 +2,10 @@ from copy import deepcopy
 from dataclasses import replace
 from datetime import datetime,timedelta
 import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
 from uuid import uuid4
 
@@ -18,6 +22,7 @@ class TaskDiscoveryTest(unittest.TestCase):
         self.assertEqual(candidate['occurrences'],8)
         self.assertEqual(candidate['sessions'],8)
         self.assertGreaterEqual(len(candidate['variants']),3)
+        self.assertEqual(candidate['rework_signals']['adjacent_repetitions'],2)
         self.assertIsNone(candidate['saving_scenario'])
         self.assertIn('temporal_not_causal',candidate['gaps'])
         self.assertFalse(result['pilot_authorized'])
@@ -55,3 +60,17 @@ class TaskDiscoveryTest(unittest.TestCase):
         with self.assertRaises(ValueError):discover_tasks([replace(events[0],device_id='real-user')])
         with self.assertRaises(ValueError):discover_tasks(events,max_steps=100)
         with self.assertRaises(ValueError):discover_tasks(events,assumed_automation_seconds=float('nan'))
+
+    def test_cli_writes_exclusively_and_errors_do_not_echo_paths(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output=Path(tmp)/'synthetic-private-name.json'
+            command=[sys.executable,'-m','observador.task_discovery','--out',str(output)]
+            first=subprocess.run(command,capture_output=True,text=True,timeout=10)
+            self.assertEqual(first.returncode,0)
+            self.assertTrue(json.loads(output.read_text())['candidates'])
+            before=output.read_bytes()
+            second=subprocess.run(command,capture_output=True,text=True,timeout=10)
+            self.assertNotEqual(second.returncode,0)
+            self.assertNotIn(str(output),second.stderr)
+            self.assertNotIn('Traceback',second.stderr)
+            self.assertEqual(before,output.read_bytes())

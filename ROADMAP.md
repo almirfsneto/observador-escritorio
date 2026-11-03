@@ -68,3 +68,14 @@
 - [x] Relatório local fora de Git com schema fechado; nenhum upload ou liberação de piloto.
 - [x] Confirmar CI Linux/Windows desta entrega e registrar evidências em PROGRESS.md (76 testes Windows; Ubuntu 68 executados + oito skips).
 - [ ] Execução humana em Windows 10 e 11 dedicados, que continua obrigatória.
+
+## Execução intensiva — entregas sobre PR6
+- [x] PR7: orçamento agregado e reserva de journal, recuperação/erros, DACL Windows e arquivo DPAPI experimental.
+- [x] PR8: diagnóstico process-scoped e comparação WPF/WinForms; incompatibilidade permanece explícita, sem inferir clique.
+- [x] PR9: MV3 somente fixture loopback, pausa/limites e importação fechada; CI Chromium real aprovada.
+- [x] PR10: famílias de microtarefas/variantes sem IDs, suporte não sobreposto, cenários de economia e corpus fictício.
+- [ ] Criptografia da fila SQLite ativa, cota física estrita e revisão adversarial com outra conta.
+- [ ] Adapter semântico específico para WinForms incompatível; teste de input humano em Windows 10/11.
+- [ ] Integração browser/agente, ordenação multi-origem e durabilidade/ACK de exportação.
+- [ ] Calibração do minerador com corpus sintético maior e comparação executada de bibliotecas auditadas.
+- [ ] Aceite humano Windows 10/11 e Chrome/Edge em perfil descartável; nenhum piloto autorizado.
