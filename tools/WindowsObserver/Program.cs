@@ -157,21 +157,26 @@ internal static class Program
             var watchdog = Stopwatch.StartNew();
             var maximum = expires - DateTime.UtcNow;
             new Thread(() => {
-                while (watchdog.Elapsed < maximum && DateTime.UtcNow < expires && !target.HasExited)
-                    Thread.Sleep(100);
+                try {
+                    while (watchdog.Elapsed < maximum && DateTime.UtcNow < expires && !target.HasExited)
+                        Thread.Sleep(100);
+                } catch (InvalidOperationException) { return; }
                 Environment.Exit(0);
             }) { IsBackground = true }.Start();
             stage = "subscription_failed";
             if (!synthetic) observer.Subscribe();
             observer.Ready();
-            new Thread(observer.Writer) { IsBackground = true }.Start();
+            new Thread(() => {
+                try { observer.Writer(); } catch (IOException) { Environment.Exit(0); }
+            }) { IsBackground = true }.Start();
             var input = new BlockingCollection<string>(16);
             new Thread(() => {
                 try {
                     string? line;
                     while ((line = Console.ReadLine()) is not null)
                         if (!input.TryAdd(line)) return;
-                } finally { input.CompleteAdding(); }
+                } catch (IOException) { }
+                finally { input.CompleteAdding(); }
             }) { IsBackground = true }.Start();
             stage = "backend_failure";
             var timer = Stopwatch.StartNew();
