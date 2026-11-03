@@ -310,3 +310,39 @@ ocorrências; legado no mesmo corpus não ligava IDs entre sessões. Relatório 
 Git sem dados individuais. Comparadas licenças/capacidades PrefixSpan/PM4Py, sem
 adotar dependências. Linux: 91 descobertos, 80 executados, 11 testes específicos
 ignorados; testes de mineração aprovados. Evidência CI desta branch pendente.
+
+### Evidência do endurecimento do armazenamento
+
+PR #7: CI 41741273177 no código 7bd09ff, quatro jobs aprovados Linux/Windows
+Python 3.11/3.12. Windows: 83 descobertos/82 executados, um symlink ignorado;
+Linux: 74 executados/nove Windows ignorados. DACL verificada por trustees numéricos
+(não aliases SDDL), DPAPI real roundtrip/tamper, recuperação de rollback, filas e
+validador anterior aprovados. Revisão adicional passa a tentar symlink Windows
+em vez de presumir falta de privilégio e recusa WAL/SHM legado sem checkpoint ou
+remoção. Testes dessa revisão serão confirmados na CI subsequente. O SQLite ativo
+continua em claro; não há quota física de volume nem aceite humano.
+
+### Evidência da comparação Windows
+
+PR #8, código b9361c3: CI 41741819622, quatro jobs aprovados. Windows 84
+descobertos/83 executados, um symlink ignorado; Linux 74/dez ignorados. WPF:
+30/30 Invoke em dois controles, sem descartes. WinForms: zero Invoke nesse
+estímulo; probe WinEvent restrito aceitou zero notificações em ambos os caminhos.
+Os filtros conservadores excluíram objetos não suportados (43 WPF/30 WinForms).
+Isso NÃO demonstra cobertura melhor de cliques WinForms. Diagnóstico verificável
+fundamenta adapter complementar, em vez de inferir ações. Probe durou ~2,2s,
+consumiu ~109–141ms de CPU e ~29 MiB de working set pico em rodadas CI; valores
+amostrais do processo próprio, não SLA. Latência reportada zero quando não houve
+callback aceito é ausência de amostra, não atraso zero garantido.
+
+### Evidência de extensão MV3 real
+
+PR #9, código 5dcf7d5: CI 41742054304, cinco jobs aprovados (matriz núcleo
+Linux/Windows 3.11/3.12 + Chromium real). Núcleo: 87 descobertos; Linux 76
+executados/11 ignorados; Windows 85 executados/dois ignorados (symlink presumido
+naquela revisão e browser separado). Job web executou um teste real aprovado,
+Chromium 151.0.7922.34: 27 eventos sanitizados, carregamento MV3/popup/guardas,
+valores/senha/URL excluídos, pausa/retomada/navegação, limite/rate e expiração
+injetada, download local validado pelo importador Python. Não foi aceite humano
+Chrome/Edge Windows nem observação de ambiente profissional. Política local do
+executor permaneceu intacta. Correção posterior na base tenta symlink real.

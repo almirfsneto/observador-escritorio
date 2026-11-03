@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 21598,
-      "sha256": "f67562206559a600a36ae249ecb30af03d1b382ded31edce3a5ac6b29a602f03"
+      "size_bytes": 23884,
+      "sha256": "c915a8644c093d43b566564198dca0bf8e426ba02dcba59bbaa052d5de899f43"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -155,8 +155,8 @@
     },
     {
       "path": "docs/STORAGE_HARDENING.md",
-      "size_bytes": 3365,
-      "sha256": "fc8ba6c52ee4729bc37f5a0aece09258bae4948339f55a9f71e6ab301b3a9562"
+      "size_bytes": 3783,
+      "sha256": "3ed28eaa298c135d6ea5e13d44b0554e7820bd6ed79c605d0b7b4ef414ff3b1d"
     },
     {
       "path": "docs/TASK_DISCOVERY.md",
@@ -170,13 +170,13 @@
     },
     {
       "path": "docs/WEB_EXTENSION.md",
-      "size_bytes": 3602,
-      "sha256": "59b362db1ededdec6b3d8b67dd583a318a77c709481e48f1173f4c4ca5f1d3ec"
+      "size_bytes": 3628,
+      "sha256": "e64709c1134ecd6fa35c36502be3a657b831fb0a52ea55dc2fd2feaff556612a"
     },
     {
       "path": "docs/WINDOWS_COVERAGE.md",
-      "size_bytes": 2585,
-      "sha256": "e7e38a19405d8bf57ed1408fbd2e4b21a4f1e79122797f7b9800fe451f416601"
+      "size_bytes": 2907,
+      "sha256": "c63a7be4576bedd2aae71411e854e12f2f01f331403757486d1728955a508bc7"
     },
     {
       "path": "docs/WINDOWS_LAB.md",
@@ -250,8 +250,8 @@
     },
     {
       "path": "src/observador/lab_queue.py",
-      "size_bytes": 9460,
-      "sha256": "9dc7fbc7dcad4052830fb2b392a6313858b70a3c2b0a5663ff464c690aa22fbe"
+      "size_bytes": 9609,
+      "sha256": "0015f240503ebed93402faaef855b3e94005f53e1e3819a2460fe49c11c9384a"
     },
     {
       "path": "src/observador/lab_session.py",
@@ -385,8 +385,8 @@
     },
     {
       "path": "tests/test_storage_hardening.py",
-      "size_bytes": 7062,
-      "sha256": "d740625ffdd187290d076df2ca72ef2f850fc98781e9bd15cb467bfb45090d14"
+      "size_bytes": 7761,
+      "sha256": "5f9fe26719138caf005a1e7df89aa417bc90489e2bcc5651961f4cdd02de102d"
     },
     {
       "path": "tests/test_store.py",

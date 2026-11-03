@@ -22,8 +22,9 @@ Exportação por botão baixa JSON sintético local, a revisar antes de comparti
 
 ## Minimização e contrato
 
-Permissão somente storage; host/match limitado a 127.0.0.1/synthetic-lab/*.
-Match patterns do Chrome não restringem porta: código exige **origem exata
+Permissão somente storage; host loopback 127.0.0.1, content match somente
+/synthetic-lab/*. Host permissions do Chrome não restringem caminho/porta:
+código exige **origem exata
 http://127.0.0.1:8765** e caminho permitido, top frame e marcador sintético v1.
 Nenhuma permissão tabs/scripting/downloads/cookies/webRequest/all_urls. Consultas
 de aba ativa acessam URL apenas da origem permitida para autorização, nunca
