@@ -22,6 +22,8 @@ internal sealed class Observer : IDisposable
     private readonly object gate = new();
     private readonly byte[] salt = RandomNumberGenerator.GetBytes(32);
     private readonly BlockingCollection<object> output = new(512);
+    private readonly BlockingCollection<(AutomationElement element, long generation)> focusQueue = new(256);
+    private readonly CacheRequest captureCache;
     private readonly AutomationFocusChangedEventHandler focusHandler;
     private readonly AutomationEventHandler invokeHandler;
     private readonly AutomationPropertyChangedEventHandler toggleHandler;
@@ -37,7 +39,12 @@ internal sealed class Observer : IDisposable
         this.expires = expires;
         budget = expires - DateTime.UtcNow;
         this.synthetic = synthetic;
-        focusHandler = (sender, _) => Capture(sender, "focus");
+        captureCache = new CacheRequest { AutomationElementMode = AutomationElementMode.None };
+        captureCache.Add(AutomationElement.ProcessIdProperty);
+        captureCache.Add(AutomationElement.IsPasswordProperty);
+        captureCache.Add(AutomationElement.ControlTypeProperty);
+        captureCache.Add(AutomationElement.RuntimeIdProperty);
+        focusHandler = (sender, _) => Focus(sender);
         invokeHandler = (sender, _) => Capture(sender, "invoke");
         toggleHandler = (sender, _) => Capture(sender, "toggle");
     }
@@ -53,16 +60,36 @@ internal sealed class Observer : IDisposable
         }
         root = AutomationElement.FromHandle(target.MainWindowHandle);
         if (root is null) throw new InvalidOperationException();
-        var cache = new CacheRequest { AutomationElementMode = AutomationElementMode.None };
-        cache.Add(AutomationElement.ProcessIdProperty);
-        cache.Add(AutomationElement.IsPasswordProperty);
-        cache.Add(AutomationElement.ControlTypeProperty);
-        cache.Add(AutomationElement.RuntimeIdProperty);
-        using var cachedEvents = cache.Activate();
-        Automation.AddAutomationFocusChangedEventHandler(focusHandler);
+        // Global focus notifications cache only PID. Other properties are requested
+        // on a separate MTA thread after the owned-process check, never on strangers.
+        var focusCache = new CacheRequest();
+        focusCache.Add(AutomationElement.ProcessIdProperty);
+        using (focusCache.Activate()) Automation.AddAutomationFocusChangedEventHandler(focusHandler);
+        using var cachedEvents = captureCache.Activate();
         Automation.AddAutomationEventHandler(InvokePattern.InvokedEvent, root, TreeScope.Subtree, invokeHandler);
         Automation.AddAutomationPropertyChangedEventHandler(root, TreeScope.Subtree, toggleHandler,
             TogglePattern.ToggleStateProperty);
+        new Thread(() => {
+            foreach (var item in focusQueue.GetConsumingEnumerable()) {
+                try {
+                    lock (gate) { if (!enabled || generation != item.generation || !Alive()) continue; }
+                    Capture(item.element.GetUpdatedCache(captureCache), "focus", item.generation);
+                } catch { Interlocked.Increment(ref errors); Interlocked.Increment(ref dropped); }
+            }
+        }) { IsBackground = true }.Start();
+    }
+
+    private void Focus(object sender)
+    {
+        try {
+            lock (gate) {
+                if (!enabled || !Alive() || sender is not AutomationElement element) return;
+                if ((int)element.GetCachedPropertyValue(AutomationElement.ProcessIdProperty) != target.Id) {
+                    Interlocked.Increment(ref excluded); return;
+                }
+                if (!focusQueue.TryAdd((element, generation))) Interlocked.Increment(ref dropped);
+            }
+        } catch { Interlocked.Increment(ref errors); Interlocked.Increment(ref dropped); }
     }
 
     private bool Alive() => !target.HasExited && DateTime.UtcNow < expires && lifetime.Elapsed < budget;
@@ -88,6 +115,7 @@ internal sealed class Observer : IDisposable
             generation = token;
             // A generation boundary invalidates anything still queued in either process.
             while (output.TryTake(out _)) { }
+            while (focusQueue.TryTake(out _)) { }
             enabled = command == "start";
             if (command != "start" && command != "pause") return false;
             Send(new { kind = "ack", generation, active = enabled });
@@ -95,12 +123,15 @@ internal sealed class Observer : IDisposable
         return true;
     }
 
-    private void Capture(object sender, string action)
+    private void Capture(object sender, string action, long? expectedGeneration = null)
     {
         try
         {
             long token;
-            lock (gate) { if (!enabled || !Alive()) return; token = generation; }
+            lock (gate) {
+                if (!enabled || !Alive() || (expectedGeneration.HasValue && expectedGeneration != generation)) return;
+                token = generation;
+            }
             if (action == "focus") Interlocked.Increment(ref focusSeen);
             else if (action == "invoke") Interlocked.Increment(ref invokeSeen);
             else Interlocked.Increment(ref toggleSeen);
@@ -144,6 +175,7 @@ internal sealed class Observer : IDisposable
     public void Dispose()
     {
         lock (gate) enabled = false;
+        focusQueue.CompleteAdding();
         // OS can stall during UIA teardown. Parent has a bounded kill fallback.
         if (!synthetic) Automation.RemoveAllEventHandlers();
         output.CompleteAdding();

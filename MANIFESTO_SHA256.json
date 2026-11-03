@@ -250,8 +250,8 @@
     },
     {
       "path": "tools/WindowsObserver/Program.cs",
-      "size_bytes": 11107,
-      "sha256": "05518d3b5df1c8acffb5c5821f705ff3f5962aea5533ba7867ad2009fc80afd8"
+      "size_bytes": 12894,
+      "sha256": "2aacd8ac4c9003126a84b0955c723f28e70aeaaf379c0e31161dae80bb3080c0"
     },
     {
       "path": "tools/WindowsObserver/WindowsObserver.csproj",
