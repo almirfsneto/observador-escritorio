@@ -35,3 +35,17 @@
 - **Decisao:** usar projeto WinForms .NET 8 que gera SyntheticTaskApp.exe e controlador Tkinter que inicia desativado, exige acao explicita, limita o alvo ao binario ficticio do repositorio e expira em quinze minutos.
 - **Motivo:** separar laboratorio de maquinas e aplicativos reais; eliminar o risco de permitir genericamente powershell.exe utilizado no formulario anterior.
 - **Limites:** nenhum evento gravado, nenhuma rede, nenhum print; ainda falta verificar Win32/UIA numa sessao Windows real. A comparacao por caminho de executavel nao valida isoladamente identidade/assinatura do binario nem associa uma instancia por PID. Testes CI nao provam captura interativa.
+
+## D-009 - Provider UIA persistente e isolado por instancia
+- **Decisao:** processo .NET 8 original, assinaturas UIA de foco/Invoke/Toggle e filtro de PID/caminho/instante de criacao. RuntimeId salgado e efemero diferencia controles sem nomes ou valores.
+- **Alternativas:** polling PowerShell mais rapido ou hooks globais. Rejeitados pelo overhead/perda e pela superficie de coleta. Provider nao importa codigo de terceiros.
+- **Riscos:** entrega UIA nao garantida, chamadas de provedor podem travar, comportamentos variam por Windows. Watchdog monotono/heartbeat/EOF e encerramento limitado reduzem orfaos; ensaio humano permanece obrigatorio.
+
+## D-010 - Pausa com geracoes, buffers limitados e evidencias separadas
+- **Decisao:** LabStream sincronizado invalida buffers ao pausar; tokens impedem retorno de eventos antigos. Filas 512/256, texto 200 linhas, contadores de perda. UI nao espera leitura de UIA ou escrita em pipe.
+- **Alternativas:** reutilizar Collector compartilhado entre threads ou manter eventos de pausa para exibir depois. Rejeitadas por condicao de corrida e semantica de pausa.
+- **Validacao:** protocolo nativo artificial e desktop sintetico sao testes distintos. Ausencia de foreground marca o ensaio como skipped e nao como captura aprovada. Nenhum resultado autoriza piloto ou merge.
+
+## D-011 - Endurecer contrato de metadata e caminhos
+- **Decisao:** valores de metadata enumerados/faixas numericas, sem objetos arbitrarios; rejeitar NaN, booleano como numero e caminhos screenshot Windows/UNC enraizados.
+- **Risco:** entradas antigas fora dos dominios agora falham explicitamente. Campos textuais gerais continuam exigindo projecao fechada: validar schema nao equivale a anonimizar qualquer dado externo.

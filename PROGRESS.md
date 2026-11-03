@@ -56,3 +56,24 @@ Commit posterior desta entrega registra apenas documentacao/evidencias e manifes
 **Verificacao ainda necessaria:** executar novos jobs CI e registrar resultado; exercitar interface, foco e campo de senha em Windows interativo; medir latencia do PowerShell e cobertura de controles. Nao alegar testes interativos ou instalacao. A API de UIA segue experimental.
 
 **Proximo passo:** acompanhar CI do PR e, em computador de teste, executar o roteiro `docs/LAB_ENTREGA_2.md`; manter proibida captura da equipe ate gates do piloto.
+
+## Entrega 3 — revisao e captura persistente — 2026-11-03
+
+**Revisado:** PR1 em 15e1e6d e PR2 em 598e8e6, documentos obrigatorios e codigo/testes.
+Achados e correcoes em docs/REVIEW_PRS_1_2.md. Mudancas empilhadas sobre PR2, sem
+merge, deploy ou alteracao de maquinas reais. Revisao independente ainda pendente.
+
+**Implementado:** provider .NET UIA persistente, vinculo PID/caminho/criacao,
+assinaturas foco/Invoke/Toggle, IDs efemeros de controles, pausa por geracoes,
+filas e timeline limitadas, perdas visiveis, heartbeat/EOF/watchdog monotono e
+limpeza dos filhos. Endurecimento de metadata e caminhos; roteiro manual corrigido.
+
+**Validacao local:** 40 testes descobertos, 35 executados com sucesso no Linux e
+5 testes Windows explicitamente skipped. Compilacao cruzada dos dois projetos
+.NET 8 aprovada, zero warnings/erros. Acrescentados testes nativos de protocolo e
+ensaio automatizado UIA de fixture para CI Windows. Resultados remotos pendentes.
+
+**Proximo passo nesta execucao:** publicar PR empilhado e conferir CI, corrigir
+falhas e registrar se o runner permite ensaio sintetico UIA; depois avancar fila
+SQLite limitada/retencao sem habilitar coleta real. Teste humano Windows permanece
+pendente; nenhuma alegacao de validacao manual ou de aptidao para piloto.

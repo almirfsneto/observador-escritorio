@@ -1,17 +1,17 @@
 {
-  "package": "OBSERVADOR_ESCRITORIO_LAB_FOUNDATION",
+  "package": "OBSERVADOR_ESCRITORIO_LAB",
   "date": "2026-11-03",
-  "note": "Snapshot de fontes e documentacao, sem dados de captura; nao inclui o proprio manifesto. Nao comprova validacao Windows.",
+  "note": "Fontes e documentacao; exclui o proprio manifesto, dados e binarios. Nao comprova teste de desktop.",
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 974,
-      "sha256": "deb3f8d30c02df944e066a45d93813c7b761550d55da8081659c60a9fa5e8878"
+      "size_bytes": 1291,
+      "sha256": "93645c44741da003541d63051c4db000cb362159e735745d791d7fc7e682d0d9"
     },
     {
       "path": ".gitignore",
-      "size_bytes": 64,
-      "sha256": "13d5f6c2a1a2b74b710553b34896795982d7c594da1e63ee9a762fa7c6f213b6"
+      "size_bytes": 123,
+      "sha256": "da20fd210401e5cdc54f536f3c6d389e7aec341d612090a774493f23c449e677"
     },
     {
       "path": "AGENTS.md",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 2432,
-      "sha256": "9acf04813872faf30793846520652cf280112589d24638fb7191d7efe57b8703"
+      "size_bytes": 4909,
+      "sha256": "a1dc30d81b71e55e29f20e4a769632936aed6e0d3818c8991fa89d6bdb911945"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 3370,
-      "sha256": "b78c8f11ca3c31a6511ceb4060550e7bc3b0e8b600b16a66c8cd97e3f908587e"
+      "size_bytes": 5645,
+      "sha256": "e15f340c10c2d7f2b9789a2e770644c759037ff564009fc629528a7ec1d4b721"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 2317,
-      "sha256": "ba3d85509faa9939d221825861ca08d83238bdb1be2ea6674dbf5f2bff5a44f3"
+      "size_bytes": 2967,
+      "sha256": "e3dcbbe0f5fa740ed31d39a71f6d8e03c0b400c1e81511cf02ab37e939da524c"
     },
     {
       "path": "SECURITY.md",
@@ -84,6 +84,16 @@
       "sha256": "0b69608005cb899aaf56ffd65509bf12653277ed24be10b2075f9d3e7fc7db1a"
     },
     {
+      "path": "docs/LAB_ENTREGA_2.md",
+      "size_bytes": 2780,
+      "sha256": "6aae7191602bc899f61aa6bd3accab2c0550a8ace09b2234b9393f352135dca3"
+    },
+    {
+      "path": "docs/LAB_PERSISTENTE.md",
+      "size_bytes": 2464,
+      "sha256": "37495c6fd77342309e1feee9efe3dac571866ed3ad0d990f6ef9ab3b22bcd787"
+    },
+    {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
       "size_bytes": 923,
       "sha256": "0e1604a195d538758d9b4edf8cbac9da54159c26166dede1b007e953a1db55e1"
@@ -92,6 +102,11 @@
       "path": "docs/RESUMO_ENTREGA.md",
       "size_bytes": 766,
       "sha256": "57d0de53587bcec7657ce0ca2880abbe8693904974252b9e792a3ee4dd3a80c9"
+    },
+    {
+      "path": "docs/REVIEW_PRS_1_2.md",
+      "size_bytes": 3537,
+      "sha256": "ff6b26a0efd7d842a20e660e703f4b784943e405413883e701230f8ceb1cc40a"
     },
     {
       "path": "docs/WINDOWS_LAB.md",
@@ -125,8 +140,23 @@
     },
     {
       "path": "src/observador/events.py",
-      "size_bytes": 2270,
-      "sha256": "8bc9d30758e1618b97e4ddc6bb933857b8b3860aa16b3236eb7007e6313a942a"
+      "size_bytes": 3294,
+      "sha256": "701fa4d4f7a47c87bba7514899adbf0808177d3d5ae50f198128ea9df778cd10"
+    },
+    {
+      "path": "src/observador/lab_controller.py",
+      "size_bytes": 6740,
+      "sha256": "8636b474d3c255cd7816b0597d6ddd4116c552d2554e4b31ad9911d5230cb3ae"
+    },
+    {
+      "path": "src/observador/lab_session.py",
+      "size_bytes": 1406,
+      "sha256": "84f90f8904360512857801fc5b72bd5aff9d88ac93527f30f43307c28a776d73"
+    },
+    {
+      "path": "src/observador/native_session.py",
+      "size_bytes": 5714,
+      "sha256": "946222d6fe0e7a90b1f56be2cb5eceb4696ab1c9257c7b345d8ba20663088041"
     },
     {
       "path": "src/observador/sample.py",
@@ -137,6 +167,11 @@
       "path": "src/observador/store.py",
       "size_bytes": 1890,
       "sha256": "37fa65d0d92a4ccb634e3b425cc0106f9a703b5cf995f98387d9718e932823dd"
+    },
+    {
+      "path": "src/observador/stream.py",
+      "size_bytes": 6136,
+      "sha256": "cf05fce7d52c1b36ad4f0e500174acca86e1e7125d63db7798c20bd832203911"
     },
     {
       "path": "src/observador/windows.py",
@@ -165,8 +200,18 @@
     },
     {
       "path": "tests/test_events.py",
-      "size_bytes": 789,
-      "sha256": "be4b2e594d335c9a790e71671bd8f23369dc3cd6fe63021ae9f3086d883c24d1"
+      "size_bytes": 1649,
+      "sha256": "c4d8659e4659701867995fea10e4d3194a0eb5d473898da916ef8904e09b5598"
+    },
+    {
+      "path": "tests/test_lab_session.py",
+      "size_bytes": 1869,
+      "sha256": "d5531f5af57581d96697e5efc63255d17c8acb1238ffd05f41b9666c3577cd0b"
+    },
+    {
+      "path": "tests/test_native_windows.py",
+      "size_bytes": 3997,
+      "sha256": "d1d64a7c1ad3af8bfd2de64af66a1b66faaf88c5e12535e913828e05756eeaa8"
     },
     {
       "path": "tests/test_store.py",
@@ -174,9 +219,49 @@
       "sha256": "da07f9d28b449324c7525193635d6dae30599aedea8173066a84e77544287f94"
     },
     {
+      "path": "tests/test_stream.py",
+      "size_bytes": 3932,
+      "sha256": "7665acd783e741d0a64d1dc6f79e5d6a9413735cf122a5a7820a2b87aa7dc6b5"
+    },
+    {
+      "path": "tests/test_windows_desktop.py",
+      "size_bytes": 3081,
+      "sha256": "43cc23f9fbad4040caaa4a7b5425192546eceb30563893be3522ceb09b1c0bbb"
+    },
+    {
+      "path": "tools/SyntheticTaskApp/Program.cs",
+      "size_bytes": 2544,
+      "sha256": "0f6c88d256a189ba8f91b53718c7f56575e22c2e34edaf2093069322de657d1f"
+    },
+    {
+      "path": "tools/SyntheticTaskApp/SyntheticTaskApp.csproj",
+      "size_bytes": 342,
+      "sha256": "c1c248a806f87ca07f6c3c5041d72b336012ba66f7e7098e04283ad406ebac80"
+    },
+    {
+      "path": "tools/WindowsObserver/Program.cs",
+      "size_bytes": 8607,
+      "sha256": "c23900fe04cf05ce0fe7ac11a2ed3d1d3f181609c40a79db05ba6a629b4c4d36"
+    },
+    {
+      "path": "tools/WindowsObserver/WindowsObserver.csproj",
+      "size_bytes": 271,
+      "sha256": "6cfb70b4c9c72e6f228c1ae36e55fb88bce48ce91f25cfc6d3007c767aa0d12b"
+    },
+    {
+      "path": "tools/exercise_fixture.ps1",
+      "size_bytes": 2321,
+      "sha256": "68a5991c7c2b01dd2b6dee1edafe0c6cd1a13e12807407165bee314abf2116a7"
+    },
+    {
       "path": "tools/synthetic_windows_app.ps1",
       "size_bytes": 1061,
       "sha256": "b89b311195c4af1cc15f0704c575887d38534b982767fac3d59a48373a0ad410"
+    },
+    {
+      "path": "tools/update_manifest.py",
+      "size_bytes": 852,
+      "sha256": "7eff7d16d8f43119b73dedc3a208b1de6c67d749a96508b836c41f350b40ad8d"
     }
   ]
 }
