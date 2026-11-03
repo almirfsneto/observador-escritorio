@@ -210,8 +210,8 @@
     },
     {
       "path": "tests/test_native_windows.py",
-      "size_bytes": 4612,
-      "sha256": "ebcb6e5c1095405797155a91bcf463bbbdcd4dcb0dcd56831f24f61866c3a6c2"
+      "size_bytes": 4914,
+      "sha256": "7dad0eb2850b7b845f924d71ac356348ca4600edf4ad7d07d1bb9e11a56d97f7"
     },
     {
       "path": "tests/test_store.py",
@@ -225,8 +225,13 @@
     },
     {
       "path": "tests/test_windows_desktop.py",
-      "size_bytes": 3820,
-      "sha256": "a7e2dbde344a16c4fc2c512a1682d269eb6dd21cfd0459e63b8ea5d5f8570e40"
+      "size_bytes": 3993,
+      "sha256": "3f1f88d48cba595c54efd8fc1588262647d804e6a2e66f1d2244995864c27b47"
+    },
+    {
+      "path": "tests/windows_support.py",
+      "size_bytes": 1922,
+      "sha256": "069ac317af1cb44560f7ab2985d4cfcb01dbc17add16c5475fc1288fac24bf4c"
     },
     {
       "path": "tools/SyntheticTaskApp/Program.cs",

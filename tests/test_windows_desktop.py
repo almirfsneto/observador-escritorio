@@ -8,6 +8,7 @@ import time
 import unittest
 
 from observador.native_session import NativeSession, creation_ticks
+from windows_support import prepare_foreground
 
 
 @unittest.skipUnless(sys.platform == 'win32', 'Windows desktop automation requires Windows')
@@ -33,7 +34,8 @@ class DesktopAutomationTest(unittest.TestCase):
                 self.assertEqual(data['status'], 'ok')
             # Establish a real owned foreground window before subscribing, rather
             # than treating cold GUI startup as a collection/provider failure.
-            exercise('probe')
+            if not prepare_foreground(fixture):
+                self.skipTest('Hosted runner has no usable foreground desktop; manual validation required')
             session = NativeSession(fixture, target, datetime.now(timezone.utc) + timedelta(seconds=40),
                                     executable=observer)
             deadline = time.monotonic() + 8

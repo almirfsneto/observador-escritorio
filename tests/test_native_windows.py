@@ -65,7 +65,12 @@ class NativeProtocolTest(unittest.TestCase):
                                     (datetime.now(timezone.utc) + timedelta(seconds=6)).isoformat()],
                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         try:
-            self.assertEqual(process.wait(timeout=10), 0)
+            code = process.wait(timeout=10)
+            # The native watchdog intentionally uses TerminateProcess after its
+            # teardown grace. Both bounded native paths satisfy expiry; Python
+            # never kills the provider before this assertion.
+            self.assertIn(code, (0, 4294967295))
+            print('NATIVE_EXPIRY_EXIT', code)
         finally:
             if process.poll() is None:
                 process.kill()
