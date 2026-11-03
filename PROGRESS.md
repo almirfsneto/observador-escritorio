@@ -135,7 +135,10 @@ retomada, buffer de texto limitado e encerramento dos filhos/escritor. Gravou
 58 eventos em Python 3.11 e 60 em 3.12, zero descartes de fila; ambas as execucoes
 confirmaram banco igual ao total gravado e filhos encerrados. Foco pode ser
 coalescido pelo provedor: zero descarte de fila nao prova entrega de todo foco.
-Um teste posterior tambem exige exatamente 30 Invoke no caminho da UI/escritor.
+O teste final aguarda 30 Invoke visiveis e duraveis antes de pausar, e exige
+exatamente essas 30 acoes em SQLite. Pausar antes da drenagem descartava pendencias
+intencionalmente, conforme a politica de pausa; nao se deve confundir isso com
+overflow nem usar contagem mista de foco+acao como sinal de conclusao da rajada.
 
 Resolucao de dependencias preservou testes de desktop e manifestos; a falha do
 harness que bloqueava o loop Tk durante ativacao de foreground foi corrigida.

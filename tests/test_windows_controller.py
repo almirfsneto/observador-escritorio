@@ -64,7 +64,10 @@ class ControllerAutomationTest(unittest.TestCase):
                 window.start_btn.invoke()
                 pump(lambda: window.session is not None and window.session.stream.health == 'active')
                 exercise('burst')
-                pump(lambda: window.event_count >= 30 and window.sink.written >= 30)
+                # UIA Invoke is asynchronous. Wait for all actions to be visible
+                # and durable before pausing (which intentionally drops pending data).
+                pump(lambda: window.log.get('1.0', tk.END).count(' | invoke | ') == 30
+                     and window.sink.written >= window.event_count)
                 window.pause_btn.invoke()
                 self.assertFalse(window.session.stream.enabled)
                 pump(lambda: window.session.stream.health == 'paused')
