@@ -230,8 +230,8 @@
     },
     {
       "path": "src/observador/private_directory.py",
-      "size_bytes": 4623,
-      "sha256": "aabad64315cafdd5e089062870c019df6b8bbf526f10538ae94ed97fc77aaa0f"
+      "size_bytes": 6443,
+      "sha256": "e5509b8d22792a68dada9334934e555d0e130544c95c3cee0c517f3f77037867"
     },
     {
       "path": "src/observador/sample.py",
@@ -325,8 +325,8 @@
     },
     {
       "path": "tests/test_storage_hardening.py",
-      "size_bytes": 6880,
-      "sha256": "7b30dc1dcbb9098f441f28e0585e459a8ad963d4f3a21b8f17345ee5f54fad9b"
+      "size_bytes": 7062,
+      "sha256": "d740625ffdd187290d076df2ca72ef2f850fc98781e9bd15cb467bfb45090d14"
     },
     {
       "path": "tests/test_store.py",
