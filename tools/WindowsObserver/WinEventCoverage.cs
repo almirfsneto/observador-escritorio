@@ -27,7 +27,7 @@ internal static class WinEventCoverage
         uint deliveryPeak = 0;
         var controls = new HashSet<IntPtr>(); // Only aggregate cardinality leaves this process.
         var elapsed = Stopwatch.StartNew();
-        Callback callback = (_, kind, window, objectId, child, _, _) => {
+        Callback callback = (_, kind, window, objectId, child, _, time) => {
             if (invoked + stateChanges >= 10000) { dropped++; return; }
             GetWindowThreadProcessId(window, out uint pid);
             GetWindowThreadProcessId(GetForegroundWindow(), out uint foreground);
