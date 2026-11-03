@@ -279,3 +279,12 @@ novos cobrem auxiliares, disco indisponível, read-only, corrupção, queda com
 rollback e permissões/DPAPI nativos no Windows. Evidência remota pendente.
 Detalhes e limites: docs/STORAGE_HARDENING.md. Validador e schema de aceite v1
 preservados; nenhum dado real, instalação na equipe, deploy ou merge.
+
+## Execução intensiva — cobertura Windows experimental
+
+Nova branch codex/windows-coverage-probe sobre codex/storage-reliability. Provider
+padrão inalterado; probe WinEvent opcional restrito ao PID de fixture, botões
+nativos e 20s. STATECHANGE não vira ação inferida. Comparação automatizada WPF e
+WinForms, contagens UIA/WinEvent, custo próprio e atraso de callback, pause ACK.
+Linux: 84 descobertos, 74 executados, dez Windows skipped. Compilação e desktop
+Windows dependem da CI em acompanhamento; não equivalem ao aceite humano.

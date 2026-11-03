@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 10892,
-      "sha256": "1d0a36678d392fce3173def180058f8d4f355de3da416783969818f24870c3e1"
+      "size_bytes": 11573,
+      "sha256": "7cfabfde7476a2ef7f9e318061d591e2ef4ed063c858b2353bf8915d7beb80f0"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 19633,
-      "sha256": "78d6a91d19aea12fd0d9579459f84bbaf54e6f6d1cb12bf5ac09b819243e3710"
+      "size_bytes": 20182,
+      "sha256": "949af9395e48d25960c0fbc5cd4b5095a5079c0c666c399beaac9c9845c5da04"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -137,6 +137,11 @@
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
       "size_bytes": 6368,
       "sha256": "ef5e84b6a82157f13cea10ed6d76358e66577da4cee833313655a9bb42166d54"
+    },
+    {
+      "path": "docs/WINDOWS_COVERAGE.md",
+      "size_bytes": 2585,
+      "sha256": "e7e38a19405d8bf57ed1408fbd2e4b21a4f1e79122797f7b9800fe451f416601"
     },
     {
       "path": "docs/WINDOWS_LAB.md",
@@ -339,6 +344,11 @@
       "sha256": "55b964ed11093f4a1fef2f03d5a67bc14728f82e378d4211751d46f2b29497c2"
     },
     {
+      "path": "tests/test_windows_coverage.py",
+      "size_bytes": 4647,
+      "sha256": "1487d7343d7f5347c322e47a51a4bff3d80a712a5076d5b580de02aaf334942e"
+    },
+    {
       "path": "tests/test_windows_desktop.py",
       "size_bytes": 4606,
       "sha256": "35f00b7fe97187a8f27c58c18488552fc93438b1c2950a16bcaa2c102e8f8147"
@@ -370,8 +380,13 @@
     },
     {
       "path": "tools/WindowsObserver/Program.cs",
-      "size_bytes": 13822,
-      "sha256": "48bb7ab555fec1c92942d09a2b1ed36f49e9c252353cccbb5d08d62c627aace9"
+      "size_bytes": 14013,
+      "sha256": "a11fa3282efbc7cf9b1b3e71eddc078001660be79b861113469b3b14a026a887"
+    },
+    {
+      "path": "tools/WindowsObserver/WinEventCoverage.cs",
+      "size_bytes": 4755,
+      "sha256": "0eeb86cae473cae98a2d0d2ae7bee8a2a3cbfe7cf2ec842de9eceef6516152fe"
     },
     {
       "path": "tools/WindowsObserver/WindowsObserver.csproj",
