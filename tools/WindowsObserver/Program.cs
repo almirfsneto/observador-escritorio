@@ -164,7 +164,7 @@ internal static class Program
             _ = target.Handle; // Retain a handle to this process instance, not a future reused PID.
             if (!StringComparer.OrdinalIgnoreCase.Equals(target.MainModule?.FileName, path)
                 || target.StartTime.ToUniversalTime().Ticks != ticks) return 2;
-            if (!synthetic && Path.GetFileName(path) != "SyntheticTaskApp.exe") return 2;
+            if (!synthetic && Path.GetFileName(path) is not ("SyntheticTaskApp.exe" or "SyntheticWpfTaskApp.exe")) return 2;
             using var observer = new Observer(target, expires, synthetic);
             // A separate watchdog also bounds a stuck UIA call or teardown.
             var watchdog = Stopwatch.StartNew();

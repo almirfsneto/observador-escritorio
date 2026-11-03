@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 try {
     $target = Get-Process -Id $TargetPid
     if ($target.StartTime.ToUniversalTime().Ticks -ne $StartTicks -or
-        $target.Path -ne $TargetPath -or [IO.Path]::GetFileName($target.Path) -ne 'SyntheticTaskApp.exe') {
+        $target.Path -ne $TargetPath -or [IO.Path]::GetFileName($target.Path) -notin @('SyntheticTaskApp.exe', 'SyntheticWpfTaskApp.exe')) {
         throw 'Wrong fixture'
     }
     Add-Type -AssemblyName UIAutomationClient

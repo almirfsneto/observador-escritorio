@@ -14,7 +14,7 @@ from observador.native_session import NativeSession
 class DesktopAutomationTest(unittest.TestCase):
     def test_synthetic_invokes_and_password_exclusion(self):
         root = Path(__file__).resolve().parents[1]
-        target = root / 'tools/SyntheticTaskApp/bin/Release/net8.0-windows/SyntheticTaskApp.exe'
+        target = root / 'tools/SyntheticWpfTaskApp/bin/Release/net8.0-windows/SyntheticWpfTaskApp.exe'
         observer = root / 'tools/WindowsObserver/bin/Release/net8.0-windows/WindowsObserver.exe'
         fixture = subprocess.Popen([str(target)])
         session = None

@@ -6,18 +6,19 @@ from .collector import Application, Policy
 
 LAB_DURATION_MINUTES = 15
 SYNTHETIC_BINARY_NAME = "SyntheticTaskApp.exe"
+WPF_BINARY_NAME = "SyntheticWpfTaskApp.exe"
 
 
 def fixture_path() -> Path:
     """Fixed source-tree path; this laboratory runner is not an installed agent."""
-    return (Path(__file__).resolve().parents[2] / "tools" / "SyntheticTaskApp"
-            / "bin" / "Release" / "net8.0-windows" / SYNTHETIC_BINARY_NAME)
+    return (Path(__file__).resolve().parents[2] / "tools" / "SyntheticWpfTaskApp"
+            / "bin" / "Release" / "net8.0-windows" / WPF_BINARY_NAME)
 
 
 def validate_lab_executable(executable: str) -> None:
     path = PureWindowsPath(executable)
-    if not path.is_absolute() or path.name.casefold() != SYNTHETIC_BINARY_NAME.casefold():
-        raise ValueError("laboratory requires a dedicated SyntheticTaskApp.exe")
+    if not path.is_absolute() or path.name.casefold() not in {SYNTHETIC_BINARY_NAME.casefold(), WPF_BINARY_NAME.casefold()}:
+        raise ValueError("laboratory requires a dedicated synthetic fixture")
 
 
 def make_lab_policy(executable: str, now: datetime) -> Policy:
