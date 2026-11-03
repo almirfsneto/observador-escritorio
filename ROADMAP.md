@@ -66,5 +66,5 @@
 - [x] Avaliação manual PASSOU/FALHOU/NÃO EXECUTADO com observações fechadas.
 - [x] CPU/RAM de processos próprios, tempos de ACK e contadores separados de percepção humana.
 - [x] Relatório local fora de Git com schema fechado; nenhum upload ou liberação de piloto.
-- [ ] Confirmar CI Linux/Windows desta entrega e registrar evidências em PROGRESS.md.
+- [x] Confirmar CI Linux/Windows desta entrega e registrar evidências em PROGRESS.md (76 testes Windows; Ubuntu 68 executados + oito skips).
 - [ ] Execução humana em Windows 10 e 11 dedicados, que continua obrigatória.
