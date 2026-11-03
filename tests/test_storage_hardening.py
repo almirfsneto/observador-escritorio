@@ -126,7 +126,9 @@ class StorageHardeningTest(unittest.TestCase):
                 for target in (path.parent, path):
                     dacl = api.dacl(target)
                     self.assertTrue(dacl.startswith('D:P'))
-                    self.assertIn(api.user_sid(), dacl)
+                    trustees = api.trustees(target)
+                    self.assertEqual({entry[0] for entry in trustees}, {api.user_sid(), 'S-1-5-18'})
+                    self.assertTrue(all(entry[2] == 0x1f01ff for entry in trustees))
                     self.assertIn(';;;SY)', dacl)
                     self.assertEqual(dacl.count('(A;'), 2)
                     self.assertNotIn(';;;BU)', dacl)
