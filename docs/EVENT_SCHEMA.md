@@ -12,7 +12,20 @@ Campos obrigatorios:
 - `target`: papel/classe de UI sem texto pessoal
 - `duration_ms`: duracao nao negativa (0 quando indisponivel)
 
-Opcionais: `screenshot_ref` (caminho relativo controlado), `metadata` (dicionario de chaves em allowlist: `control_role`, `http_status`, `result`, `confidence`, `category`).
+Opcionais: `screenshot_ref` (caminho relativo sem barras invertidas, drive ou
+componentes vazios/ponto), `metadata` com dominios fechados:
+
+- `control_role`: button, checkbox, combobox, edit, listitem, menuitem, tab, window ou control.
+- `http_status`: inteiro 100–599, sem booleanos.
+- `result`: success, failure, cancelled ou unknown.
+- `confidence`: numero finito entre 0 e 1, sem booleanos.
+- `category`: demo, laboratory ou synthetic.
+- `source_sequence`: inteiro positivo menor que 2^63, opcional e restrito a sessao.
+  Desempata observacoes com o mesmo timestamp; nao e prova de ordem causal.
+
+O campo opcional source_sequence preserva compatibilidade com eventos v1 anteriores;
+nenhuma migracao de tabela e necessaria porque metadata e armazenada no JSON.
+O endurecimento de dominios rejeita metadata antiga fora da allowlist atual.
 
 Nao colocar senhas, CPF, email, nomes reais, valores de formulario, caminhos de cliente ou payloads de rede em `metadata`.
 

@@ -98,3 +98,89 @@ probe de foreground, teardown e exige exatamente 30 acoes sem perda/duplicacao.
 com fixture, verificar pausa/fim/expiracao, acesso local e overhead. O ensaio
 acima e automacao de desktop no runner, nao aceite manual de uma pessoa. Nao
 instalar, coletar de pessoas, fazer deploy ou integrar PRs sem autorizacao.
+
+## Entrega 4 — fila local limitada de laboratorio — 2026-11-03
+
+**Implementado:** persistencia opt-in inicialmente desmarcada; SQLite em lab-data
+ignorado pelo Git, limite 4 MiB no banco principal, 10 mil eventos e TTL 1h;
+projecao restrita a eventos ficticios, expurgo/secure_delete, escritor dedicado,
+buffer limitado e contagem de perdas/expurgos. Erro de armazenamento pausa o
+ensaio. Sem rede, dados reais, instalacao, deploy ou merge.
+
+**Validacao local:** 55 testes descobertos, 49 executados com sucesso no Linux,
+6 especificos de Windows skipped. Testados quota cheia, integrity_check apos
+rollback, lock externo/recuperacao, retencao/reinicio, idempotencia, buffer e
+encerramento. Teste Windows agora integra UIA → projecao → SQLite → mineracao de
+sequencias; resultado remoto ainda a conferir. Docs em LAB_QUEUE.md.
+
+**Limites:** cota do banco nao cobre journal/filesystem; sem cifragem/ACL revisada;
+expurgo nao roda com app fechado e nao garante apagamento forense. Captura UIA
+nao garante entrega/ordem de todos eventos; horarios sao do callback. Nao apto a
+piloto. PR4 sera empilhado sobre PR3 e permanecera em rascunho.
+
+**Atualizacao final da entrega 3:** CI do head `59dc69aba64645c94ab25416ab80be7e9d30acf8` aprovada em Ubuntu/Windows e Python 3.11/3.12: [run 41712520509](https://github.com/almirfsneto/observador-escritorio/actions/runs/41712520509). Inclui 44 testes, confirmacao de pausa por ACK, timeout de comando e expiracao nativa testada sem fallback Python. PRs 1/2 revisados com correcoes no [PR3](https://github.com/almirfsneto/observador-escritorio/pull/3); fila no [PR4](https://github.com/almirfsneto/observador-escritorio/pull/4), todos em rascunho e sem merge.
+
+### Evidencia final da entrega 4 e estado para retomada
+
+[CI 41713966909](https://github.com/almirfsneto/observador-escritorio/actions/runs/41713966909),
+commit `0142e9b2bf2c5cd824d2e1531d9bfe59d2b1d679`: quatro jobs aprovados
+Ubuntu/Windows x Python 3.11/3.12. Windows executou 55 testes sem skips; Linux
+executou 49 e pulou seis dependentes de Windows. O ensaio UIA WPF capturou
+exatamente 30 Invoke em dois controles / 60 eventos, zero descartes de fila e
+senha excluida. A projecao percorreu SQLite e detector de sequencias.
+
+O controlador Tk visivel foi exercitado automaticamente: desativado por padrao,
+inicio explicito, ACK de pausa, contador estavel durante interacoes pausadas,
+retomada, buffer de texto limitado e encerramento dos filhos/escritor. Gravou
+58 eventos em Python 3.11 e 60 em 3.12, zero descartes de fila; ambas as execucoes
+confirmaram banco igual ao total gravado e filhos encerrados. Foco pode ser
+coalescido pelo provedor: zero descarte de fila nao prova entrega de todo foco.
+O teste final aguarda 30 Invoke visiveis e duraveis antes de pausar, e exige
+exatamente essas 30 acoes em SQLite. Pausar antes da drenagem descartava pendencias
+intencionalmente, conforme a politica de pausa; nao se deve confundir isso com
+overflow nem usar contagem mista de foco+acao como sinal de conclusao da rajada.
+
+Resolucao de dependencias preservou testes de desktop e manifestos; a falha do
+harness que bloqueava o loop Tk durante ativacao de foreground foi corrigida.
+Uma execucao antiga presa em cancelamento terminou cancelada; novas execucoes
+ficaram limitadas a dez minutos. Fonte e wheel verificados localmente; nenhum
+observador rodou em computadores reais da equipe. Nao ha trabalho continuo apos
+esta execucao, nem merge/deploy/instalacao autorizados.
+
+**Proxima tarefa que depende de intervencao humana:** executar
+`docs/VALIDACAO_MANUAL_WINDOWS.md` em ambiente Windows 10 e 11 dedicado, registrar
+somente versoes/hashes/contagens e verificar responsividade, isolamento de segunda
+instancia, pausa, fim e custo. CI usa desktop sintetico automatizado e nao e esse
+aceite. Depois do relatorio, revisar cobertura por aplicativo, cifragem/ACL,
+cota total de disco e gates de piloto. Manter PRs 1/2/3/4 em rascunho ate revisao.
+
+**Ajustes finais de ensaio:** preparacao de foreground usa Win32 apenas no PID
+ficticio, mantendo o loop Tk ativo, para evitar bootstrap PowerShell no probe.
+Expiracao nativa e testada com stdin aberto e sem NativeSession: exige termino
+em ate 10s para prazo de 6s, por saida normal ou encerramento proprio do watchdog
+(codigo Windows 4294967295). O fallback e intencional para teardown preso, nao um
+comando Python de parada. Aceite humano continua pendente.
+
+**Correcao de encerramento:** o fallback nativo de um segundo agora e armado antes do teardown COM, tambem em EOF/stop/erro e na saida de Main. Isso cobre o caso observado em que o runtime mantinha o processo vivo depois do fim logico. Os testes independentes de EOF e prazo aceitam apenas saida normal ou codigo do watchdog proprio, dentro do timeout; nenhum fallback Python satisfaz esses testes.
+
+### Confirmacao final apos correcoes de EOF e foreground
+
+- Provider: head `8c76fb9acce15fc25bf9b9ffe4c6ea134b9f8a6b`,
+  [CI 41718058154](https://github.com/almirfsneto/observador-escritorio/actions/runs/41718058154),
+  quatro combinacoes Ubuntu/Windows x Python 3.11/3.12 aprovadas.
+- Integracao: head de codigo `9aaf67979d286220864a490ebfc3b87bee131326`,
+  [CI 41718674684](https://github.com/almirfsneto/observador-escritorio/actions/runs/41718674684),
+  quatro jobs aprovados; Windows executou 55 testes sem skips e Linux 49 com seis
+  skips Windows. UIA WPF: 30/30 Invoke, dois controles, 60 eventos e zero descartes
+  de fila. O controlador confirmou exatamente 30 Invoke atraves de UI/SQLite,
+  pausa sem crescimento, retomada e encerramento dos filhos/escritor. Pipeline
+  SQLite/mineracao aprovado. EOF e expiracao independentes tiveram saida nativa
+  normal nesta rodada; o fallback proprio permanece testavel e limitado.
+- Ultima alteracao somente documental registra esta evidencia. Fonte, manifesto,
+  CLI e wheel verificaveis; working tree limpo ao encerrar. PRs 1/2 revisados com
+  correcoes no PR3; PR4 empilhado sobre PR3. Nenhum PR integrado.
+
+**Estado de parada:** desenvolvimento desta etapa concluido e recuperavel. O
+proximo gate e o roteiro humano VALIDACAO_MANUAL_WINDOWS.md, em Windows 10 e 11
+exclusivos de teste. Nao considerar validado em computadores da equipe ou apto
+a producao. Nenhuma automacao permanecera trabalhando depois deste atendimento.

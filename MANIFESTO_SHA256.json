@@ -10,8 +10,8 @@
     },
     {
       "path": ".gitignore",
-      "size_bytes": 123,
-      "sha256": "da20fd210401e5cdc54f536f3c6d389e7aec341d612090a774493f23c449e677"
+      "size_bytes": 133,
+      "sha256": "0a82835b26bf86b29d05e97a8520d9199990e28ad35c28bcf8783389c1334673"
     },
     {
       "path": "AGENTS.md",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 6015,
-      "sha256": "b5f6301b69239e8490563de778877de46ec4aaedb6d2b6ffec4ddbf51ba282c5"
+      "size_bytes": 7474,
+      "sha256": "d36722e2194951d94eb4464d45a4d5c9862521ee28a5c85ca5a1e78f7160c811"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 6967,
-      "sha256": "446c5ec22e4c803f0d4f5fae80907c0e480423f625d1be63200c4264646ba9a7"
+      "size_bytes": 13264,
+      "sha256": "11c5797ddc30ce36d21cbab6094cad6b37e0a97ca5b32ac091de1e172825bf20"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -35,13 +35,13 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 2857,
-      "sha256": "5cab1ee24a254ce86e0423dd5c52af7fa4106001970ac8c7a0200a485be487be"
+      "size_bytes": 3290,
+      "sha256": "62c34ae8e655f8aded36c15fc4bd2231af53e69d7b2213ea5798c43120295f2c"
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 2967,
-      "sha256": "e3dcbbe0f5fa740ed31d39a71f6d8e03c0b400c1e81511cf02ab37e939da524c"
+      "size_bytes": 3735,
+      "sha256": "16ef5235ac10704f925ae9f1b8521cb3a825bf09db175726071043c1af92256e"
     },
     {
       "path": "SECURITY.md",
@@ -75,8 +75,8 @@
     },
     {
       "path": "docs/EVENT_SCHEMA.md",
-      "size_bytes": 1072,
-      "sha256": "10fea2ba7cd254b27ad7600f2960483e5525802879d7f20c6bcc4367bcd0bee6"
+      "size_bytes": 1741,
+      "sha256": "d10cfc63fdaff5bea917b3750ed1c920609d05cea5670ad615f64139fc250292"
     },
     {
       "path": "docs/GUIA_DE_AUDITORIA_IA.md",
@@ -90,8 +90,13 @@
     },
     {
       "path": "docs/LAB_PERSISTENTE.md",
-      "size_bytes": 2464,
-      "sha256": "37495c6fd77342309e1feee9efe3dac571866ed3ad0d990f6ef9ab3b22bcd787"
+      "size_bytes": 4132,
+      "sha256": "41b983c4b868858e9ec1800fda7a99729333719a26b71ef19de2512b3f09f382"
+    },
+    {
+      "path": "docs/LAB_QUEUE.md",
+      "size_bytes": 2873,
+      "sha256": "8d72e7b389a8ff99dc480543eb46abeccbb6809ccd17c1369a4b2be05ee04203"
     },
     {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
@@ -109,9 +114,14 @@
       "sha256": "ff6b26a0efd7d842a20e660e703f4b784943e405413883e701230f8ceb1cc40a"
     },
     {
+      "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
+      "size_bytes": 3371,
+      "sha256": "621d1142d72a1416ac63dafce2888c57258eb036229b1684b9a63621dfa7e326"
+    },
+    {
       "path": "docs/WINDOWS_LAB.md",
-      "size_bytes": 3081,
-      "sha256": "7f12b08f2a3be2cb1840cede057671ec88cf902f96a298b28e0b6b92c718d681"
+      "size_bytes": 3247,
+      "sha256": "c0dbfd39b336764e5a8ad1af762a19d561e28af56ba601647659971fd1619f78"
     },
     {
       "path": "pyproject.toml",
@@ -145,8 +155,13 @@
     },
     {
       "path": "src/observador/lab_controller.py",
-      "size_bytes": 6740,
-      "sha256": "8636b474d3c255cd7816b0597d6ddd4116c552d2554e4b31ad9911d5230cb3ae"
+      "size_bytes": 8645,
+      "sha256": "b3dbe44511b63f3d7c49f6beaece857b30ec32d5412d900e8b05d6ea74aa6a50"
+    },
+    {
+      "path": "src/observador/lab_queue.py",
+      "size_bytes": 7837,
+      "sha256": "22066a809283dc52bc5950716c717238d7872ea6fa3115875f04a39674f8e8de"
     },
     {
       "path": "src/observador/lab_session.py",
@@ -204,6 +219,11 @@
       "sha256": "c4d8659e4659701867995fea10e4d3194a0eb5d473898da916ef8904e09b5598"
     },
     {
+      "path": "tests/test_lab_queue.py",
+      "size_bytes": 6491,
+      "sha256": "ad2ebb003d00e084f178a4f1bad5b2876cf785de15ed069b912628509f178d2b"
+    },
+    {
       "path": "tests/test_lab_session.py",
       "size_bytes": 1869,
       "sha256": "d5531f5af57581d96697e5efc63255d17c8acb1238ffd05f41b9666c3577cd0b"
@@ -224,9 +244,14 @@
       "sha256": "bd1d781320862b0d33eb56d308aa2f5917781b0c03392f3c792dc61f5f2dbb80"
     },
     {
+      "path": "tests/test_windows_controller.py",
+      "size_bytes": 6071,
+      "sha256": "55b964ed11093f4a1fef2f03d5a67bc14728f82e378d4211751d46f2b29497c2"
+    },
+    {
       "path": "tests/test_windows_desktop.py",
-      "size_bytes": 3993,
-      "sha256": "3f1f88d48cba595c54efd8fc1588262647d804e6a2e66f1d2244995864c27b47"
+      "size_bytes": 4606,
+      "sha256": "35f00b7fe97187a8f27c58c18488552fc93438b1c2950a16bcaa2c102e8f8147"
     },
     {
       "path": "tests/windows_support.py",

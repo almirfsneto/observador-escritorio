@@ -4,13 +4,14 @@ Na raiz de um checkout Windows com Python 3.11+ (Tk) e .NET SDK 8:
 
 ```powershell
 dotnet build tools/SyntheticTaskApp/SyntheticTaskApp.csproj -c Release
+dotnet build tools/SyntheticWpfTaskApp/SyntheticWpfTaskApp.csproj -c Release
 dotnet build tools/WindowsObserver/WindowsObserver.csproj -c Release
 python -m pip install -e .
 python -m unittest discover -s tests -v
 python -m observador.lab_controller
 ```
 
-A UI inicia desativada. Abrir fixture nao inicia observador. Iniciar cria um unico
+A UI inicia desativada e abre por padrao SyntheticWpfTaskApp. Abrir fixture nao inicia observador. Iniciar cria um unico
 processo .NET vinculado ao PID/caminho/instante de criacao da instancia ficticia.
 UIA registra assinaturas de foco, Invoke e Toggle; nao ha hook de teclado/mouse,
 leitura de Name/Value/Text, screenshot ou clipboard. Somente o processo ficticio
@@ -32,7 +33,7 @@ em memoria nesta etapa.
   EOF, rajada de 2000 eventos artificiais, pausa e expiracao em --protocol-test.
   Esse modo nao assina UIA nem observa desktop.
 - Ensaio automatizado de desktop Windows: tests/test_windows_desktop.py abre
-  apenas a fixture, invoca botoes a intervalos curtos e verifica exclusao de senha.
+  apenas a fixture WPF, invoca botoes a intervalos curtos e verifica exclusao de senha.
   Se o runner nao permite foreground, o teste fica **skipped** com motivo explicito.
   Skip nao comprova captura. Falha de inscricao UIA ou perda de invokes gera falha.
 - Validacao humana: executar o controlador, alternar entre as duas janelas,
@@ -42,3 +43,28 @@ em memoria nesta etapa.
 
 Nao utilizar o observador em colaboradores, aplicativos reais ou dados de clientes.
 Os PRs permanecem em rascunho e dependem de revisao/autorizacao para merge.
+
+## Cobertura por framework: nao presumir eventos universais
+
+O ensaio inicial de WinForms .NET 8 recebeu foco, mas zero callbacks Invoke, sem
+erros/descarte no provider. Inspecao do Button.OnClick no codigo publico do
+[WinForms v8.0.0](https://github.com/dotnet/winforms/blob/v8.0.0/src/System.Windows.Forms/src/System/Windows/Forms/Button.cs)
+mostrou notificacoes de propriedades nesse caminho, sem garantia de Invoke.
+Codigo consultado sob MIT apenas para diagnostico; nenhum trecho importado.
+WinForms continua no repositorio para expor essa limitacao. A fixture WPF usa
+controles padrao, sem instrumentacao de captura ou emissao artificial de eventos
+para o observador. Seu ensaio verifica o caminho UIA Invoke quando o provedor o
+oferece. Isso nao demonstra cobertura de cliques de aplicativos WinForms, legados,
+navegadores ou sistemas do escritorio. Nao habilitar hooks globais ou ler Name/
+valores como atalho para completar essa cobertura.
+
+## Persistencia opcional na entrega seguinte
+
+A caixa de gravacao local inicia desmarcada. Se habilitada, aplica limites e
+retencao descritos em [LAB_QUEUE.md](LAB_QUEUE.md); a UI mostra gravados,
+descartados e expurgados e pausa em erro. O modo padrao continua somente memoria.
+
+O teste automatizado do controlador mantem o loop Tk ativo durante os estimulos,
+verifica inicio desativado, pausa com ACK, ausencia de novos eventos aceitos durante
+pausa, escrita assíncrona e encerramento de filhos. Isso ainda nao e o aceite
+humano: siga [VALIDACAO_MANUAL_WINDOWS.md](VALIDACAO_MANUAL_WINDOWS.md).

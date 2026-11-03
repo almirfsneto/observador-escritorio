@@ -1,3 +1,5 @@
+> Estado historico da entrega 1. Roteiro atual: [LAB_PERSISTENTE.md](LAB_PERSISTENTE.md); aceite humano: [VALIDACAO_MANUAL_WINDOWS.md](VALIDACAO_MANUAL_WINDOWS.md).
+
 # Prototipo de laboratorio: estado e retomada
 
 O nucleo `collector.py` aplica allowlist por caminho absoluto do executavel,
