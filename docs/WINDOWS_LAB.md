@@ -21,6 +21,7 @@ python -m unittest discover -s tests -v
 
 CI configurada para Ubuntu e Windows, Python 3.11/3.12. Mocks nao comprovam UIA
 real. O workflow tambem analisa a sintaxe dos scripts no Windows sem coleta.
+As quatro combinacoes passaram no commit `f48b31e`; evidencia em `PROGRESS.md`.
 
 ## Aplicativo ficticio para o proximo teste Windows
 

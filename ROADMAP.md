@@ -5,7 +5,7 @@
 - [x] Esquema de eventos validavel e sem conteudo sensivel por padrao.
 - [x] Banco SQLite com IDs unicos.
 - [x] CLI com dados ficticios e detector simples de padroes.
-- [x] Testes unitarios e workflow CI Linux/Windows (execucao CI a confirmar apos publicacao).
+- [x] Testes unitarios e workflow CI Linux/Windows (4 jobs aprovados no commit f48b31e; evidencia em PROGRESS.md).
 - [ ] Revisao independente do scaffold.
 
 ## Fase 1 - Avaliacao de motores de captura

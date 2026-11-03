@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 2707,
-      "sha256": "55a0c7d621f7892b189f4a306bdcb02b2f31fec08508c2db084c9a06c6c31dc9"
+      "size_bytes": 3370,
+      "sha256": "b78c8f11ca3c31a6511ceb4060550e7bc3b0e8b600b16a66c8cd97e3f908587e"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 2296,
-      "sha256": "17d151bcacad8c3373c55b5544b36925c97f8a4e6326740b3813ae67d8e8dc28"
+      "size_bytes": 2317,
+      "sha256": "ba3d85509faa9939d221825861ca08d83238bdb1be2ea6674dbf5f2bff5a44f3"
     },
     {
       "path": "SECURITY.md",
@@ -95,8 +95,8 @@
     },
     {
       "path": "docs/WINDOWS_LAB.md",
-      "size_bytes": 3001,
-      "sha256": "0e2e96dd5b113e1a8b32352bff3901ef4bc82d78b7ed6c9d21afbd08196fd667"
+      "size_bytes": 3081,
+      "sha256": "7f12b08f2a3be2cb1840cede057671ec88cf902f96a298b28e0b6b92c718d681"
     },
     {
       "path": "pyproject.toml",

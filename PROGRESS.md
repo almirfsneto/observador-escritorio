@@ -39,3 +39,12 @@ runner visivel inicialmente pausado; depois fila limitada/retencao e ensaio UIA
 em Windows. Retomar com leitura de AGENTS/SPEC/SECURITY/ROADMAP/DECISIONS/PROGRESS,
 rodar testes e conferir o PR/CI desta entrega. Nao ha trabalho continuo apos o
 encerramento desta execucao.
+
+**Entrega e evidencia remota:** implementacao no commit
+`f48b31e3bff4506840357969186a9faad4d0ba24`, branch
+`codex/windows-lab-foundation`, [PR #1 em rascunho](https://github.com/almirfsneto/observador-escritorio/pull/1).
+[CI do commit de implementacao](https://github.com/almirfsneto/observador-escritorio/actions/runs/41699535298):
+os quatro jobs Ubuntu/Windows x Python 3.11/3.12 concluiram com sucesso, incluindo
+os 19 testes por job e parsing PowerShell nos jobs Windows. Sao testes de nucleo,
+mocks e sintaxe; nao houve ensaio de captura UIA em desktop Windows interativo.
+Commit posterior desta entrega registra apenas documentacao/evidencias e manifesto.
