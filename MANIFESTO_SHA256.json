@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 12230,
-      "sha256": "4cd2ea2a170e0ce9a7a2eb4f4b50cc4b4f6076dffd7411791d8c29093656d14c"
+      "size_bytes": 12994,
+      "sha256": "ac97e495dced8914336e55b62331d649d505bac14ce2dc30724ee5ddffb56eef"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 20877,
-      "sha256": "1dd73e13f41f688bcfecd2d405b653d3052c9eb3370c8eda13acdb9748b43c31"
+      "size_bytes": 21598,
+      "sha256": "f67562206559a600a36ae249ecb30af03d1b382ded31edce3a5ac6b29a602f03"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -159,6 +159,11 @@
       "sha256": "fc8ba6c52ee4729bc37f5a0aece09258bae4948339f55a9f71e6ab301b3a9562"
     },
     {
+      "path": "docs/TASK_DISCOVERY.md",
+      "size_bytes": 4666,
+      "sha256": "d58deae42643ca856c425ea107decbb644132cd5b62b42d7a564f5dd0407dd22"
+    },
+    {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
       "size_bytes": 6368,
       "sha256": "ef5e84b6a82157f13cea10ed6d76358e66577da4cee833313655a9bb42166d54"
@@ -284,6 +289,11 @@
       "sha256": "8dfb186981c25b4824c735b23ac3f7c7f44e1b78592caf628780f43cec17235c"
     },
     {
+      "path": "src/observador/task_discovery.py",
+      "size_bytes": 11485,
+      "sha256": "0c4bf62b30b0ce7775dc317bbed01d883ad603d2cf7275c532776df377989f2b"
+    },
+    {
       "path": "src/observador/web_events.py",
       "size_bytes": 2887,
       "sha256": "8c181b8f17727dbd62af4b9593368f8bd7839df8141bd73bbf670832ff6481f2"
@@ -387,6 +397,11 @@
       "path": "tests/test_stream.py",
       "size_bytes": 5445,
       "sha256": "bd1d781320862b0d33eb56d308aa2f5917781b0c03392f3c792dc61f5f2dbb80"
+    },
+    {
+      "path": "tests/test_task_discovery.py",
+      "size_bytes": 3301,
+      "sha256": "f8dbf47a8ced140e7e8334094c4b46476c392e7ca569b90b9db2732c00ee670d"
     },
     {
       "path": "tests/test_web_contract.py",

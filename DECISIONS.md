@@ -93,3 +93,8 @@
 ## D-020 - Extensão MV3 local com contrato fechado e estado efêmero
 - **Decisão:** storage.session, origem 127.0.0.1:8765/caminho sintético, permissão só storage, geração por pausa, IDs aleatórios, sem conteúdo e exportação por download local explícito. Event v1 continua compatível; importador específico rejeita payloads fora da projeção.
 - **Limites:** host pattern não limita porta; guardas no worker/content fazem isso. Timestamp é de recepção; unload/suspensão pode perder mensagens. Política unpacked bloqueia execução no executor: não contornar; CI usa Chromium descartável, e Chrome/Edge reais permanecem gate separado.
+
+## D-021 - Mineração por semântica mínima, variantes e cenários explícitos
+- **Decisão:** motor novo paralelo ao legado; normaliza roles/ações sem alvos livres, segmenta sessões/gaps e agrupa edit-distance<=1 com âncoras. Intervalos não sobrepostos por família; famílias são hipóteses alternativas, não totais aditivos. IDs conflitantes são erro.
+- **Inferência:** confiança heurística não probabilística, spans não são trabalho efetivo, retrabalho são sinais, economia é null salvo hipótese explícita. UIA genérico sem significado recebe baixa confiança.
+- **Alternativas:** PrefixSpan MIT e PM4Py AGPL-3.0 consultados e não incorporados; auditoria transitiva/benchmark pendentes. Limites e evidências em docs/TASK_DISCOVERY.md.

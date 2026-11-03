@@ -299,3 +299,14 @@ tabela/navegação e teste real Playwright. Política Chromium deste executor im
 unpacked; não foi contornada nem reportada como teste aprovado. Job CI real
 Chromium separado adicionado; resultado remoto ainda pendente. Testes unitários
 não substituem carregamento real nem aceite Chrome/Edge Windows.
+
+## Execução intensiva — descoberta de microtarefas
+
+Branch codex/task-discovery sobre extensão experimental. Motor paralelo ao legado,
+com segmentação/gaps, normalização sem IDs/alvos, variantes, contagem sem overlap,
+confiança heurística e cenários explícitos de economia. Corpus administrativo
+fictício: 36 eventos/oito rotinas/três variantes, família principal com oito
+ocorrências; legado no mesmo corpus não ligava IDs entre sessões. Relatório fora
+Git sem dados individuais. Comparadas licenças/capacidades PrefixSpan/PM4Py, sem
+adotar dependências. Linux: 91 descobertos, 80 executados, 11 testes específicos
+ignorados; testes de mineração aprovados. Evidência CI desta branch pendente.
