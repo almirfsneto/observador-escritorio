@@ -75,6 +75,13 @@ class StreamTest(unittest.TestCase):
         self.event(timestamp_utc=None)
         self.assertTrue(self.stream.stopped)
 
+    def test_bounded_windows_clock_resolution_tolerance(self):
+        self.event(timestamp_utc=(self.now + timedelta(milliseconds=15)).isoformat())
+        self.assertEqual(len(self.stream.drain()), 1)
+        self.event(2, timestamp_utc=(self.now + timedelta(seconds=1)).isoformat())
+        self.assertTrue(self.stream.stopped)
+        self.assertEqual(self.stream.protocol_failure, 'timestamp')
+
     def test_reordered_sequence_fails_closed_and_gap_reported(self):
         self.event(1)
         self.event(4)

@@ -144,5 +144,11 @@ class NativeSession:
         self.reader.join(timeout=1)
         self.writer.join(timeout=1)
         if not self.process.stdin.closed:
-            self.process.stdin.close()
-        self.process.stdout.close()
+            try:
+                self.process.stdin.close()
+            except OSError:
+                pass  # Windows can report EINVAL while flushing a pipe whose child exited.
+        try:
+            self.process.stdout.close()
+        except OSError:
+            pass

@@ -155,8 +155,8 @@
     },
     {
       "path": "src/observador/native_session.py",
-      "size_bytes": 5714,
-      "sha256": "946222d6fe0e7a90b1f56be2cb5eceb4696ab1c9257c7b345d8ba20663088041"
+      "size_bytes": 5913,
+      "sha256": "9bc73f4aad1afddc5a2931934f8bf64d99e8929f1de5738f6a8aba004be9da15"
     },
     {
       "path": "src/observador/sample.py",
@@ -170,8 +170,8 @@
     },
     {
       "path": "src/observador/stream.py",
-      "size_bytes": 6136,
-      "sha256": "cf05fce7d52c1b36ad4f0e500174acca86e1e7125d63db7798c20bd832203911"
+      "size_bytes": 6622,
+      "sha256": "3cd5c6df4a3b19ceaf7e1b3094decde103dd7ad0ffa54a6f74df78b1d4bd8436"
     },
     {
       "path": "src/observador/windows.py",
@@ -220,13 +220,13 @@
     },
     {
       "path": "tests/test_stream.py",
-      "size_bytes": 3932,
-      "sha256": "7665acd783e741d0a64d1dc6f79e5d6a9413735cf122a5a7820a2b87aa7dc6b5"
+      "size_bytes": 4332,
+      "sha256": "3be36159712030638b9a12f2e9ee443fddbef139ef5e433df04048677bb0ae2f"
     },
     {
       "path": "tests/test_windows_desktop.py",
-      "size_bytes": 3081,
-      "sha256": "43cc23f9fbad4040caaa4a7b5425192546eceb30563893be3522ceb09b1c0bbb"
+      "size_bytes": 3387,
+      "sha256": "849d654eb0b40321d5e24f19ef01b10d47289123faaa65653469e476555c8033"
     },
     {
       "path": "tools/SyntheticTaskApp/Program.cs",

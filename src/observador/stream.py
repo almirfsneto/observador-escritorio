@@ -1,6 +1,6 @@
 """Bounded, generation-aware laboratory event stream. No raw UI data accepted."""
 from collections import deque
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import json
 import re
 import threading
@@ -34,6 +34,8 @@ class LabStream:
         self.started_at = utc(clock())
         self.last_received = monotonic()
         self.last_focus = None
+        self.protocol_failure = None
+        self.validation_stage = 'shape'
 
     def alive(self):
         if utc(self.clock()) >= self.expires_at or self.monotonic() >= self.deadline:
@@ -64,6 +66,7 @@ class LabStream:
             if not self.alive():
                 return
             try:
+                self.validation_stage = 'shape'
                 if len(line) > 4096:
                     raise ValueError()
                 data = json.loads(line)
@@ -94,6 +97,7 @@ class LabStream:
                 self.last_received = self.monotonic()
             except (ValueError, TypeError, KeyError, OverflowError):
                 self.invalid += 1
+                self.protocol_failure = self.validation_stage
                 self.stop('protocol_error')
 
     def _event(self, data):
@@ -106,11 +110,15 @@ class LabStream:
                 or not isinstance(data['control_id'], str)
                 or not re.fullmatch('[a-f0-9]{16}', data['control_id'])):
             raise ValueError()
+        self.validation_stage = 'timestamp'
         stamp = utc(datetime.fromisoformat(data['timestamp_utc'].replace('Z', '+00:00')))
-        if not self.started_at <= stamp <= utc(self.clock()) or stamp >= self.expires_at:
+        # Windows runtimes can expose clocks with different resolutions. Local
+        # receipt/monotonic time still enforce expiry; never accept unbounded future dates.
+        if not self.started_at <= stamp <= utc(self.clock()) + timedelta(milliseconds=100) or stamp >= self.expires_at:
             raise ValueError()
         if not self.ready or not self.enabled or data['generation'] != self.generation:
             return  # Paused and superseded generations never reach the timeline.
+        self.validation_stage = 'sequence'
         if data['sequence'] <= self.last_sequence:
             raise ValueError()
         if self.last_sequence:
