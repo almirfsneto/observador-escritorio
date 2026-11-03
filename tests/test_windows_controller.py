@@ -88,7 +88,10 @@ class ControllerAutomationTest(unittest.TestCase):
                 self.assertEqual(window.sink.discarded, 0)
                 store = LabEventQueue(database)
                 try:
-                    self.assertEqual(len(store.list_events()), window.sink.written)
+                    saved = store.list_events()
+                    self.assertEqual(len(saved), window.sink.written)
+                    self.assertEqual(sum(event.action == 'invoke' for event in saved), 30,
+                                     'All thirty actions must survive the visible UI and async writer')
                 finally:
                     store.close()
                 print('SYNTHETIC_CONTROLLER_COUNTS', json.dumps({

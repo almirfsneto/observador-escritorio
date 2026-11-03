@@ -114,6 +114,11 @@
       "sha256": "ff6b26a0efd7d842a20e660e703f4b784943e405413883e701230f8ceb1cc40a"
     },
     {
+      "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
+      "size_bytes": 3371,
+      "sha256": "621d1142d72a1416ac63dafce2888c57258eb036229b1684b9a63621dfa7e326"
+    },
+    {
       "path": "docs/WINDOWS_LAB.md",
       "size_bytes": 3081,
       "sha256": "7f12b08f2a3be2cb1840cede057671ec88cf902f96a298b28e0b6b92c718d681"
@@ -240,8 +245,8 @@
     },
     {
       "path": "tests/test_windows_controller.py",
-      "size_bytes": 5393,
-      "sha256": "cfb41000880e14b578cffdd98100ed52ce7c92e2510f7f96528986afc731bbcd"
+      "size_bytes": 5622,
+      "sha256": "17da731a615205ebf933865e75a849f4f091e79e13bdb08569638bf58fe65b95"
     },
     {
       "path": "tests/test_windows_desktop.py",
