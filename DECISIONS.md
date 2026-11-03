@@ -79,3 +79,8 @@
 - **Decisão:** invalidar o PASSOU anterior antes de cada nova execução automática; timeout/erro deixa FALHOU com contagens desconhecidas. Timeout encerra apenas o comando próprio e permite nova tentativa, enquanto fechamento do assistente cancela permanentemente o runner.
 - **Evidência:** teste regressivo cobre sucesso anterior seguido de interrupção e tentativa após timeout; integração aguarda o ACK também ser registrado pelo loop Tk antes de consultar a métrica.
 - **Motivo:** a primeira CI desta entrega encontrou uma corrida no teste de pausa, que consultava o contador antes do tick da instrumentação; receber o ACK no stream e observar sua medida no controlador são instantes distintos. Nenhum teste automático promove aceite humano.
+
+## D-018 - Reserva de journal e permissões do armazenamento sintético
+- **Decisão:** manter schema legado, DELETE/FULL, sem spill de cache, admissão por bytes de todo diretório dedicado e reserva conservadora de rollback. Rejeitar links e corrupção; não redefinir banco automaticamente. Contar descarte após shutdown e preservar contagem de commits.
+- **Limite:** não é quota do filesystem/volume nem barreira contra administrador/escritor concorrente externo. A medição é discreta; limites físicos exigem VFS/volume revisado.
+- **Windows:** DACL protegida somente usuário atual e SYSTEM antes de dados; falha fecha a fila. DPAPI só em arquivo experimental exportado, escopo usuário e sem UI; SQLite ativo permanece em claro. Alternativas e riscos em QUESTOES_ARQUITETURA_PRO.md.

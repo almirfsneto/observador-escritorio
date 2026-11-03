@@ -266,3 +266,27 @@ aguardar também a expiração de 15 minutos, encerrar e salvar o JSON sanitizad
 fora de Git. Revisão humana desses relatórios continua obrigatória; sem piloto,
 dados reais, instalação na equipe, deploy ou integração dos PRs. As limitações
 de amostragem, UIA, rede não auditada e ACL/cifragem/cota total permanecem.
+
+## Execução intensiva — armazenamento — 2026-11-03
+
+Base obrigatória PR6, head 3d4a770; baseline Linux reproduzido: 76 descobertos,
+68 executados, oito Windows skipped. Branch nova codex/storage-reliability.
+Implementados orçamento agregado/reserva para journal, free-space headroom,
+cache sem spill, batch direto limitado, quick_check, DACL Windows e proteção de
+links, contagem explícita de submissão após shutdown e corrupção preservada.
+Protótipo DPAPI de arquivo sintético exportado, não de SQLite cifrado. Testes
+novos cobrem auxiliares, disco indisponível, read-only, corrupção, queda com
+rollback e permissões/DPAPI nativos no Windows. Evidência remota pendente.
+Detalhes e limites: docs/STORAGE_HARDENING.md. Validador e schema de aceite v1
+preservados; nenhum dado real, instalação na equipe, deploy ou merge.
+
+### Evidência do endurecimento do armazenamento
+
+PR #7: CI 41741273177 no código 7bd09ff, quatro jobs aprovados Linux/Windows
+Python 3.11/3.12. Windows: 83 descobertos/82 executados, um symlink ignorado;
+Linux: 74 executados/nove Windows ignorados. DACL verificada por trustees numéricos
+(não aliases SDDL), DPAPI real roundtrip/tamper, recuperação de rollback, filas e
+validador anterior aprovados. Revisão adicional passa a tentar symlink Windows
+em vez de presumir falta de privilégio e recusa WAL/SHM legado sem checkpoint ou
+remoção. Testes dessa revisão serão confirmados na CI subsequente. O SQLite ativo
+continua em claro; não há quota física de volume nem aceite humano.

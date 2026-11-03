@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 10093,
-      "sha256": "b7a52799be6f63447c10365773ef2fa0440c6fb52373960a4a044b3385f5bbc5"
+      "size_bytes": 10892,
+      "sha256": "1d0a36678d392fce3173def180058f8d4f355de3da416783969818f24870c3e1"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 18787,
-      "sha256": "51abf1eac37e37377b5a906cccc28f20677567f14ab891ccc1bd3228e2e4219f"
+      "size_bytes": 20329,
+      "sha256": "8f2984e773096f6617e5d688e8f92511f48bda41492bcc6d01e66cf0df496386"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -114,6 +114,11 @@
       "sha256": "0e1604a195d538758d9b4edf8cbac9da54159c26166dede1b007e953a1db55e1"
     },
     {
+      "path": "docs/QUESTOES_ARQUITETURA_PRO.md",
+      "size_bytes": 1386,
+      "sha256": "61e36495e139a82c6398e45930d11860ba2f941ba2c769a2f83b7430436d5dce"
+    },
+    {
       "path": "docs/RESUMO_ENTREGA.md",
       "size_bytes": 766,
       "sha256": "57d0de53587bcec7657ce0ca2880abbe8693904974252b9e792a3ee4dd3a80c9"
@@ -122,6 +127,11 @@
       "path": "docs/REVIEW_PRS_1_2.md",
       "size_bytes": 3537,
       "sha256": "ff6b26a0efd7d842a20e660e703f4b784943e405413883e701230f8ceb1cc40a"
+    },
+    {
+      "path": "docs/STORAGE_HARDENING.md",
+      "size_bytes": 3783,
+      "sha256": "3ed28eaa298c135d6ea5e13d44b0554e7820bd6ed79c605d0b7b4ef414ff3b1d"
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
@@ -184,6 +194,11 @@
       "sha256": "8db33b47fb6af90796fdaf28ab5299173669dce712cec843f64184c794302de1"
     },
     {
+      "path": "src/observador/dpapi_archive.py",
+      "size_bytes": 4895,
+      "sha256": "2bae0dcfd4cb57cba5923a7ce3f52591705608590fd755cfda93f9abca941abe"
+    },
+    {
       "path": "src/observador/events.py",
       "size_bytes": 3421,
       "sha256": "0e91e61b0ffe2c9b566ccb15cc143338d69b11b470d04338315de8795bfd7fce"
@@ -195,8 +210,8 @@
     },
     {
       "path": "src/observador/lab_queue.py",
-      "size_bytes": 7837,
-      "sha256": "22066a809283dc52bc5950716c717238d7872ea6fa3115875f04a39674f8e8de"
+      "size_bytes": 9609,
+      "sha256": "0015f240503ebed93402faaef855b3e94005f53e1e3819a2460fe49c11c9384a"
     },
     {
       "path": "src/observador/lab_session.py",
@@ -209,9 +224,19 @@
       "sha256": "807397dbac7fa82ef726d01de6560743d26b2efe53cc7b2605bed41b63705c71"
     },
     {
+      "path": "src/observador/private_directory.py",
+      "size_bytes": 6443,
+      "sha256": "e5509b8d22792a68dada9334934e555d0e130544c95c3cee0c517f3f77037867"
+    },
+    {
       "path": "src/observador/sample.py",
       "size_bytes": 1392,
       "sha256": "7e705a4bc195fc634b81abe930f629cbaaa27b367879c126bd78ea9c2e22359c"
+    },
+    {
+      "path": "src/observador/storage_budget.py",
+      "size_bytes": 1842,
+      "sha256": "d516a52766e717993ccd480d6a2650b4ca5d2a415ef6d4eeb87cc26f61bc9484"
     },
     {
       "path": "src/observador/store.py",
@@ -292,6 +317,11 @@
       "path": "tests/test_native_windows.py",
       "size_bytes": 4992,
       "sha256": "15f809986cd99ea61dd3e2f6c40e200a03cf52798c146d8c6f9d162744efab36"
+    },
+    {
+      "path": "tests/test_storage_hardening.py",
+      "size_bytes": 7761,
+      "sha256": "5f9fe26719138caf005a1e7df89aa417bc90489e2bcc5651961f4cdd02de102d"
     },
     {
       "path": "tests/test_store.py",

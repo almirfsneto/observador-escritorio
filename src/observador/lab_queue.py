@@ -1,8 +1,4 @@
-"""Local synthetic-event queue: explicit opt-in, retention and bounded SQLite file.
-
-The cap covers the main DB. Rollback journals and the filesystem require free-space
-headroom; this is not a whole-disk quota or encryption facility.
-"""
+"""Synthetic queue with bounded main DB, auxiliary budget and explicit losses."""
 from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
@@ -13,47 +9,73 @@ import threading
 
 from .collector import utc
 from .store import EventStore
+from .store import DDL
+from .private_directory import reject_links, secure_directory, secure_file
+from .storage_budget import StorageBudget
 
 
 class LabEventQueue(EventStore):
     def __init__(self, path, *, max_db_bytes=4 * 1024 * 1024, max_events=10000,
-                 retention=timedelta(hours=1), clock=lambda: datetime.now(timezone.utc)):
+                 retention=timedelta(hours=1), clock=lambda: datetime.now(timezone.utc),
+                 max_total_bytes=None, min_free_bytes=1024*1024):
         if max_db_bytes < 65536 or max_events < 1 or not timedelta(0) < retention <= timedelta(days=1):
             raise ValueError('invalid laboratory retention or quota')
         self.clock, self.retention, self.max_events = clock, retention, max_events
         self.rejected = self.purged = 0
         self.health = 'ready'
-        path = Path(path)
+        path = Path(path).absolute()
         if path.is_symlink() or path.parent.is_symlink() or (path.exists() and path.stat().st_size > max_db_bytes):
             raise ValueError('existing queue exceeds quota or is a symlink')
-        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        super().__init__(path)
+        reject_links(path)
+        secure_directory(path.parent)
+        self.path = path
+        self.budget = StorageBudget(path, max_db_bytes, max_total_bytes, min_free_bytes)
+        self.budget.check()
+        if any(path.with_name(path.name+suffix).exists() for suffix in ('-wal','-shm')):
+            raise OSError('unsupported_existing_wal_queue')
+        # Repair permissions on pre-existing journals before SQLite crash recovery.
+        for entry in path.parent.iterdir():
+            secure_file(entry)
+        self.conn = sqlite3.connect(path, timeout=.05)
         try:
-            path.chmod(0o600)
+            secure_file(path)
             self.conn.execute('PRAGMA busy_timeout=50')
             # Do not retain deleted values in SQLite free pages. Does not promise SSD erasure.
             self.conn.execute('PRAGMA secure_delete=ON')
-            self.conn.execute('PRAGMA journal_mode=DELETE')
+            mode = self.conn.execute('PRAGMA journal_mode=DELETE').fetchone()[0]
+            if mode != 'delete':
+                raise ValueError('unsupported_queue_journal')
+            self.conn.execute('PRAGMA synchronous=FULL')
+            self.conn.execute('PRAGMA temp_store=MEMORY')
+            self.conn.execute('PRAGMA cache_spill=OFF')
+            self.conn.execute('PRAGMA cache_size=-2048')
+            if self.conn.execute('PRAGMA quick_check').fetchone()[0] != 'ok':
+                raise ValueError('queue_corrupt')
             page_size = self.conn.execute('PRAGMA page_size').fetchone()[0]
             pages = max_db_bytes // page_size
             actual = self.conn.execute(f'PRAGMA max_page_count={pages}').fetchone()[0]
             if actual > pages:
                 raise ValueError('existing queue exceeds page quota')
+            self.conn.executescript(DDL)
             self.purge()
         except Exception:
             self.close()
             raise
 
     def purge(self):
+        self.budget.check()
         cutoff = (utc(self.clock()) - self.retention).isoformat()
         with self.conn:
             cursor = self.conn.execute('DELETE FROM events WHERE julianday(timestamp_utc) < julianday(?)', (cutoff,))
-            self.purged += cursor.rowcount
+            deleted = cursor.rowcount
             extra = max(0, self.conn.execute('SELECT COUNT(*) FROM events').fetchone()[0] - self.max_events)
             if extra:
                 cursor = self.conn.execute('DELETE FROM events WHERE event_id IN '
                                            '(SELECT event_id FROM events ORDER BY timestamp_utc, event_id LIMIT ?)', (extra,))
-                self.purged += cursor.rowcount
+                deleted += cursor.rowcount
+            self.budget.check(reserve=False)
+        self.purged += deleted
+        self.budget.check(reserve=False)
         return self.purged
 
     def append_batch(self, events):
@@ -61,6 +83,8 @@ class LabEventQueue(EventStore):
         now = utc(self.clock())
         rows = []
         for event in events:
+            if len(rows) >= 100:
+                raise ValueError('queue_batch_limit')
             event.validate()
             when = datetime.fromisoformat(event.timestamp_utc.replace('Z', '+00:00'))
             if (event.app != 'synthetic-app' or event.metadata.get('category') != 'laboratory'
@@ -87,13 +111,20 @@ class LabEventQueue(EventStore):
                 if extra:
                     self.conn.execute('DELETE FROM events WHERE event_id IN '
                                       '(SELECT event_id FROM events ORDER BY timestamp_utc,event_id LIMIT ?)', (extra,))
+                self.budget.check(reserve=False)
             self.purged += extra
+            inserted = self.conn.total_changes - before - extra
             self.health = 'ready'
-            return self.conn.total_changes - before - extra
-        except sqlite3.OperationalError as error:
+            try:
+                self.budget.check(reserve=False)
+            except OSError:
+                self.health = 'storage_unavailable'  # Already committed: never count these as lost.
+            return inserted
+        except (sqlite3.Error, OSError) as error:
             # SQLite may return BUSY or FULL; do not copy exception text into health logs.
             self.rejected += len(rows)
-            code = getattr(error, 'sqlite_errorcode', None)
+            code = getattr(error, 'sqlite_errorcode', 0) or 0
+            code &= 0xff
             self.health = 'quota_full' if code == sqlite3.SQLITE_FULL else 'storage_unavailable'
             return 0
 
@@ -117,7 +148,10 @@ class AsyncLabQueue:
 
     def submit(self, events):
         with self.lock:
-            if not events or self.shutdown.is_set():
+            if not events:
+                return
+            if self.shutdown.is_set():
+                self.discarded += len(events)
                 return
             if len(events) > 100:
                 self.discarded += len(events)
@@ -159,7 +193,10 @@ class AsyncLabQueue:
             # No exception text or user payload is retained.
         finally:
             if store:
-                store.close()
+                try:
+                    store.close()
+                except sqlite3.Error:
+                    self.health = 'storage_unavailable'
 
     def close(self):
         with self.lock:
