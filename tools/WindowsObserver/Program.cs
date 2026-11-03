@@ -53,6 +53,12 @@ internal sealed class Observer : IDisposable
         }
         root = AutomationElement.FromHandle(target.MainWindowHandle);
         if (root is null) throw new InvalidOperationException();
+        var cache = new CacheRequest { AutomationElementMode = AutomationElementMode.None };
+        cache.Add(AutomationElement.ProcessIdProperty);
+        cache.Add(AutomationElement.IsPasswordProperty);
+        cache.Add(AutomationElement.ControlTypeProperty);
+        cache.Add(AutomationElement.RuntimeIdProperty);
+        using var cachedEvents = cache.Activate();
         Automation.AddAutomationFocusChangedEventHandler(focusHandler);
         Automation.AddAutomationEventHandler(InvokePattern.InvokedEvent, root, TreeScope.Subtree, invokeHandler);
         Automation.AddAutomationPropertyChangedEventHandler(root, TreeScope.Subtree, toggleHandler,
@@ -100,17 +106,19 @@ internal sealed class Observer : IDisposable
             else Interlocked.Increment(ref toggleSeen);
             if (sender is not AutomationElement element) return;
             // Filter the process before requesting any control properties.
-            if ((int)element.GetCurrentPropertyValue(AutomationElement.ProcessIdProperty) != target.Id) {
+            if ((int)element.GetCachedPropertyValue(AutomationElement.ProcessIdProperty) != target.Id) {
                 Interlocked.Increment(ref excluded); return;
             }
             GetWindowThreadProcessId(GetForegroundWindow(), out uint foreground);
             if (foreground != target.Id) { Interlocked.Increment(ref excluded); return; }
-            var password = element.GetCurrentPropertyValue(AutomationElement.IsPasswordProperty);
+            var password = element.GetCachedPropertyValue(AutomationElement.IsPasswordProperty);
             if (password is not bool secret || secret) { Interlocked.Increment(ref excluded); return; }
-            var type = element.GetCurrentPropertyValue(AutomationElement.ControlTypeProperty) as ControlType;
+            var type = element.GetCachedPropertyValue(AutomationElement.ControlTypeProperty) as ControlType;
             if (type is null) return;
             // Runtime IDs contain provider integers, not control text. Salt prevents cross-session linkage.
-            var runtime = Encoding.UTF8.GetBytes(string.Join(",", element.GetRuntimeId()));
+            var runtimeIds = element.GetCachedPropertyValue(AutomationElement.RuntimeIdProperty) as int[];
+            if (runtimeIds is null) { Interlocked.Increment(ref excluded); return; }
+            var runtime = Encoding.UTF8.GetBytes(string.Join(",", runtimeIds));
             var id = Convert.ToHexString(SHA256.HashData(salt.Concat(runtime).ToArray()))[..16].ToLowerInvariant();
             lock (gate)
             {

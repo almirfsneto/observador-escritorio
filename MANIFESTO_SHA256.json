@@ -5,8 +5,8 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 1528,
-      "sha256": "bd851ff07c8aeb899362eab14bc2a1d7883955c506bfe6ec879a499e729e32eb"
+      "size_bytes": 1580,
+      "sha256": "bd5bf33c66b99232f126b088a4bcddc948867b83e29de9edd7670917c558e8a3"
     },
     {
       "path": ".gitignore",
@@ -250,8 +250,8 @@
     },
     {
       "path": "tools/WindowsObserver/Program.cs",
-      "size_bytes": 10559,
-      "sha256": "0912de2ce8681d58452cc9a98e6411d6d4d22539af68e6c1c61f628ecb394c96"
+      "size_bytes": 11107,
+      "sha256": "05518d3b5df1c8acffb5c5821f705ff3f5962aea5533ba7867ad2009fc80afd8"
     },
     {
       "path": "tools/WindowsObserver/WindowsObserver.csproj",
