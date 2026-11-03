@@ -128,7 +128,7 @@ class CommandRunner:
             process.wait(timeout=timeout)
             return process.returncode, ''.join(chunks) if not reader.is_alive() else self._finish_output(reader, chunks)
         except subprocess.TimeoutExpired:
-            self.cancel()
+            self._terminate()
             raise PreparationError('command_timeout') from None
         finally:
             with self.lock:
@@ -147,6 +147,9 @@ class CommandRunner:
 
     def cancel(self):
         self.cancelled.set()
+        self._terminate()
+
+    def _terminate(self):
         with self.lock:
             if self.job:
                 self.job.close()  # Only this command's owned job and descendants.
@@ -159,7 +162,9 @@ def parse_tests(code, output):
     failed = re.findall(r'failures=(\d+)', output)
     errors = re.findall(r'errors=(\d+)', output)
     skipped = re.findall(r'skipped=(\d+)', output)
-    return {'status': 'PASSOU' if code == 0 and matches else 'FALHOU',
+    proven = (code == 0 and matches and int(matches[-1]) > 0
+              and not any(int(count) for count in failed + errors))
+    return {'status': 'PASSOU' if proven else 'FALHOU',
             'discovered': int(matches[-1]) if matches else None,
             'skipped': int(skipped[-1]) if skipped else 0,
             'failures': int(failed[-1]) if failed else 0,
@@ -236,6 +241,8 @@ class Preparation:
     def run_tests(self, notify=lambda _: None):
         if not self.ready:
             raise PreparationError('preparation_required')
+        self.report['automated_tests'] = {'status': 'FALHOU', 'discovered': None,
+                                        'skipped': None, 'failures': None, 'errors': None}
         notify('Testes automáticos: podem abrir apenas as fixtures e o observador fictício. Não são aceite humano.')
         environment_source = str(self.root / 'src')
         # -c sets only the source import directory, without pip or dependency installation.

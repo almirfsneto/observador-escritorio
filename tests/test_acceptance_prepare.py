@@ -17,6 +17,33 @@ class PreparationTest(unittest.TestCase):
         self.assertNotIn('Alice', str(result))
         self.assertEqual(parse_tests(1, 'secret error')['status'], 'FALHOU')
         self.assertEqual(parse_tests(0, 'unproven')['status'], 'FALHOU')
+        self.assertEqual(parse_tests(0, 'Ran 0 tests in 0.0s')['status'], 'FALHOU')
+        self.assertEqual(parse_tests(0, 'Ran 2 tests in 0.1s\nFAILED (errors=1)')['status'], 'FALHOU')
+
+    def test_interrupted_rerun_invalidates_previous_success(self):
+        class Runner:
+            def run(self, *args, **kwargs):
+                raise PreparationError('command_timeout')
+        report = new_report()
+        report['automated_tests'] = parse_tests(0, 'Ran 2 tests in 0.1s\nOK')
+        prep = Preparation('.', report, runner=Runner())
+        prep.ready = True
+        with self.assertRaises(PreparationError):
+            prep.run_tests()
+        self.assertEqual(report['automated_tests']['status'], 'FALHOU')
+        self.assertIsNone(report['automated_tests']['discovered'])
+        finalize_report(report)
+
+    def test_timeout_stops_owned_command_but_allows_retry(self):
+        runner = CommandRunner()
+        with self.assertRaisesRegex(PreparationError, 'command_timeout'):
+            runner.run([sys.executable, '-c', 'import time;time.sleep(30)'], cwd=Path.cwd(), timeout=.2)
+        self.assertIsNone(runner.current)
+        code, output = runner.run([sys.executable, '-c', 'print(42)'], cwd=Path.cwd(), timeout=10)
+        self.assertEqual((code, output.strip()), (0, '42'))
+        runner.cancel()
+        with self.assertRaisesRegex(PreparationError, 'preparation_cancelled'):
+            runner.run([sys.executable, '-c', 'print(42)'], cwd=Path.cwd(), timeout=10)
 
     def test_offline_build_pins_sdk_and_hashes_code_assemblies_not_just_apphost(self):
         class Runner:
@@ -69,4 +96,7 @@ class PreparationTest(unittest.TestCase):
         code, output = runner.run([sys.executable, '-c', script], cwd=Path.cwd(), timeout=10)
         self.assertEqual(code, 0)
         self.assertLessEqual(len(output), 32 * 4096)
+        code, output = runner.run([sys.executable, '-c', "import os;print(os.environ['DOTNET_CLI_TELEMETRY_OPTOUT'])"],
+                                  cwd=Path.cwd(), timeout=10)
+        self.assertEqual((code, output.strip()), (0, '1'))
         runner.cancel()

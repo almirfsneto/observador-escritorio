@@ -155,13 +155,13 @@
     },
     {
       "path": "src/observador/acceptance_prepare.py",
-      "size_bytes": 11934,
-      "sha256": "4c0ae6b26448e6e6fc15fc3207b9061ae625963e08a92f0f5dd56ef9ae2b0a09"
+      "size_bytes": 12278,
+      "sha256": "6b1e649e05b8b67db5191bf1d29020db777a139d4b11591f4080b8026ac3b7c4"
     },
     {
       "path": "src/observador/acceptance_report.py",
-      "size_bytes": 13009,
-      "sha256": "977559222e82aa4df5a7f346143ae1216616e49fbd8c308ac4e39dd2688bba21"
+      "size_bytes": 13036,
+      "sha256": "6f649a231a9e9b239623c552bd06db8a2ab31ca350a0647adfd2029ec9f400e1"
     },
     {
       "path": "src/observador/acceptance_session.py",
@@ -240,8 +240,8 @@
     },
     {
       "path": "tests/test_acceptance_prepare.py",
-      "size_bytes": 3680,
-      "sha256": "6e869145b926302a101b6584da510627fd199458a2662be9439e2ea16b5479e9"
+      "size_bytes": 5412,
+      "sha256": "aa76182dd3f17547106de700154b9a91503c9d237472084d80f6106f55e86ae8"
     },
     {
       "path": "tests/test_acceptance_report.py",
@@ -250,8 +250,8 @@
     },
     {
       "path": "tests/test_acceptance_windows.py",
-      "size_bytes": 4898,
-      "sha256": "4eea2c3d2b3030601cf9c4dc26c7281fd1261814e8b53875002ebb7d72b78549"
+      "size_bytes": 5224,
+      "sha256": "c95f76958555c61b40755e9feb00fa4346cd3cca6d8f0ca6363432c78ad437b1"
     },
     {
       "path": "tests/test_cli.py",

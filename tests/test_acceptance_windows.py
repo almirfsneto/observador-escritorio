@@ -57,11 +57,15 @@ class WindowsAcceptanceTest(unittest.TestCase):
                 if not prepare_foreground(lab.fixture, tick=wizard.root.update):
                     self.skipTest('Hosted foreground unavailable; manual Windows 10/11 trial still required')
                 lab.start_btn.invoke()
-                pump(lambda: lab.session and lab.session.stream.health == 'active')
+                pump(lambda: lab.session and lab.session.stream.health == 'active'
+                     and lab.recorder.data['metrics']['start_to_active_ack_ms'] is not None)
                 lab.secondary_btn.invoke()
                 self.assertIsNotNone(lab.secondary)
                 lab.pause_btn.invoke()
-                pump(lambda: lab.session.stream.health == 'paused')
+                pump(lambda: lab.session.stream.health == 'paused'
+                     and lab.recorder.data['metrics']['pause_ack_samples'] >= 1)
+                pump(lambda: all(metric['samples'] > 0 for metric in
+                                lab.recorder.data['metrics']['processes'].values()))
                 self.assertGreaterEqual(lab.recorder.data['metrics']['pause_ack_samples'], 1)
                 lab.stop_btn.invoke()
                 pump(lambda: lab.cleanup and not lab.cleanup.is_alive())
