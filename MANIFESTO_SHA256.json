@@ -1,17 +1,17 @@
 {
-  "package": "OBSERVADOR_ESCRITORIO_CODEX_V0_1_RECRIADO",
+  "package": "OBSERVADOR_ESCRITORIO_LAB_FOUNDATION",
   "date": "2026-11-03",
-  "note": "Pacote novo reconstruido; nao e o mesmo arquivo binario da entrega anterior",
+  "note": "Snapshot de fontes e documentacao, sem dados de captura; nao inclui o proprio manifesto. Nao comprova validacao Windows.",
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 525,
-      "sha256": "3e2cabf3825b81429ab6452dbdc813885a4daa1ea1901f6832980409f69d7958"
+      "size_bytes": 974,
+      "sha256": "deb3f8d30c02df944e066a45d93813c7b761550d55da8081659c60a9fa5e8878"
     },
     {
       "path": ".gitignore",
-      "size_bytes": 140,
-      "sha256": "c320b58101ca2ac166e9667a79f728d56a34dc7430b5e767fd70db48253a82c7"
+      "size_bytes": 64,
+      "sha256": "13d5f6c2a1a2b74b710553b34896795982d7c594da1e63ee9a762fa7c6f213b6"
     },
     {
       "path": "AGENTS.md",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 876,
-      "sha256": "44b5db6c3ae9385313e12672dcbb58b697c9841d30d339217c3ae70fa052d0ac"
+      "size_bytes": 2432,
+      "sha256": "9acf04813872faf30793846520652cf280112589d24638fb7191d7efe57b8703"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 657,
-      "sha256": "5e8df491021d76df3c51821aa0efed3890fcbeb06e2945a00e8d80cd18573b21"
+      "size_bytes": 3370,
+      "sha256": "b78c8f11ca3c31a6511ceb4060550e7bc3b0e8b600b16a66c8cd97e3f908587e"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -35,13 +35,13 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 2459,
-      "sha256": "b53ea77e461bf68641bd3eb1ccc1a8b5b8ca2cd847b38ccf3d6b3a0e9916566d"
+      "size_bytes": 2857,
+      "sha256": "5cab1ee24a254ce86e0423dd5c52af7fa4106001970ac8c7a0200a485be487be"
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 1914,
-      "sha256": "4ab7b2b1769cf3ace1b467aa7f1082ae9bc1e39785a102e62bdbe68a4ac4a8a1"
+      "size_bytes": 2317,
+      "sha256": "ba3d85509faa9939d221825861ca08d83238bdb1be2ea6674dbf5f2bff5a44f3"
     },
     {
       "path": "SECURITY.md",
@@ -57,6 +57,11 @@
       "path": "docs/ARQUITETURA.md",
       "size_bytes": 1489,
       "sha256": "84543d673c2b94bbd3e031e4653730bcd08bf9ea46f252f4d0f2c0d79164e241"
+    },
+    {
+      "path": "docs/CAPTURE_ENGINE_REVIEW.md",
+      "size_bytes": 3446,
+      "sha256": "c57af98d56c2bc5e620011f0b7a875095b40ab133924d3d8237e0aedfde1c733"
     },
     {
       "path": "docs/COMO_INICIAR_EM_10_MINUTOS.md",
@@ -89,9 +94,14 @@
       "sha256": "57d0de53587bcec7657ce0ca2880abbe8693904974252b9e792a3ee4dd3a80c9"
     },
     {
+      "path": "docs/WINDOWS_LAB.md",
+      "size_bytes": 3081,
+      "sha256": "7f12b08f2a3be2cb1840cede057671ec88cf902f96a298b28e0b6b92c718d681"
+    },
+    {
       "path": "pyproject.toml",
-      "size_bytes": 351,
-      "sha256": "44691a3210aaf3272ad95dbb477bfdf03a5330a57cd7c9831ef7c49381c2ba0e"
+      "size_bytes": 406,
+      "sha256": "06577b558755bd3e02cd44e281edb99e7c56576a262aa07857428421878b76c0"
     },
     {
       "path": "src/observador/__init__.py",
@@ -102,6 +112,11 @@
       "path": "src/observador/__main__.py",
       "size_bytes": 1680,
       "sha256": "d6aebba822c2803c558dea28edd0267af737cb1bd8b892a857ac94c89c263d83"
+    },
+    {
+      "path": "src/observador/collector.py",
+      "size_bytes": 5574,
+      "sha256": "6a701cc79ba9a0ccc784eb2793e4c07fb6d00b2e5aecb3b1b141a8332d92e9c9"
     },
     {
       "path": "src/observador/discovery.py",
@@ -124,6 +139,26 @@
       "sha256": "37fa65d0d92a4ccb634e3b425cc0106f9a703b5cf995f98387d9718e932823dd"
     },
     {
+      "path": "src/observador/windows.py",
+      "size_bytes": 1562,
+      "sha256": "e3cf6407f687941f3d298c4bac28a6c189438c5d01c0bd3046dac962fba0fb7b"
+    },
+    {
+      "path": "src/observador/windows_probe.ps1",
+      "size_bytes": 2237,
+      "sha256": "dd0c64d95f217ad29dcd3bff0874b186821ab2f52fe7990cdb71cd377f43a4fd"
+    },
+    {
+      "path": "tests/test_cli.py",
+      "size_bytes": 1181,
+      "sha256": "2fc9528e7ba5da4be9ee068a7e498081d332129e170dc0369a9ab8891aae44b3"
+    },
+    {
+      "path": "tests/test_collector.py",
+      "size_bytes": 6155,
+      "sha256": "cc0d4efbd33fa2bb6d21943fb6bc068241c1411f7ba5b9e1dea0b485b057776c"
+    },
+    {
       "path": "tests/test_discovery.py",
       "size_bytes": 534,
       "sha256": "6abce2f38c2bfa59a00ec0d363ca53603438da46f83100a15c007000518053e1"
@@ -137,6 +172,11 @@
       "path": "tests/test_store.py",
       "size_bytes": 990,
       "sha256": "da07f9d28b449324c7525193635d6dae30599aedea8173066a84e77544287f94"
+    },
+    {
+      "path": "tools/synthetic_windows_app.ps1",
+      "size_bytes": 1061,
+      "sha256": "b89b311195c4af1cc15f0704c575887d38534b982767fac3d59a48373a0ad410"
     }
   ]
 }

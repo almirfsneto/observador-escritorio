@@ -5,14 +5,17 @@
 - [x] Esquema de eventos validavel e sem conteudo sensivel por padrao.
 - [x] Banco SQLite com IDs unicos.
 - [x] CLI com dados ficticios e detector simples de padroes.
-- [x] Testes unitarios e workflow CI Linux/Windows (execucao CI a confirmar apos publicacao).
+- [x] Testes unitarios e workflow CI Linux/Windows (4 jobs aprovados no commit f48b31e; evidencia em PROGRESS.md).
 - [ ] Revisao independente do scaffold.
 
 ## Fase 1 - Avaliacao de motores de captura
 
 - [ ] Inspecionar DeskMate, SmartRPA e alternativas livres; matriz de licenca, seguranca, compatibilidade e manutencao.
+  - Entrega inicial: matriz documental em `docs/CAPTURE_ENGINE_REVIEW.md`; identidade do DeskMate referido e auditoria transitiva ainda pendentes.
 - [ ] Prototipo Windows UI Automation com aplicativo ficticio.
+  - Implementados ponte Win32/UIA, politica testada com mocks e formulario ficticio; ensaio integrado em Windows pendente.
 - [ ] Extracao de metadados de janela e controle, sem keylogger nem valores de campo.
+  - Projecao fechada de foco/papel implementada; acoes e identificacao segura entre controles iguais pendentes.
 - [ ] Integração opcional com captura selecionada e redacao.
 
 ## Fase 2 - Agente Windows utilizavel em laboratorio
