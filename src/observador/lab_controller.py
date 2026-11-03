@@ -3,9 +3,11 @@ from datetime import datetime
 import subprocess
 import sys
 import threading
+from pathlib import Path
 
 from .lab_session import fixture_path, make_lab_policy
 from .native_session import NativeSession, observer_path
+from .lab_queue import AsyncLabQueue
 
 
 class LaboratoryWindow:
@@ -13,17 +15,23 @@ class LaboratoryWindow:
         self.tk = tk
         self.root = tk.Tk()
         self.root.title('Observador | Laboratorio sintetico')
-        self.root.geometry('760x460')
+        self.root.geometry('760x520')
         self.root.protocol('WM_DELETE_WINDOW', self.close)
         self.fixture = None
         self.session = None
+        self.sink = None
         self.cleanup = None
         self.finished = False
         self.event_count = 0
         tk.Label(self.root, text='LABORATORIO FICTICIO - INICIALMENTE DESATIVADO',
                  font=('Segoe UI', 12, 'bold')).pack(pady=12)
         tk.Label(self.root, text='Somente a instancia ficticia aberta aqui. Sem texto, prints ou rede.\n'
-                 'Eventos UIA na memoria, por ate 15 minutos. Fechar encerra os processos do ensaio.').pack()
+                 'Ensaio por ate 15 minutos. Fechar encerra os processos do ensaio.').pack()
+        self.persist = tk.BooleanVar(value=False)
+        self.persist_box = tk.Checkbutton(self.root,
+            text='Salvar eventos ficticios locais por 1 hora (opcional; limite de 4 MiB no banco)',
+            variable=self.persist)
+        self.persist_box.pack(pady=5)
         controls = tk.Frame(self.root)
         controls.pack(pady=12)
         self.launch_btn = tk.Button(controls, text='1. Abrir aplicativo ficticio', command=self.launch_fixture)
@@ -38,6 +46,8 @@ class LaboratoryWindow:
         tk.Label(self.root, textvariable=self.status_var, wraplength=720).pack(pady=8)
         self.events_var = tk.StringVar(value='Eventos: 0 | perdas: 0')
         tk.Label(self.root, textvariable=self.events_var).pack()
+        self.storage_var = tk.StringVar(value='Armazenamento: somente memoria')
+        tk.Label(self.root, textvariable=self.storage_var).pack()
         self.log = tk.Text(self.root, height=14, width=93, state=tk.DISABLED)
         self.log.pack(pady=10)
         self.root.after(100, self.tick)
@@ -54,7 +64,7 @@ class LaboratoryWindow:
     def launch_fixture(self):
         target = fixture_path()
         if not target.is_file() or target.is_symlink() or not observer_path().is_file():
-            self.status_var.set('ERRO: compile SyntheticTaskApp e WindowsObserver em Release.')
+            self.status_var.set('ERRO: compile SyntheticWpfTaskApp e WindowsObserver em Release.')
             return
         try:
             self.fixture = subprocess.Popen([str(target)], cwd=str(target.parent))
@@ -72,12 +82,16 @@ class LaboratoryWindow:
         policy = make_lab_policy(str(fixture_path()), datetime.now().astimezone())
         try:
             self.session = NativeSession(self.fixture, fixture_path(), policy.expires_at)
+            if self.persist.get():
+                destination = Path(__file__).resolve().parents[2] / 'lab-data' / 'events.sqlite3'
+                self.sink = AsyncLabQueue(destination)
             self.session.set_active(True)
         except (OSError, ValueError):
             self.status_var.set('ERRO: nao foi possivel vincular o observador ao aplicativo ficticio.')
             self.stop()
             return
         self.start_btn.config(state=self.tk.DISABLED)
+        self.persist_box.config(state=self.tk.DISABLED)
         self.pause_btn.config(state=self.tk.NORMAL)
         self.append('Ensaio iniciado. Fim automatico: ' + policy.expires_at.isoformat(timespec='seconds'))
 
@@ -94,6 +108,7 @@ class LaboratoryWindow:
             self.session.stream.stop()
         for button in (self.launch_btn, self.start_btn, self.pause_btn, self.stop_btn):
             button.config(state=self.tk.DISABLED)
+        self.persist_box.config(state=self.tk.DISABLED)
         self.status_var.set('Estado: ENCERRADO | reinicie para outro ensaio')
         self.cleanup = threading.Thread(target=self._cleanup, daemon=True)
         self.cleanup.start()
@@ -103,6 +118,8 @@ class LaboratoryWindow:
             if self.session:
                 self.session.close()
         finally:
+            if self.sink:
+                self.sink.close()
             if self.fixture and self.fixture.poll() is None:
                 self.fixture.terminate()
                 try:
@@ -112,6 +129,9 @@ class LaboratoryWindow:
                     self.fixture.wait(timeout=2)
 
     def tick(self):
+        if self.sink:
+            self.storage_var.set(f'Fila local: {self.sink.health} | gravados: {self.sink.written}'
+                                 f' | descartados: {self.sink.discarded} | expurgados: {self.sink.purged}')
         if self.fixture and self.fixture.poll() is not None and not self.finished:
             self.append('Aplicativo ficticio fechado; fim do ensaio.')
             self.stop()
@@ -121,7 +141,14 @@ class LaboratoryWindow:
                 self.append('Fim do ensaio: ' + stream.health)
                 self.stop()
             else:
-                for event in stream.drain():
+                if self.sink and self.sink.health not in {'ready', 'starting'} and stream.enabled:
+                    self.session.set_active(False)
+                    self.pause_btn.config(text='Retomar')
+                    self.append('Ensaio pausado por falha de armazenamento: ' + self.sink.health)
+                events = stream.drain()
+                if self.sink:
+                    self.sink.submit(events)
+                for event in events:
                     self.event_count += 1
                     self.append(f'{event.timestamp_utc} | {event.action} | {event.target}')
                 self.status_var.set('Estado: ' + stream.health.upper() +

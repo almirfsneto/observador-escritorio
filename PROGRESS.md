@@ -98,3 +98,24 @@ probe de foreground, teardown e exige exatamente 30 acoes sem perda/duplicacao.
 com fixture, verificar pausa/fim/expiracao, acesso local e overhead. O ensaio
 acima e automacao de desktop no runner, nao aceite manual de uma pessoa. Nao
 instalar, coletar de pessoas, fazer deploy ou integrar PRs sem autorizacao.
+
+## Entrega 4 — fila local limitada de laboratorio — 2026-11-03
+
+**Implementado:** persistencia opt-in inicialmente desmarcada; SQLite em lab-data
+ignorado pelo Git, limite 4 MiB no banco principal, 10 mil eventos e TTL 1h;
+projecao restrita a eventos ficticios, expurgo/secure_delete, escritor dedicado,
+buffer limitado e contagem de perdas/expurgos. Erro de armazenamento pausa o
+ensaio. Sem rede, dados reais, instalacao, deploy ou merge.
+
+**Validacao local:** 54 testes descobertos, 49 executados com sucesso no Linux,
+5 especificos de Windows skipped. Testados quota cheia, integrity_check apos
+rollback, lock externo/recuperacao, retencao/reinicio, idempotencia, buffer e
+encerramento. Teste Windows agora integra UIA → projecao → SQLite → mineracao de
+sequencias; resultado remoto ainda a conferir. Docs em LAB_QUEUE.md.
+
+**Limites:** cota do banco nao cobre journal/filesystem; sem cifragem/ACL revisada;
+expurgo nao roda com app fechado e nao garante apagamento forense. Captura UIA
+nao garante entrega/ordem de todos eventos; horarios sao do callback. Nao apto a
+piloto. PR4 sera empilhado sobre PR3 e permanecera em rascunho.
+
+**Atualizacao final da entrega 3:** CI do head `59dc69aba64645c94ab25416ab80be7e9d30acf8` aprovada em Ubuntu/Windows e Python 3.11/3.12: [run 41712520509](https://github.com/almirfsneto/observador-escritorio/actions/runs/41712520509). Inclui 44 testes, confirmacao de pausa por ACK, timeout de comando e expiracao nativa testada sem fallback Python. PRs 1/2 revisados com correcoes no [PR3](https://github.com/almirfsneto/observador-escritorio/pull/3); fila no [PR4](https://github.com/almirfsneto/observador-escritorio/pull/4), todos em rascunho e sem merge.

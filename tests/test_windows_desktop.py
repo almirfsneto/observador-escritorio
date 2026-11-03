@@ -5,9 +5,12 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+import tempfile
 import unittest
 
 from observador.native_session import NativeSession, creation_ticks
+from observador.lab_queue import LabEventQueue
+from observador.discovery import discover_patterns
 from windows_support import prepare_foreground
 
 
@@ -57,6 +60,14 @@ class DesktopAutomationTest(unittest.TestCase):
             self.assertGreaterEqual(len({event.target for event in invokes}), 2)
             self.assertNotIn('PROCESSO-FICTICIO', json.dumps([event.to_dict() for event in events]))
             self.assertNotIn('SENHA-FICTICIA', json.dumps([event.to_dict() for event in events]))
+            with tempfile.TemporaryDirectory() as temporary:
+                store = LabEventQueue(Path(temporary) / 'synthetic.sqlite3')
+                try:
+                    self.assertEqual(store.append_batch(events), len(events))
+                    patterns = discover_patterns(store.list_events(), min_count=3, max_steps=2)
+                    self.assertTrue(patterns, 'Synthetic UIA actions must survive persistence and mining')
+                finally:
+                    store.close()
             exercise('password')
             time.sleep(.5)
             self.assertEqual(session.stream.drain(), [], 'Password focus must never be emitted')

@@ -51,3 +51,12 @@
 - [ ] Validacao integrada em sessao Windows interativa com evidencia e medicao de latencia.
 - [ ] Vincular instancia por PID + instante de criacao e substituir polling lento antes do piloto.
 - [ ] Fila persistente com cotas, retencao e controles completos de privacidade.
+
+## Entregas 3/4 — revisao, eventos rapidos e fila local
+- [x] Revisao tecnica dos PRs 1/2 pelo desenvolvedor, com correcoes documentadas (nao revisao independente).
+- [x] Provider UIA persistente, instancia PID/criacao/caminho, foco/Invoke/Toggle e IDs efemeros.
+- [x] Buffers limitados, geracoes de pausa, expiração monotona e encerramento dos processos possuidos.
+- [x] Fila SQLite opt-in sintetica com cota do banco, TTL, limite de linhas e saude.
+- [ ] Concluir evidencia CI Windows do ensaio UIA e registrar contagens/limites.
+- [ ] Aceite humano do controlador em Windows 10/11 e medicao de overhead/perda.
+- [ ] ACL/cifragem, cota total incluindo auxiliares, screenshots e demais gates de piloto.

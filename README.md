@@ -50,3 +50,11 @@ com mocks, allowlist, pausa, expediente e expiracao. A CLI continua demonstrativ
 Veja `docs/WINDOWS_LAB.md` para limites e retomada, e
 `docs/CAPTURE_ENGINE_REVIEW.md` para comparacao dos motores. Nao validado em Windows
 interativo e nao apto a piloto com pessoas.
+
+## Laboratorio persistente e fila sintetica
+
+O controlador experimental agora usa um provider .NET UIA persistente limitado a
+instancia ficticia; foco, Invoke e Toggle usam IDs efemeros e nao valores de campo.
+Siga `docs/LAB_PERSISTENTE.md`. Gravacao local e opcional e desligada por padrao;
+limites e retencao em `docs/LAB_QUEUE.md`. A revisao dos PRs 1/2 esta em
+`docs/REVIEW_PRS_1_2.md`. Nao utilizar com pessoas ou dados reais.

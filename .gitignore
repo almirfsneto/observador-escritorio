@@ -9,3 +9,4 @@ dist/
 # Synthetic WinForms fixture build output
 **/bin/
 **/obj/
+lab-data/
