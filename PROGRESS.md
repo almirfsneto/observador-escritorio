@@ -160,3 +160,5 @@ Expiracao nativa e testada com stdin aberto e sem NativeSession: exige termino
 em ate 10s para prazo de 6s, por saida normal ou encerramento proprio do watchdog
 (codigo Windows 4294967295). O fallback e intencional para teardown preso, nao um
 comando Python de parada. Aceite humano continua pendente.
+
+**Correcao de encerramento:** o fallback nativo de um segundo agora e armado antes do teardown COM, tambem em EOF/stop/erro e na saida de Main. Isso cobre o caso observado em que o runtime mantinha o processo vivo depois do fim logico. Os testes independentes de EOF e prazo aceitam apenas saida normal ou codigo do watchdog proprio, dentro do timeout; nenhum fallback Python satisfaz esses testes.
