@@ -58,3 +58,12 @@ instancia ficticia; foco, Invoke e Toggle usam IDs efemeros e nao valores de cam
 Siga `docs/LAB_PERSISTENTE.md`. Gravacao local e opcional e desligada por padrao;
 limites e retencao em `docs/LAB_QUEUE.md`. A revisao dos PRs 1/2 esta em
 `docs/REVIEW_PRS_1_2.md`. Nao utilizar com pessoas ou dados reais.
+
+## Aceite guiado para operador Windows (Issue 5)
+
+Com Python 3.11+ com Tk e SDK .NET 8 previamente instalados em **máquina dedicada
+de teste**, abra `VALIDAR_LABORATORIO.cmd`. Verifique/compile, execute os testes
+fictícios, abra o laboratório desativado e inicie o ensaio explicitamente. Preencha
+os itens humanos e salve JSON sanitizado fora de Git. O assistente não instala
+nada nem faz upload. Veja `docs/VALIDACAO_MANUAL_WINDOWS.md`; CI não substitui
+aceite humano e nenhum relatório libera piloto.

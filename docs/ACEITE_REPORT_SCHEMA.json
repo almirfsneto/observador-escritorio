@@ -1,0 +1,1214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "report_id",
+    "created_utc",
+    "origin",
+    "pilot_authorized",
+    "human_gate",
+    "environment",
+    "source",
+    "artifacts",
+    "checks",
+    "automated_tests",
+    "manual_checks",
+    "sessions",
+    "gaps"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "synthetic_lab_acceptance"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{32}$"
+    },
+    "created_utc": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "origin": {
+      "type": "string",
+      "enum": [
+        "operator_guided",
+        "automated_test"
+      ]
+    },
+    "pilot_authorized": {
+      "const": false
+    },
+    "human_gate": {
+      "const": "PENDENTE_REVISAO_HUMANA"
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "os_family",
+        "os_edition",
+        "os_build",
+        "python",
+        "tk",
+        "dotnet_sdk"
+      ],
+      "properties": {
+        "os_family": {
+          "type": "string",
+          "enum": [
+            "windows10",
+            "windows11",
+            "windows_server",
+            "unsupported"
+          ]
+        },
+        "os_edition": {
+          "type": "string",
+          "enum": [
+            "Home",
+            "HomeSingleLanguage",
+            "Pro",
+            "Enterprise",
+            "EnterpriseLTSC",
+            "Education",
+            "Server",
+            "unknown"
+          ]
+        },
+        "os_build": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "python": {
+          "type": "string",
+          "pattern": "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,5}$"
+        },
+        "tk": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{1,5})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dotnet_sdk": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,5}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "modified"
+      ],
+      "properties": {
+        "commit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "modified": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture",
+        "provider"
+      ],
+      "properties": {
+        "fixture": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "exe_sha256",
+            "assembly_sha256",
+            "deps_sha256",
+            "runtimeconfig_sha256"
+          ],
+          "properties": {
+            "exe_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "assembly_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "deps_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "runtimeconfig_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "provider": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "exe_sha256",
+            "assembly_sha256",
+            "deps_sha256",
+            "runtimeconfig_sha256"
+          ],
+          "properties": {
+            "exe_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "assembly_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "deps_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "runtimeconfig_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "python",
+        "tk",
+        "dotnet_sdk",
+        "offline_build",
+        "artifact_hashes"
+      ],
+      "properties": {
+        "python": {
+          "type": "string",
+          "enum": [
+            "PASSOU",
+            "FALHOU",
+            "NAO_EXECUTADO"
+          ]
+        },
+        "tk": {
+          "type": "string",
+          "enum": [
+            "PASSOU",
+            "FALHOU",
+            "NAO_EXECUTADO"
+          ]
+        },
+        "dotnet_sdk": {
+          "type": "string",
+          "enum": [
+            "PASSOU",
+            "FALHOU",
+            "NAO_EXECUTADO"
+          ]
+        },
+        "offline_build": {
+          "type": "string",
+          "enum": [
+            "PASSOU",
+            "FALHOU",
+            "NAO_EXECUTADO"
+          ]
+        },
+        "artifact_hashes": {
+          "type": "string",
+          "enum": [
+            "PASSOU",
+            "FALHOU",
+            "NAO_EXECUTADO"
+          ]
+        }
+      }
+    },
+    "automated_tests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "discovered",
+        "skipped",
+        "failures",
+        "errors"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "PASSOU",
+            "FALHOU",
+            "NAO_EXECUTADO"
+          ]
+        },
+        "discovered": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "skipped": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failures": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "errors": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "manual_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interface",
+        "inicio_fim",
+        "acoes_rapidas",
+        "segunda_instancia",
+        "pausa_retomada",
+        "senha",
+        "limpeza_filhos",
+        "latencia",
+        "expiracao",
+        "persistencia"
+      ],
+      "properties": {
+        "interface": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "inicio_fim": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "acoes_rapidas": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "segunda_instancia": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "pausa_retomada": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "senha": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "limpeza_filhos": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "latencia": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "expiracao": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        },
+        "persistencia": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "observation"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "PASSOU",
+                "FALHOU",
+                "NAO_EXECUTADO"
+              ]
+            },
+            "observation": {
+              "type": "string",
+              "enum": [
+                "NAO_AVALIADO",
+                "SEM_ANOMALIA",
+                "LENTIDAO_PERCEBIDA",
+                "TRAVAMENTO",
+                "CONTADOR_INESPERADO",
+                "SENHA_NAO_EXCLUIDA",
+                "RETOMADA_FALHOU",
+                "PROCESSO_PERMANECEU",
+                "DEPENDENCIA_AUSENTE",
+                "OUTRO_REQUER_REVISAO"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "sessions": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "capture_started",
+          "persistence_enabled",
+          "termination",
+          "children_stopped",
+          "counters",
+          "metrics"
+        ],
+        "properties": {
+          "capture_started": {
+            "type": "boolean"
+          },
+          "persistence_enabled": {
+            "type": "boolean"
+          },
+          "termination": {
+            "type": "string",
+            "enum": [
+              "not_started",
+              "operator_stop",
+              "window_close",
+              "fixture_exit",
+              "expired",
+              "backend_error"
+            ]
+          },
+          "children_stopped": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "counters": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "events_accepted",
+              "invoke",
+              "focus",
+              "toggle",
+              "native_dropped",
+              "python_dropped",
+              "sequence_gaps",
+              "invalid_messages",
+              "queue_written",
+              "queue_discarded",
+              "queue_purged"
+            ],
+            "properties": {
+              "events_accepted": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "invoke": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "focus": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "toggle": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "native_dropped": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "python_dropped": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "sequence_gaps": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "invalid_messages": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queue_written": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queue_discarded": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "queue_purged": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              }
+            }
+          },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sample_interval_ms",
+              "fixture_launch_call_ms",
+              "start_to_active_ack_ms",
+              "pause_ack_samples",
+              "pause_ack_peak_ms",
+              "pause_unconfirmed",
+              "processes"
+            ],
+            "properties": {
+              "sample_interval_ms": {
+                "const": 500
+              },
+              "fixture_launch_call_ms": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000000000000.0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "start_to_active_ack_ms": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000000000000.0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pause_ack_samples": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "pause_ack_peak_ms": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000000000000.0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pause_unconfirmed": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9223372036854775807
+              },
+              "processes": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "controller",
+                  "fixture",
+                  "provider",
+                  "fixture_secondary"
+                ],
+                "properties": {
+                  "controller": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "availability",
+                      "samples",
+                      "cpu_single_core_sample_peak_percent",
+                      "ram_working_set_sample_peak_bytes",
+                      "ram_working_set_process_lifetime_peak_bytes"
+                    ],
+                    "properties": {
+                      "availability": {
+                        "type": "string",
+                        "enum": [
+                          "not_sampled",
+                          "sampled",
+                          "unavailable"
+                        ]
+                      },
+                      "samples": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      },
+                      "cpu_single_core_sample_peak_percent": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000000000000.0
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "ram_working_set_sample_peak_bytes": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9223372036854775807
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "ram_working_set_process_lifetime_peak_bytes": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9223372036854775807
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "fixture": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "availability",
+                      "samples",
+                      "cpu_single_core_sample_peak_percent",
+                      "ram_working_set_sample_peak_bytes",
+                      "ram_working_set_process_lifetime_peak_bytes"
+                    ],
+                    "properties": {
+                      "availability": {
+                        "type": "string",
+                        "enum": [
+                          "not_sampled",
+                          "sampled",
+                          "unavailable"
+                        ]
+                      },
+                      "samples": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      },
+                      "cpu_single_core_sample_peak_percent": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000000000000.0
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "ram_working_set_sample_peak_bytes": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9223372036854775807
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "ram_working_set_process_lifetime_peak_bytes": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9223372036854775807
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "provider": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "availability",
+                      "samples",
+                      "cpu_single_core_sample_peak_percent",
+                      "ram_working_set_sample_peak_bytes",
+                      "ram_working_set_process_lifetime_peak_bytes"
+                    ],
+                    "properties": {
+                      "availability": {
+                        "type": "string",
+                        "enum": [
+                          "not_sampled",
+                          "sampled",
+                          "unavailable"
+                        ]
+                      },
+                      "samples": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      },
+                      "cpu_single_core_sample_peak_percent": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000000000000.0
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "ram_working_set_sample_peak_bytes": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9223372036854775807
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "ram_working_set_process_lifetime_peak_bytes": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9223372036854775807
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "fixture_secondary": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "availability",
+                      "samples",
+                      "cpu_single_core_sample_peak_percent",
+                      "ram_working_set_sample_peak_bytes",
+                      "ram_working_set_process_lifetime_peak_bytes"
+                    ],
+                    "properties": {
+                      "availability": {
+                        "type": "string",
+                        "enum": [
+                          "not_sampled",
+                          "sampled",
+                          "unavailable"
+                        ]
+                      },
+                      "samples": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9223372036854775807
+                      },
+                      "cpu_single_core_sample_peak_percent": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1000000000000.0
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "ram_working_set_sample_peak_bytes": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9223372036854775807
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "ram_working_set_process_lifetime_peak_bytes": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9223372036854775807
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "maxItems": 13,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "manual_review_required",
+          "windows10_trial_required",
+          "windows11_trial_required",
+          "sampling_not_continuous",
+          "os_peak_covers_process_lifetime",
+          "metrics_unavailable",
+          "commit_unavailable",
+          "source_modified",
+          "preparation_incomplete",
+          "automatic_tests_not_passed",
+          "unsupported_os",
+          "network_absence_not_instrumented",
+          "pilot_not_authorized"
+        ]
+      }
+    }
+  }
+}

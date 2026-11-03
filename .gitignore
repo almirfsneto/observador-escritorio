@@ -10,3 +10,5 @@ dist/
 **/bin/
 **/obj/
 lab-data/
+# Defensive fallback; guided reports are required to stay outside version control.
+aceite-*.json

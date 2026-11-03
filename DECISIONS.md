@@ -64,3 +64,18 @@
 ## D-014 - Aceite do controlador separado de testes nativos e de aceite humano
 - **Decisao:** testar Tk visivel com loop de mensagens ativo, provider real, fixture padrao e SQLite temporario, preservando estado inicial desativado, ACK de pausa e limpeza de filhos. Caminhos sao injetaveis para testes do wheel; o comando normal mantem defaults do checkout e nao aceita outros apps pela CLI.
 - **Evidencia e limite:** 55 testes Windows aprovados na matriz 3.11/3.12; captura UIA isolada 30/30 Invoke e caminho UI/escritor exercitado. Variacao de foco e latencia de provedores nao sao causalidade nem qualidade universal. O aceite humano em Windows 10/11 continua sendo a proxima dependencia, conforme VALIDACAO_MANUAL_WINDOWS.md.
+
+## D-015 - Aceite guiado com etapas explícitas e relatório fechado
+- **Decisão:** lançador CMD/Python local, sem pip/instalação/elevação/bypass, com preparação offline em SDK 8 fixado, hashes de executáveis e DLLs e testes automáticos iniciados pelo operador. Laboratório continua desativado até início explícito, por 15 minutos.
+- **Relatório:** JSON versionado e validado por schema fechado; observações são enums, sem texto livre. Exportação exclusiva para pasta fora de qualquer checkout Git, sem eventos individuais/identificadores da máquina. Todos os PASSOU humanos são auto declarações: o gate permanece pendente de revisão e piloto sempre falso.
+- **Alternativas:** regex para tentar anonimizar notas arbitrárias ou promover CI a aceite. Rejeitadas por risco de vazamento e evidência incorreta. Campos não verificáveis ficam nulos/lacunas.
+
+## D-016 - Métricas somente de handles próprios e limpeza dos comandos
+- **Decisão:** CPU por delta e RAM por Win32, apenas no controlador e filhos fictícios explicitamente registrados, sem enumeração de processos, nomes, títulos ou conteúdo. Amostra de 500 ms e pico OS de vida inteira são identificados; início/pausa medidos até ACK observado na UI, separados da percepção humana.
+- **Confiabilidade:** comandos de preparação/teste usam Job Object kill-on-close só para seus descendentes; buffers de saída bruta limitados em memória e nunca exportados. Artefatos são rechecados antes de cada lançamento/início. Toplevel usa o mesmo interpretador Tk e cancela timers ao fechar.
+- **Limites:** falhas de medição não viram zero, amostragem perde picos; não há prova instrumentada de ausência de tráfego de todo o sistema. ACL/cota total ficam fora do escopo da Issue 5, conforme solicitado.
+
+## D-017 - Resultado automático vigente e ACK observado
+- **Decisão:** invalidar o PASSOU anterior antes de cada nova execução automática; timeout/erro deixa FALHOU com contagens desconhecidas. Timeout encerra apenas o comando próprio e permite nova tentativa, enquanto fechamento do assistente cancela permanentemente o runner.
+- **Evidência:** teste regressivo cobre sucesso anterior seguido de interrupção e tentativa após timeout; integração aguarda o ACK também ser registrado pelo loop Tk antes de consultar a métrica.
+- **Motivo:** a primeira CI desta entrega encontrou uma corrida no teste de pausa, que consultava o contador antes do tick da instrumentação; receber o ACK no stream e observar sua medida no controlador são instantes distintos. Nenhum teste automático promove aceite humano.

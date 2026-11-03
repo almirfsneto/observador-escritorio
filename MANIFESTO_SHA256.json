@@ -5,13 +5,13 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 1580,
-      "sha256": "bd5bf33c66b99232f126b088a4bcddc948867b83e29de9edd7670917c558e8a3"
+      "size_bytes": 1701,
+      "sha256": "1ffbab164ed0ecad1f67493743646c684a6d951fddd4361f85c54d29b65966e7"
     },
     {
       "path": ".gitignore",
-      "size_bytes": 133,
-      "sha256": "0a82835b26bf86b29d05e97a8520d9199990e28ad35c28bcf8783389c1334673"
+      "size_bytes": 230,
+      "sha256": "652045515e6a0b70682648ba9b42e634804e0a3a5b1c2f9feb6b1af0d07ab6ba"
     },
     {
       "path": "AGENTS.md",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 7474,
-      "sha256": "d36722e2194951d94eb4464d45a4d5c9862521ee28a5c85ca5a1e78f7160c811"
+      "size_bytes": 10093,
+      "sha256": "b7a52799be6f63447c10365773ef2fa0440c6fb52373960a4a044b3385f5bbc5"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 13264,
-      "sha256": "11c5797ddc30ce36d21cbab6094cad6b37e0a97ca5b32ac091de1e172825bf20"
+      "size_bytes": 18787,
+      "sha256": "51abf1eac37e37377b5a906cccc28f20677567f14ab891ccc1bd3228e2e4219f"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -35,13 +35,13 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 3290,
-      "sha256": "62c34ae8e655f8aded36c15fc4bd2231af53e69d7b2213ea5798c43120295f2c"
+      "size_bytes": 3800,
+      "sha256": "81fb8af1d4ae0e7cd9970762a6f7bc6b9a48f35d3a895c4c0972d4b0034c6e85"
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 3735,
-      "sha256": "16ef5235ac10704f925ae9f1b8521cb3a825bf09db175726071043c1af92256e"
+      "size_bytes": 4404,
+      "sha256": "5177a7c08a733b1fca005d336ebd644628ecf36623724b6dbb594af2112f1e40"
     },
     {
       "path": "SECURITY.md",
@@ -52,6 +52,16 @@
       "path": "SPEC.md",
       "size_bytes": 2715,
       "sha256": "2920c6e2e47fa62d03bc6d1d5b3b34776014f6f32f15e96f1f325c5222261ea7"
+    },
+    {
+      "path": "VALIDAR_LABORATORIO.cmd",
+      "size_bytes": 445,
+      "sha256": "16e7f846947534653c160408fd5f6965cf4ef795cc43e377bd62df2d961db333"
+    },
+    {
+      "path": "docs/ACEITE_REPORT_SCHEMA.json",
+      "size_bytes": 33681,
+      "sha256": "1adbfa44d92cee657bb1d190659b30cc2a250e1484e218ef93df3d27a89064fa"
     },
     {
       "path": "docs/ARQUITETURA.md",
@@ -115,8 +125,8 @@
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
-      "size_bytes": 3371,
-      "sha256": "621d1142d72a1416ac63dafce2888c57258eb036229b1684b9a63621dfa7e326"
+      "size_bytes": 6368,
+      "sha256": "ef5e84b6a82157f13cea10ed6d76358e66577da4cee833313655a9bb42166d54"
     },
     {
       "path": "docs/WINDOWS_LAB.md",
@@ -139,6 +149,31 @@
       "sha256": "d6aebba822c2803c558dea28edd0267af737cb1bd8b892a857ac94c89c263d83"
     },
     {
+      "path": "src/observador/acceptance_metrics.py",
+      "size_bytes": 7568,
+      "sha256": "cfa26cfce76a22f57bccef0f8eca2dd7825121fdb4e12504bb6f84675a21ddbc"
+    },
+    {
+      "path": "src/observador/acceptance_prepare.py",
+      "size_bytes": 12278,
+      "sha256": "6b1e649e05b8b67db5191bf1d29020db777a139d4b11591f4080b8026ac3b7c4"
+    },
+    {
+      "path": "src/observador/acceptance_report.py",
+      "size_bytes": 13036,
+      "sha256": "6f649a231a9e9b239623c552bd06db8a2ab31ca350a0647adfd2029ec9f400e1"
+    },
+    {
+      "path": "src/observador/acceptance_session.py",
+      "size_bytes": 7690,
+      "sha256": "3f80728d332fd1b777db14e99dcb8f9baeb0fff5adfad570df3863b0b8de5adc"
+    },
+    {
+      "path": "src/observador/acceptance_wizard.py",
+      "size_bytes": 17879,
+      "sha256": "ca6dfef6fbf0cc2976135d513e9ed57a01a9635ff578a0f85d22bee81ba62508"
+    },
+    {
       "path": "src/observador/collector.py",
       "size_bytes": 5574,
       "sha256": "6a701cc79ba9a0ccc784eb2793e4c07fb6d00b2e5aecb3b1b141a8332d92e9c9"
@@ -155,8 +190,8 @@
     },
     {
       "path": "src/observador/lab_controller.py",
-      "size_bytes": 8645,
-      "sha256": "b3dbe44511b63f3d7c49f6beaece857b30ec32d5412d900e8b05d6ea74aa6a50"
+      "size_bytes": 9134,
+      "sha256": "c2583e746901104ece80a4bd9c4673aa54d30639278aacf5a78eac423988c4a9"
     },
     {
       "path": "src/observador/lab_queue.py",
@@ -197,6 +232,31 @@
       "path": "src/observador/windows_probe.ps1",
       "size_bytes": 2237,
       "sha256": "dd0c64d95f217ad29dcd3bff0874b186821ab2f52fe7990cdb71cd377f43a4fd"
+    },
+    {
+      "path": "tests/test_acceptance_launcher.py",
+      "size_bytes": 1575,
+      "sha256": "f24772f5eb80d89476f844b94a64bcba9a69ff8c367097a3082df88ffdb54168"
+    },
+    {
+      "path": "tests/test_acceptance_metrics.py",
+      "size_bytes": 4273,
+      "sha256": "7651e0ce59ddcca0507e9b102cb88dc6a064429aace1f80cf564c01b5b68a921"
+    },
+    {
+      "path": "tests/test_acceptance_prepare.py",
+      "size_bytes": 5412,
+      "sha256": "aa76182dd3f17547106de700154b9a91503c9d237472084d80f6106f55e86ae8"
+    },
+    {
+      "path": "tests/test_acceptance_report.py",
+      "size_bytes": 5028,
+      "sha256": "35583a1b6a2e81604b0ff13bf137f363991ef95e59e90cb3ccd6344cc29e9add"
+    },
+    {
+      "path": "tests/test_acceptance_windows.py",
+      "size_bytes": 5295,
+      "sha256": "29b8810acc339699a6f04cd676e4f46514d6469c42db06a8bbde44e215b5d643"
     },
     {
       "path": "tests/test_cli.py",
@@ -302,6 +362,11 @@
       "path": "tools/update_manifest.py",
       "size_bytes": 852,
       "sha256": "7eff7d16d8f43119b73dedc3a208b1de6c67d749a96508b836c41f350b40ad8d"
+    },
+    {
+      "path": "tools/validar_laboratorio.py",
+      "size_bytes": 437,
+      "sha256": "43d7c3f625a07c90ff62eac9f9a0ed92072da7ad16f8efa373ef93dc55790520"
     }
   ]
 }

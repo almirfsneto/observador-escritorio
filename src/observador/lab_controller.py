@@ -11,16 +11,17 @@ from .lab_queue import AsyncLabQueue
 
 
 class LaboratoryWindow:
-    def __init__(self, tk, *, fixture_target=None, observer_target=None, data_target=None):
+    def __init__(self, tk, *, fixture_target=None, observer_target=None, data_target=None, root=None):
         self.tk = tk
         self.target = Path(fixture_target) if fixture_target is not None else fixture_path()
         self.native_target = Path(observer_target) if observer_target is not None else observer_path()
         self.data_target = (Path(data_target) if data_target is not None else
                             Path(__file__).resolve().parents[2] / 'lab-data' / 'events.sqlite3')
-        self.root = tk.Tk()
+        self.root = root if root is not None else tk.Tk()
         self.root.title('Observador | Laboratorio sintetico')
         self.root.geometry('760x520')
         self.root.protocol('WM_DELETE_WINDOW', self.close)
+        self.closed = False
         self.fixture = None
         self.session = None
         self.sink = None
@@ -31,7 +32,7 @@ class LaboratoryWindow:
                  font=('Segoe UI', 12, 'bold')).pack(pady=12)
         tk.Label(self.root, text='Somente a instancia ficticia aberta aqui. Sem texto, prints ou rede.\n'
                  'Ensaio por ate 15 minutos. Fechar encerra os processos do ensaio.').pack()
-        self.persist = tk.BooleanVar(value=False)
+        self.persist = tk.BooleanVar(master=self.root, value=False)
         self.persist_box = tk.Checkbutton(self.root,
             text='Salvar eventos ficticios locais por 1 hora (opcional; limite de 4 MiB no banco)',
             variable=self.persist)
@@ -46,15 +47,15 @@ class LaboratoryWindow:
         self.pause_btn.grid(row=0, column=2, padx=5)
         self.stop_btn = tk.Button(controls, text='Encerrar', command=self.stop, state=tk.DISABLED)
         self.stop_btn.grid(row=0, column=3, padx=5)
-        self.status_var = tk.StringVar(value='Estado: DESATIVADO')
+        self.status_var = tk.StringVar(master=self.root, value='Estado: DESATIVADO')
         tk.Label(self.root, textvariable=self.status_var, wraplength=720).pack(pady=8)
-        self.events_var = tk.StringVar(value='Eventos: 0 | perdas: 0')
+        self.events_var = tk.StringVar(master=self.root, value='Eventos: 0 | perdas: 0')
         tk.Label(self.root, textvariable=self.events_var).pack()
-        self.storage_var = tk.StringVar(value='Armazenamento: somente memoria')
+        self.storage_var = tk.StringVar(master=self.root, value='Armazenamento: somente memoria')
         tk.Label(self.root, textvariable=self.storage_var).pack()
         self.log = tk.Text(self.root, height=14, width=93, state=tk.DISABLED)
         self.log.pack(pady=10)
-        self.root.after(100, self.tick)
+        self.tick_job = self.root.after(100, self.tick)
 
     def append(self, text):
         self.log.config(state=self.tk.NORMAL)
@@ -133,6 +134,8 @@ class LaboratoryWindow:
                     self.fixture.wait(timeout=2)
 
     def tick(self):
+        if self.closed:
+            return
         if self.sink:
             self.storage_var.set(f'Fila local: {self.sink.health} | gravados: {self.sink.written}'
                                  f' | descartados: {self.sink.discarded} | expurgados: {self.sink.purged}')
@@ -150,6 +153,7 @@ class LaboratoryWindow:
                     self.pause_btn.config(text='Retomar')
                     self.append('Ensaio pausado por falha de armazenamento: ' + self.sink.health)
                 events = stream.drain()
+                self.on_events(events)
                 if self.sink:
                     self.sink.submit(events)
                 for event in events:
@@ -159,10 +163,17 @@ class LaboratoryWindow:
                                     ' | expira: ' + stream.expires_at.isoformat(timespec='seconds'))
                 self.events_var.set(f'Eventos: {self.event_count} | perdas de fila: '
                                     f'{stream.dropped + stream.native_dropped} | lacunas: {stream.sequence_gaps}')
-        self.root.after(100, self.tick)
+        self.tick_job = self.root.after(100, self.tick)
+
+    def on_events(self, events):
+        """Optional synthetic-lab instrumentation; never a raw UI data callback."""
 
     def close(self):
+        if self.closed:
+            return
         self.stop()
+        self.closed = True
+        self.root.after_cancel(self.tick_job)
         self.root.destroy()
 
     def run(self):

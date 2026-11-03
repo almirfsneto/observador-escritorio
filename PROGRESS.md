@@ -184,3 +184,85 @@ comando Python de parada. Aceite humano continua pendente.
 proximo gate e o roteiro humano VALIDACAO_MANUAL_WINDOWS.md, em Windows 10 e 11
 exclusivos de teste. Nao considerar validado em computadores da equipe ou apto
 a producao. Nenhuma automacao permanecera trabalhando depois deste atendimento.
+
+## Entrega Issue 5 — aceite guiado Windows — 2026-11-03
+
+**Base:** PR4 em b06b624; PRs 1–4 preservados em rascunho, sem merge. Documentos
+obrigatórios e roteiro de laboratório lidos integralmente. Baseline: 55 testes,
+49 executados no Linux e seis Windows skipped.
+
+**Implementado:** lançador CMD/Python com interface portuguesa; preparação local
+sem instalação/elevação/bypass, fontes NuGet vazias e SDK 8 fixado; checagem de
+Python/Tk/SDK, build e hashes SHA-256 dos dois exes e suas DLLs/configs; testes
+automáticos explícitos; laboratório opt-in desativado, segunda instância fictícia,
+pausa/stop/expiração preservados. Métricas Win32 só por handles de processos
+próprios, CPU/RAM amostradas e tempos de início/pausa até ACK. Itens realmente
+manuais não são aprovados por software. Schema fechado rejeita notas livres,
+campos extras/PII, NaN e sucesso sem evidência. JSON exclusivo fora de Git, sem
+upload; human_gate pendente e pilot_authorized falso por construção.
+
+**Verificação local até aqui:** 71 testes descobertos, 63 executados no Linux e
+oito Windows skipped. Incluem sanitização/schema/exportação, pré-requisitos,
+restauração offline/hashes, saída limitada e métricas com relógio/probes sintéticos.
+Acrescentados ensaios Windows de preparo offline real e wizard+fixture/provider+
+métricas+relatório, para CI. Aguardando evidência remota; nenhum aceite humano.
+
+**Limites:** sem tráfego de sistema auditado, sem garantia de pico contínuo de
+CPU; pico OS RAM pode preceder janela amostrada. Commit/edição/métricas faltantes
+são lacunas, não êxito. Hashes não autenticam código adulterado por administrador
+local; é necessário checkout confiável. ACL/cota total/cifragem permanecem fora
+esta Issue, não habilitados silenciosamente. Não houve dados reais, instalação
+em colaboradores, deploy ou merge. Próximo passo: CI desta entrega e, depois,
+operador dedicado executar o roteiro em Windows 10 e Windows 11.
+
+### Revisão e correções da entrega guiada
+
+- [PR #6](https://github.com/almirfsneto/observador-escritorio/pull/6), em rascunho,
+  base `codex/bounded-laboratory-queue` do PR #4; PRs #1–#4 continuam rascunhos,
+  não integrados. Nenhuma branch anterior foi alterada.
+- Primeira CI identificou corrida na leitura do contador de ACK de pausa pelo
+  teste: aguardar apenas o stream não aguardava a instrumentação do loop Tk.
+  Corrigida a sincronização; não foi mascarada com aprovação/skips artificiais.
+- Nova execução automática invalida sucesso anterior; timeout não preserva
+  PASSOU e encerra apenas o comando próprio, permitindo tentativa posterior.
+  Encerramento do assistente cancela permanentemente o runner.
+- Motivos de fim são classificados antes de o controlador parar o stream:
+  fixture fechada, backend com erro, expiração por relógio UTC ou monotônico,
+  parada pelo operador e fechamento de janela não são confundidos.
+- Teste do lançador a partir de outra pasta, inclusive com espaços; Python antigo
+  para antes de preparar/abrir o laboratório. Cleanup do teste sai do diretório
+  temporário antes de removê-lo, exigência específica observada no Windows.
+- Schema publicado comparado ao contrato executável, inteiros excessivos/NaN
+  rejeitados e wheel construído sem dependências. Linux: 76 descobertos,
+  68 executados e oito Windows skipped. Evidência final da matriz abaixo.
+
+### Evidência final automatizada da Issue 5
+
+Código validado: `20a90db7aa5a48aa55d74db92994d210be09cdc3`.
+[CI 41726436758](https://github.com/almirfsneto/observador-escritorio/actions/runs/41726436758):
+quatro jobs aprovados, Python 3.11/3.12 em Ubuntu e Windows.
+
+| Ambiente | Resultado |
+| --- | --- |
+| Ubuntu / Python 3.11 e 3.12 | 76 descobertos, 68 executados, oito testes Windows skipped |
+| Windows CI / Python 3.11 e 3.12 | 76 executados, todos aprovados, nenhum skipped |
+| Preparação Windows real | SDK 8 selecionado, restore com fontes vazias, build e hashes aprovados |
+| Assistente Windows automatizado | Tk/Toplevel, fixture WPF, provider, segunda instância, métricas dos quatro papéis, ACK de pausa, encerramento e JSON fechado aprovados |
+| Integração UIA anterior preservada | 30/30 Invoke em dois controles, 60 eventos, zero descartes nativos/Python |
+| Controlador/fila anterior preservados | 60 eventos na timeline e gravados, zero descartes, filhos encerrados |
+| EOF/expiração nativa | término normal (código 0) em ambas as versões Python |
+| Artefatos locais | wheel sem dependências e compileall aprovados; manifesto atualizado |
+
+O runner foi **Windows Server 2025, build 26100**, imagem
+`windows-2025-vs2026`; isto é automação de desktop sintético no CI, **não** um
+ensaio humano em Windows 10/11. Relatório de teste permaneceu com
+`origin=automated_test`, `human_gate=PENDENTE_REVISAO_HUMANA` e piloto falso.
+Nenhum relatório bruto/dado de captura foi anexado ou versionado.
+
+**Próxima tarefa e bloqueio humano:** TI/operador executar os quatro passos de
+`docs/VALIDACAO_MANUAL_WINDOWS.md` separadamente em Windows 10 e 11 dedicados,
+com Python/Tk e SDK 8 previamente disponíveis. Marcar apenas verificações feitas,
+aguardar também a expiração de 15 minutos, encerrar e salvar o JSON sanitizado
+fora de Git. Revisão humana desses relatórios continua obrigatória; sem piloto,
+dados reais, instalação na equipe, deploy ou integração dos PRs. As limitações
+de amostragem, UIA, rede não auditada e ACL/cifragem/cota total permanecem.
