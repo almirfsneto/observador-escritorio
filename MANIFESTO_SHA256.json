@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 19633,
-      "sha256": "78d6a91d19aea12fd0d9579459f84bbaf54e6f6d1cb12bf5ac09b819243e3710"
+      "size_bytes": 20329,
+      "sha256": "8f2984e773096f6617e5d688e8f92511f48bda41492bcc6d01e66cf0df496386"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -130,8 +130,8 @@
     },
     {
       "path": "docs/STORAGE_HARDENING.md",
-      "size_bytes": 3365,
-      "sha256": "fc8ba6c52ee4729bc37f5a0aece09258bae4948339f55a9f71e6ab301b3a9562"
+      "size_bytes": 3783,
+      "sha256": "3ed28eaa298c135d6ea5e13d44b0554e7820bd6ed79c605d0b7b4ef414ff3b1d"
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
@@ -210,8 +210,8 @@
     },
     {
       "path": "src/observador/lab_queue.py",
-      "size_bytes": 9460,
-      "sha256": "9dc7fbc7dcad4052830fb2b392a6313858b70a3c2b0a5663ff464c690aa22fbe"
+      "size_bytes": 9609,
+      "sha256": "0015f240503ebed93402faaef855b3e94005f53e1e3819a2460fe49c11c9384a"
     },
     {
       "path": "src/observador/lab_session.py",
@@ -320,8 +320,8 @@
     },
     {
       "path": "tests/test_storage_hardening.py",
-      "size_bytes": 7062,
-      "sha256": "d740625ffdd187290d076df2ca72ef2f850fc98781e9bd15cb467bfb45090d14"
+      "size_bytes": 7761,
+      "sha256": "5f9fe26719138caf005a1e7df89aa417bc90489e2bcc5651961f4cdd02de102d"
     },
     {
       "path": "tests/test_store.py",
