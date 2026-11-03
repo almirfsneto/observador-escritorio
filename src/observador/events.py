@@ -9,7 +9,7 @@ ALLOWED_TYPES = frozenset({
     "session_start", "session_end", "window_focus", "ui_action", "file_action",
     "browser_action", "error", "screenshot"
 })
-ALLOWED_META = frozenset({"control_role", "http_status", "result", "confidence", "category"})
+ALLOWED_META = frozenset({"control_role", "http_status", "result", "confidence", "category", "source_sequence"})
 
 @dataclass(frozen=True)
 class Event:
@@ -49,6 +49,8 @@ class Event:
                 valid = type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 1
             elif key == "http_status":
                 valid = type(value) is int and 100 <= value <= 599
+            elif key == "source_sequence":
+                valid = type(value) is int and 0 < value < 2**63
             elif key == "result":
                 valid = value in ("success", "failure", "cancelled", "unknown")
             elif key == "category":

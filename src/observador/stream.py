@@ -141,7 +141,8 @@ class LabStream:
         event = Event(1, str(uuid4()), stamp.isoformat(), 'laboratorio-sintetico', self.session,
                       'synthetic-app', 'window_focus' if data['action'] == 'focus' else 'ui_action',
                       data['action'], role + '-' + data['control_id'],
-                      metadata={'control_role': role, 'category': 'laboratory'})
+                      metadata={'control_role': role, 'category': 'laboratory',
+                                'source_sequence': data['sequence']})
         event.validate()
         if len(self.events) >= self.capacity:
             self.dropped += 1

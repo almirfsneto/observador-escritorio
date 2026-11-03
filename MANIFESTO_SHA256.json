@@ -135,13 +135,13 @@
     },
     {
       "path": "src/observador/discovery.py",
-      "size_bytes": 2210,
-      "sha256": "187ae477c2ed825a1be13bc5fd183a7b7a9af3085c1fe265ed2016267a2638bf"
+      "size_bytes": 2336,
+      "sha256": "8db33b47fb6af90796fdaf28ab5299173669dce712cec843f64184c794302de1"
     },
     {
       "path": "src/observador/events.py",
-      "size_bytes": 3294,
-      "sha256": "701fa4d4f7a47c87bba7514899adbf0808177d3d5ae50f198128ea9df778cd10"
+      "size_bytes": 3421,
+      "sha256": "0e91e61b0ffe2c9b566ccb15cc143338d69b11b470d04338315de8795bfd7fce"
     },
     {
       "path": "src/observador/lab_controller.py",
@@ -170,8 +170,8 @@
     },
     {
       "path": "src/observador/stream.py",
-      "size_bytes": 7269,
-      "sha256": "73f8429dcc4196fa15b76fa9920eb54da5447e9a9b088ee86994e1fc26734fda"
+      "size_bytes": 7338,
+      "sha256": "f458c900b0d61b2451046b4abec2e2438c8b352a97bee1445eab9c9abf381bc2"
     },
     {
       "path": "src/observador/windows.py",
@@ -195,8 +195,8 @@
     },
     {
       "path": "tests/test_discovery.py",
-      "size_bytes": 534,
-      "sha256": "6abce2f38c2bfa59a00ec0d363ca53603438da46f83100a15c007000518053e1"
+      "size_bytes": 1297,
+      "sha256": "4401718bfcc854de52b5ff776bf52ba8552ad1e1d5e722db82f62db26a53d9f8"
     },
     {
       "path": "tests/test_events.py",
