@@ -31,6 +31,8 @@ class LabEventQueue(EventStore):
         self.path = path
         self.budget = StorageBudget(path, max_db_bytes, max_total_bytes, min_free_bytes)
         self.budget.check()
+        if any(path.with_name(path.name+suffix).exists() for suffix in ('-wal','-shm')):
+            raise OSError('unsupported_existing_wal_queue')
         # Repair permissions on pre-existing journals before SQLite crash recovery.
         for entry in path.parent.iterdir():
             secure_file(entry)

@@ -288,3 +288,14 @@ nativos e 20s. STATECHANGE não vira ação inferida. Comparação automatizada 
 WinForms, contagens UIA/WinEvent, custo próprio e atraso de callback, pause ACK.
 Linux: 84 descobertos, 74 executados, dez Windows skipped. Compilação e desktop
 Windows dependem da CI em acompanhamento; não equivalem ao aceite humano.
+
+### Evidência do endurecimento do armazenamento
+
+PR #7: CI 41741273177 no código 7bd09ff, quatro jobs aprovados Linux/Windows
+Python 3.11/3.12. Windows: 83 descobertos/82 executados, um symlink ignorado;
+Linux: 74 executados/nove Windows ignorados. DACL verificada por trustees numéricos
+(não aliases SDDL), DPAPI real roundtrip/tamper, recuperação de rollback, filas e
+validador anterior aprovados. Revisão adicional passa a tentar symlink Windows
+em vez de presumir falta de privilégio e recusa WAL/SHM legado sem checkpoint ou
+remoção. Testes dessa revisão serão confirmados na CI subsequente. O SQLite ativo
+continua em claro; não há quota física de volume nem aceite humano.

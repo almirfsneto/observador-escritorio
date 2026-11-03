@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 20182,
-      "sha256": "949af9395e48d25960c0fbc5cd4b5095a5079c0c666c399beaac9c9845c5da04"
+      "size_bytes": 20878,
+      "sha256": "5e02d209c8be5dc9ffb8838d01ee100ab380d8ed687b1501c56b15becbd1a8ee"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -130,8 +130,8 @@
     },
     {
       "path": "docs/STORAGE_HARDENING.md",
-      "size_bytes": 3365,
-      "sha256": "fc8ba6c52ee4729bc37f5a0aece09258bae4948339f55a9f71e6ab301b3a9562"
+      "size_bytes": 3783,
+      "sha256": "3ed28eaa298c135d6ea5e13d44b0554e7820bd6ed79c605d0b7b4ef414ff3b1d"
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
@@ -215,8 +215,8 @@
     },
     {
       "path": "src/observador/lab_queue.py",
-      "size_bytes": 9460,
-      "sha256": "9dc7fbc7dcad4052830fb2b392a6313858b70a3c2b0a5663ff464c690aa22fbe"
+      "size_bytes": 9609,
+      "sha256": "0015f240503ebed93402faaef855b3e94005f53e1e3819a2460fe49c11c9384a"
     },
     {
       "path": "src/observador/lab_session.py",
@@ -325,8 +325,8 @@
     },
     {
       "path": "tests/test_storage_hardening.py",
-      "size_bytes": 7062,
-      "sha256": "d740625ffdd187290d076df2ca72ef2f850fc98781e9bd15cb467bfb45090d14"
+      "size_bytes": 7761,
+      "sha256": "5f9fe26719138caf005a1e7df89aa417bc90489e2bcc5651961f4cdd02de102d"
     },
     {
       "path": "tests/test_store.py",
@@ -385,8 +385,8 @@
     },
     {
       "path": "tools/WindowsObserver/WinEventCoverage.cs",
-      "size_bytes": 4755,
-      "sha256": "0eeb86cae473cae98a2d0d2ae7bee8a2a3cbfe7cf2ec842de9eceef6516152fe"
+      "size_bytes": 4758,
+      "sha256": "68ffcaa85e8dad6191998cf6124e20080c336ae1d7d5e658ed2c4a36ed7d9c1a"
     },
     {
       "path": "tools/WindowsObserver/WindowsObserver.csproj",

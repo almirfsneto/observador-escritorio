@@ -92,16 +92,30 @@ class StorageHardeningTest(unittest.TestCase):
                 store.close()
 
     def test_links_are_rejected_without_modifying_destination(self):
-        if sys.platform == 'win32':
-            self.skipTest('Symlink creation requires optional Windows privilege; hardlink test covers Windows separately')
         with tempfile.TemporaryDirectory() as tmp:
             outside = Path(tmp)/'outside'
             outside.mkdir()
             alias = Path(tmp)/'alias'
-            alias.symlink_to(outside, target_is_directory=True)
+            try:
+                alias.symlink_to(outside, target_is_directory=True)
+            except OSError as error:
+                if sys.platform == 'win32' and getattr(error, 'winerror', None) == 1314:
+                    self.skipTest('Windows denied optional symlink creation privilege; no policy/privilege changed')
+                raise
             with self.assertRaises((OSError, ValueError)):
                 LabEventQueue(alias/'db.sqlite3')
             self.assertEqual(list(outside.iterdir()), [])
+
+    def test_existing_wal_is_refused_without_checkpointing_or_deleting(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'queue/events.sqlite3'
+            path.parent.mkdir()
+            auxiliary = path.with_name(path.name+'-wal')
+            auxiliary.write_bytes(b'synthetic orphan WAL')
+            with self.assertRaisesRegex(OSError, 'unsupported_existing_wal_queue'):
+                LabEventQueue(path)
+            self.assertEqual(auxiliary.read_bytes(), b'synthetic orphan WAL')
+            self.assertFalse(path.exists())
 
     def test_hardlinks_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
