@@ -52,3 +52,9 @@ a fila original. Memória Python, pagefile, crash dumps e backups ficam fora da
 proteção. A portabilidade depende do perfil/chaves Windows; não exportar chaves.
 Antes de escolher cifragem da fila ativa, revisar alternativas no documento de
 arquitetura. Nenhuma destas medidas libera piloto.
+
+WAL/SHM preexistentes são recusados sem checkpoint/remoção, antes de abrir SQLite.
+Não converter formatos de journal não suportados implicitamente: recuperação WAL
+exige ferramenta/migração revisada em cópia sintética. Journal DELETE de rollback
+continua recuperável na reabertura. Tests de symlink Windows tentam criá-lo;
+somente erro efetivo de privilégio ausente gera skip, sem alterar privilégios.

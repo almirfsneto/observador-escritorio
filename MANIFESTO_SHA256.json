@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 20877,
-      "sha256": "1dd73e13f41f688bcfecd2d405b653d3052c9eb3370c8eda13acdb9748b43c31"
+      "size_bytes": 22406,
+      "sha256": "1d1c1f7e45a5903d4be67e8a2b3d919aeacb05204509d3f8cbe08b14aaa9a592"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -155,8 +155,8 @@
     },
     {
       "path": "docs/STORAGE_HARDENING.md",
-      "size_bytes": 3365,
-      "sha256": "fc8ba6c52ee4729bc37f5a0aece09258bae4948339f55a9f71e6ab301b3a9562"
+      "size_bytes": 3783,
+      "sha256": "3ed28eaa298c135d6ea5e13d44b0554e7820bd6ed79c605d0b7b4ef414ff3b1d"
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
@@ -170,8 +170,8 @@
     },
     {
       "path": "docs/WINDOWS_COVERAGE.md",
-      "size_bytes": 2585,
-      "sha256": "e7e38a19405d8bf57ed1408fbd2e4b21a4f1e79122797f7b9800fe451f416601"
+      "size_bytes": 2907,
+      "sha256": "c63a7be4576bedd2aae71411e854e12f2f01f331403757486d1728955a508bc7"
     },
     {
       "path": "docs/WINDOWS_LAB.md",
@@ -245,8 +245,8 @@
     },
     {
       "path": "src/observador/lab_queue.py",
-      "size_bytes": 9460,
-      "sha256": "9dc7fbc7dcad4052830fb2b392a6313858b70a3c2b0a5663ff464c690aa22fbe"
+      "size_bytes": 9609,
+      "sha256": "0015f240503ebed93402faaef855b3e94005f53e1e3819a2460fe49c11c9384a"
     },
     {
       "path": "src/observador/lab_session.py",
@@ -375,8 +375,8 @@
     },
     {
       "path": "tests/test_storage_hardening.py",
-      "size_bytes": 7062,
-      "sha256": "d740625ffdd187290d076df2ca72ef2f850fc98781e9bd15cb467bfb45090d14"
+      "size_bytes": 7761,
+      "sha256": "5f9fe26719138caf005a1e7df89aa417bc90489e2bcc5651961f4cdd02de102d"
     },
     {
       "path": "tests/test_store.py",
