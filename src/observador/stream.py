@@ -92,6 +92,9 @@ class LabStream:
                         self.health = 'active' if self.enabled else 'paused'
                 elif kind == 'event':
                     self._event(data)
+                elif kind == 'error' and set(data) == {'kind', 'code'} and data['code'] in {
+                        'invalid_config', 'subscription_failed', 'backend_failure'}:
+                    self.stop(data['code'])
                 else:
                     raise ValueError()
                 self.last_received = self.monotonic()

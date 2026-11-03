@@ -25,7 +25,7 @@ class DesktopAutomationTest(unittest.TestCase):
             deadline = time.monotonic() + 8
             while not session.stream.ready and not session.stream.stopped and time.monotonic() < deadline:
                 time.sleep(.02)
-            self.assertTrue(session.stream.ready, 'Native UIA subscription failed')
+            self.assertTrue(session.stream.ready, 'Native UIA subscription failed: ' + session.stream.health)
             session.set_active(True)
             def exercise(phase):
                 result = subprocess.run(

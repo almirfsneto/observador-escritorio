@@ -134,6 +134,7 @@ internal static class Program
 {
     private static int Main(string[] args)
     {
+        string stage = "invalid_config";
         Console.InputEncoding = new UTF8Encoding(false);
         Console.OutputEncoding = new UTF8Encoding(false);
         try
@@ -155,30 +156,41 @@ internal static class Program
             // A separate watchdog also bounds a stuck UIA call or teardown.
             var watchdog = Stopwatch.StartNew();
             var maximum = expires - DateTime.UtcNow;
-            _ = Task.Run(async () => {
+            new Thread(() => {
                 while (watchdog.Elapsed < maximum && DateTime.UtcNow < expires && !target.HasExited)
-                    await Task.Delay(100);
+                    Thread.Sleep(100);
                 Environment.Exit(0);
-            });
+            }) { IsBackground = true }.Start();
+            stage = "subscription_failed";
             if (!synthetic) observer.Subscribe();
             observer.Ready();
-            var writer = Task.Run(observer.Writer);
-            var input = Task.Run(Console.ReadLine);
+            new Thread(observer.Writer) { IsBackground = true }.Start();
+            var input = new BlockingCollection<string>(16);
+            new Thread(() => {
+                try {
+                    string? line;
+                    while ((line = Console.ReadLine()) is not null)
+                        if (!input.TryAdd(line)) return;
+                } finally { input.CompleteAdding(); }
+            }) { IsBackground = true }.Start();
+            stage = "backend_failure";
             var timer = Stopwatch.StartNew();
             while (observer.IsAlive())
             {
-                if (input.Wait(50))
+                if (input.TryTake(out string? line, 50))
                 {
-                    var line = input.Result;
-                    if (line is null || !observer.Command(line)) break;
+                    if (!observer.Command(line)) break;
                     if (synthetic) observer.SyntheticBurst();
-                    input = Task.Run(Console.ReadLine);
                 }
+                else if (input.IsCompleted) break;
                 if (timer.ElapsedMilliseconds >= 1000) { observer.Health(); timer.Restart(); }
             }
             // Exit also on stdin EOF: a crashed controller must not leave a collector.
             return 0;
         }
-        catch { return 2; }
+        catch {
+            Console.WriteLine(JsonSerializer.Serialize(new { kind = "error", code = stage }));
+            return 2;
+        }
     }
 }

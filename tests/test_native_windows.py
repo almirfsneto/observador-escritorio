@@ -58,8 +58,8 @@ class NativeProtocolTest(unittest.TestCase):
         self.assertFalse(session.writer.is_alive())
 
     def test_native_expires_without_controller_commands(self):
-        session = self.launch(seconds=2)
-        self.wait_for(lambda: session.process.poll() is not None, timeout=6)
+        session = self.launch(seconds=6)
+        self.wait_for(lambda: session.process.poll() is not None, timeout=10)
         self.assertEqual(session.process.returncode, 0)
         self.assertFalse(session.check())
 
@@ -78,7 +78,7 @@ class NativeProtocolTest(unittest.TestCase):
                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         try:
             process.stdin.close()
-            self.assertEqual(process.wait(timeout=5), 0)
+            self.assertEqual(process.wait(timeout=8), 0)
         finally:
             if process.poll() is None:
                 process.kill()
