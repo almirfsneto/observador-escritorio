@@ -266,3 +266,16 @@ aguardar também a expiração de 15 minutos, encerrar e salvar o JSON sanitizad
 fora de Git. Revisão humana desses relatórios continua obrigatória; sem piloto,
 dados reais, instalação na equipe, deploy ou integração dos PRs. As limitações
 de amostragem, UIA, rede não auditada e ACL/cifragem/cota total permanecem.
+
+## Execução intensiva — armazenamento — 2026-11-03
+
+Base obrigatória PR6, head 3d4a770; baseline Linux reproduzido: 76 descobertos,
+68 executados, oito Windows skipped. Branch nova codex/storage-reliability.
+Implementados orçamento agregado/reserva para journal, free-space headroom,
+cache sem spill, batch direto limitado, quick_check, DACL Windows e proteção de
+links, contagem explícita de submissão após shutdown e corrupção preservada.
+Protótipo DPAPI de arquivo sintético exportado, não de SQLite cifrado. Testes
+novos cobrem auxiliares, disco indisponível, read-only, corrupção, queda com
+rollback e permissões/DPAPI nativos no Windows. Evidência remota pendente.
+Detalhes e limites: docs/STORAGE_HARDENING.md. Validador e schema de aceite v1
+preservados; nenhum dado real, instalação na equipe, deploy ou merge.
