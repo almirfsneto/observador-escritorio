@@ -42,3 +42,11 @@ Leia `AGENTS.md`, `SPEC.md`, `SECURITY.md` e `ROADMAP.md`. Abra `PROMPT_INICIAL_
 - `.github/workflows`: CI Linux/Windows.
 
 Licenças de projetos terceiros devem ser verificadas antes de importar qualquer código, inclusive DeskMate, SmartRPA e OpenAdapt. O código deste scaffold é novo; não inclui fontes dos projetos citados.
+
+## Entrega de desenvolvimento — 2026-11-03
+
+Prototipo experimental Win32/UIA e politica de coleta implementados como biblioteca,
+com mocks, allowlist, pausa, expediente e expiracao. A CLI continua demonstrativa.
+Veja `docs/WINDOWS_LAB.md` para limites e retomada, e
+`docs/CAPTURE_ENGINE_REVIEW.md` para comparacao dos motores. Nao validado em Windows
+interativo e nao apto a piloto com pessoas.
