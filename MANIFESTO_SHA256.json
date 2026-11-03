@@ -210,8 +210,8 @@
     },
     {
       "path": "tests/test_native_windows.py",
-      "size_bytes": 4914,
-      "sha256": "7dad0eb2850b7b845f924d71ac356348ca4600edf4ad7d07d1bb9e11a56d97f7"
+      "size_bytes": 4992,
+      "sha256": "15f809986cd99ea61dd3e2f6c40e200a03cf52798c146d8c6f9d162744efab36"
     },
     {
       "path": "tests/test_store.py",
@@ -255,8 +255,8 @@
     },
     {
       "path": "tools/WindowsObserver/Program.cs",
-      "size_bytes": 13374,
-      "sha256": "6d484536d56f2485e20ec0adf8adde9861f6b9b7164d1d328a2a9c7efb8f5fa4"
+      "size_bytes": 13822,
+      "sha256": "48bb7ab555fec1c92942d09a2b1ed36f49e9c252353cccbb5d08d62c627aace9"
     },
     {
       "path": "tools/WindowsObserver/WindowsObserver.csproj",

@@ -180,6 +180,9 @@ internal sealed class Observer : IDisposable
 
     public void Dispose()
     {
+        // Arm before COM teardown: UIA/runtime background resources can otherwise
+        // keep the native process alive after Main has logically completed.
+        Program.ArmExit();
         lock (gate) enabled = false;
         focusQueue.CompleteAdding();
         // OS can stall during UIA teardown. Parent has a bounded kill fallback.
@@ -191,6 +194,16 @@ internal sealed class Observer : IDisposable
 
 internal static class Program
 {
+    private static int shutdownArmed;
+    internal static void ArmExit()
+    {
+        if (Interlocked.Exchange(ref shutdownArmed, 1) != 0) return;
+        new Thread(() => {
+            Thread.Sleep(1000);
+            Process.GetCurrentProcess().Kill();
+        }) { IsBackground = true }.Start();
+    }
+
     private static int Main(string[] args)
     {
         string stage = "invalid_config";
@@ -220,14 +233,13 @@ internal static class Program
                     while (watchdog.Elapsed < maximum && DateTime.UtcNow < expires && !target.HasExited)
                         Thread.Sleep(100);
                 } catch (InvalidOperationException) { return; }
-                Thread.Sleep(1000); // Allow normal teardown; bound a stuck COM release.
-                Process.GetCurrentProcess().Kill();
+                ArmExit();
             }) { IsBackground = true }.Start();
             stage = "subscription_failed";
             if (!synthetic) observer.Subscribe(value => stage = value);
             observer.Ready();
             new Thread(() => {
-                try { observer.Writer(); } catch (IOException) { Environment.Exit(0); }
+                try { observer.Writer(); } catch (IOException) { Process.GetCurrentProcess().Kill(); }
             }) { IsBackground = true }.Start();
             var input = new BlockingCollection<string>(16);
             new Thread(() => {
@@ -254,8 +266,10 @@ internal static class Program
             return 0;
         }
         catch (Exception error) {
+            ArmExit();
             Console.WriteLine(JsonSerializer.Serialize(new { kind = "error", code = stage, hresult = error.HResult }));
             return 2;
         }
+        finally { ArmExit(); }
     }
 }

@@ -93,7 +93,9 @@ class NativeProtocolTest(unittest.TestCase):
                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         try:
             process.stdin.close()
-            self.assertEqual(process.wait(timeout=8), 0)
+            code = process.wait(timeout=8)
+            self.assertIn(code, (0, 4294967295))
+            print('NATIVE_EOF_EXIT', code)
         finally:
             if process.poll() is None:
                 process.kill()
