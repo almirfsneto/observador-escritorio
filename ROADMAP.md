@@ -60,3 +60,11 @@
 - [x] Evidencia CI Windows de UIA, controlador, fila e mineracao sintetica registrada em PROGRESS.md (55 testes Windows; 30/30 Invoke WPF).
 - [ ] Aceite humano do controlador em Windows 10/11 e medicao de overhead/perda.
 - [ ] ACL/cifragem, cota total incluindo auxiliares, screenshots e demais gates de piloto.
+
+## Issue 5 — aceite guiado com relatório sanitizado
+- [x] Lançador local com preparação offline, dependências previamente instaladas, hashes e testes explícitos.
+- [x] Avaliação manual PASSOU/FALHOU/NÃO EXECUTADO com observações fechadas.
+- [x] CPU/RAM de processos próprios, tempos de ACK e contadores separados de percepção humana.
+- [x] Relatório local fora de Git com schema fechado; nenhum upload ou liberação de piloto.
+- [ ] Confirmar CI Linux/Windows desta entrega e registrar evidências em PROGRESS.md.
+- [ ] Execução humana em Windows 10 e 11 dedicados, que continua obrigatória.

@@ -184,3 +184,33 @@ comando Python de parada. Aceite humano continua pendente.
 proximo gate e o roteiro humano VALIDACAO_MANUAL_WINDOWS.md, em Windows 10 e 11
 exclusivos de teste. Nao considerar validado em computadores da equipe ou apto
 a producao. Nenhuma automacao permanecera trabalhando depois deste atendimento.
+
+## Entrega Issue 5 — aceite guiado Windows — 2026-11-03
+
+**Base:** PR4 em b06b624; PRs 1–4 preservados em rascunho, sem merge. Documentos
+obrigatórios e roteiro de laboratório lidos integralmente. Baseline: 55 testes,
+49 executados no Linux e seis Windows skipped.
+
+**Implementado:** lançador CMD/Python com interface portuguesa; preparação local
+sem instalação/elevação/bypass, fontes NuGet vazias e SDK 8 fixado; checagem de
+Python/Tk/SDK, build e hashes SHA-256 dos dois exes e suas DLLs/configs; testes
+automáticos explícitos; laboratório opt-in desativado, segunda instância fictícia,
+pausa/stop/expiração preservados. Métricas Win32 só por handles de processos
+próprios, CPU/RAM amostradas e tempos de início/pausa até ACK. Itens realmente
+manuais não são aprovados por software. Schema fechado rejeita notas livres,
+campos extras/PII, NaN e sucesso sem evidência. JSON exclusivo fora de Git, sem
+upload; human_gate pendente e pilot_authorized falso por construção.
+
+**Verificação local até aqui:** 71 testes descobertos, 63 executados no Linux e
+oito Windows skipped. Incluem sanitização/schema/exportação, pré-requisitos,
+restauração offline/hashes, saída limitada e métricas com relógio/probes sintéticos.
+Acrescentados ensaios Windows de preparo offline real e wizard+fixture/provider+
+métricas+relatório, para CI. Aguardando evidência remota; nenhum aceite humano.
+
+**Limites:** sem tráfego de sistema auditado, sem garantia de pico contínuo de
+CPU; pico OS RAM pode preceder janela amostrada. Commit/edição/métricas faltantes
+são lacunas, não êxito. Hashes não autenticam código adulterado por administrador
+local; é necessário checkout confiável. ACL/cota total/cifragem permanecem fora
+esta Issue, não habilitados silenciosamente. Não houve dados reais, instalação
+em colaboradores, deploy ou merge. Próximo passo: CI desta entrega e, depois,
+operador dedicado executar o roteiro em Windows 10 e Windows 11.
