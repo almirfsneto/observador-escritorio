@@ -4,12 +4,14 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from observador.acceptance_report import (MANUAL_STEPS, ReportError, empty_session,
+from observador.acceptance_report import (MANUAL_STEPS, REPORT_SCHEMA, ReportError, empty_session,
     finalize_report, new_report, validate_report, write_report)
 
 
 class AcceptanceReportTest(unittest.TestCase):
     def test_empty_report_is_explicitly_unexecuted_and_never_authorizes_pilot(self):
+        schema_path = Path(__file__).resolve().parents[1] / 'docs/ACEITE_REPORT_SCHEMA.json'
+        self.assertEqual(json.loads(schema_path.read_text(encoding='utf-8')), REPORT_SCHEMA)
         report = finalize_report(new_report())
         self.assertFalse(report['pilot_authorized'])
         self.assertEqual(report['human_gate'], 'PENDENTE_REVISAO_HUMANA')
@@ -52,7 +54,7 @@ class AcceptanceReportTest(unittest.TestCase):
             self.assertNotIn(secret, str(error.exception))
 
     def test_rejects_nan_boolean_counters_and_unproven_success(self):
-        for value in (float('nan'), float('inf'), -1, True, '123'):
+        for value in (float('nan'), float('inf'), -1, True, '123', 10**500):
             report = new_report()
             report['sessions'] = [empty_session()]
             report['sessions'][0]['metrics']['pause_ack_peak_ms'] = value

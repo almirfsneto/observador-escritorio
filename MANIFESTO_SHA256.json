@@ -234,6 +234,11 @@
       "sha256": "dd0c64d95f217ad29dcd3bff0874b186821ab2f52fe7990cdb71cd377f43a4fd"
     },
     {
+      "path": "tests/test_acceptance_launcher.py",
+      "size_bytes": 1378,
+      "sha256": "0a67d0507bb3fac461f1f9f933c93ccaaffdb3907083854973e16c7fdcc28cab"
+    },
+    {
       "path": "tests/test_acceptance_metrics.py",
       "size_bytes": 3062,
       "sha256": "877c272c356e395eeacfe38948e91a30ef64d6e65efcdc0f7605021b959e061b"
@@ -245,8 +250,8 @@
     },
     {
       "path": "tests/test_acceptance_report.py",
-      "size_bytes": 4818,
-      "sha256": "cc603f783a03a08aec7e68593f49b64e93c1633496a10d43bcd1b287bf0858cf"
+      "size_bytes": 5028,
+      "sha256": "35583a1b6a2e81604b0ff13bf137f363991ef95e59e90cb3ccd6344cc29e9add"
     },
     {
       "path": "tests/test_acceptance_windows.py",
