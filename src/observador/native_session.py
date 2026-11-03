@@ -121,12 +121,7 @@ class NativeSession:
     def check(self):
         if self.fixture.poll() is not None:
             self.stream.stop('fixture_exit')
-        if not self.stream.alive():
-            return False
-        if time.monotonic() - self.stream.last_received > 5:
-            self.stream.stop('backend_timeout')
-            return False
-        return True
+        return self.stream.check_health()
 
     def close(self):
         with self.lock:

@@ -46,6 +46,18 @@ class StreamTest(unittest.TestCase):
         self.event(3)
         self.assertEqual(len(self.stream.drain()), 1)
 
+    def test_pause_is_confirmed_only_by_matching_ack_and_missing_ack_stops(self):
+        self.stream.command(False)
+        self.assertEqual(self.stream.health, 'pausing')
+        self.send(kind='ack', generation=self.stream.generation - 1, active=False)
+        self.assertEqual(self.stream.health, 'pausing')
+        self.send(kind='ack', generation=self.stream.generation, active=False)
+        self.assertEqual(self.stream.health, 'paused')
+        self.stream.command(True)
+        self.elapsed += 4
+        self.assertFalse(self.stream.check_health())
+        self.assertEqual(self.stream.health, 'command_timeout')
+
     def test_burst_is_bounded_and_reports_loss(self):
         for i in range(1, 1001):
             self.event(i)

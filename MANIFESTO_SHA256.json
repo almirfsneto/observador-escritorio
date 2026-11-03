@@ -155,8 +155,8 @@
     },
     {
       "path": "src/observador/native_session.py",
-      "size_bytes": 5913,
-      "sha256": "9bc73f4aad1afddc5a2931934f8bf64d99e8929f1de5738f6a8aba004be9da15"
+      "size_bytes": 5740,
+      "sha256": "807397dbac7fa82ef726d01de6560743d26b2efe53cc7b2605bed41b63705c71"
     },
     {
       "path": "src/observador/sample.py",
@@ -170,8 +170,8 @@
     },
     {
       "path": "src/observador/stream.py",
-      "size_bytes": 7657,
-      "sha256": "6b29a9c9d7bc042b21bdd66a3a79e93eca5071db9cf362333cb9c5d930a7acad"
+      "size_bytes": 8206,
+      "sha256": "4f59126ab9ce95fd9bd68676ce61809a388409e971671df7e82ab9542a738a62"
     },
     {
       "path": "src/observador/windows.py",
@@ -220,8 +220,8 @@
     },
     {
       "path": "tests/test_stream.py",
-      "size_bytes": 4332,
-      "sha256": "3be36159712030638b9a12f2e9ee443fddbef139ef5e433df04048677bb0ae2f"
+      "size_bytes": 4956,
+      "sha256": "188f315dbc2482e25ea7e5a1f637eea3855c98cc59c0070525fea27b886a5efc"
     },
     {
       "path": "tests/test_windows_desktop.py",

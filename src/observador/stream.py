@@ -34,6 +34,7 @@ class LabStream:
         self.session = str(uuid4())
         self.started_at = utc(clock())
         self.last_received = monotonic()
+        self.pending_ack_at = None
         self.last_focus = None
         self.protocol_failure = None
         self.native_error = None
@@ -53,7 +54,8 @@ class LabStream:
             self.events.clear()
             self.last_focus = None
             self.last_sequence = 0
-            self.health = 'starting' if active else 'paused'
+            self.health = 'starting' if active else 'pausing'
+            self.pending_ack_at = self.monotonic()
             return {'command': 'start' if active else 'pause', 'generation': self.generation}
 
     def stop(self, reason='stopped'):
@@ -97,6 +99,7 @@ class LabStream:
                         if data['active'] != self.enabled:
                             raise ValueError()
                         self.health = 'active' if self.enabled else 'paused'
+                        self.pending_ack_at = None
                 elif kind == 'event':
                     self._event(data)
                 elif kind == 'error' and set(data) == {'kind', 'code', 'hresult'} and type(data['hresult']) is int and data['code'] in {
@@ -159,3 +162,13 @@ class LabStream:
                 self.events.clear()
                 return []
             return [self.events.popleft() for _ in range(min(limit, len(self.events)))]
+
+    def check_health(self):
+        with self.lock:
+            if not self.alive():
+                return False
+            if self.ready and self.pending_ack_at is not None and self.monotonic() - self.pending_ack_at > 3:
+                self.stop('command_timeout')
+            elif self.monotonic() - self.last_received > 5:
+                self.stop('backend_timeout')
+            return not self.stopped
