@@ -288,3 +288,14 @@ nativos e 20s. STATECHANGE não vira ação inferida. Comparação automatizada 
 WinForms, contagens UIA/WinEvent, custo próprio e atraso de callback, pause ACK.
 Linux: 84 descobertos, 74 executados, dez Windows skipped. Compilação e desktop
 Windows dependem da CI em acompanhamento; não equivalem ao aceite humano.
+
+## Execução intensiva — extensão web sintética
+
+Branch codex/synthetic-browser-extension sobre a entrega de cobertura Windows.
+MV3 opt-in, loopback/origem/caminho exatos, sem permissões amplas, valores ou URLs
+exportados. Popup de início/pausa/fim, prazo/limites, worker serial e exportação
+local; importador Event v1 fechado. Site fictício com formulário/senha/menu/tabs/
+tabela/navegação e teste real Playwright. Política Chromium deste executor impede
+unpacked; não foi contornada nem reportada como teste aprovado. Job CI real
+Chromium separado adicionado; resultado remoto ainda pendente. Testes unitários
+não substituem carregamento real nem aceite Chrome/Edge Windows.
