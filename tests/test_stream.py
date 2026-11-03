@@ -58,6 +58,16 @@ class StreamTest(unittest.TestCase):
         self.assertFalse(self.stream.check_health())
         self.assertEqual(self.stream.health, 'command_timeout')
 
+    def test_command_sent_before_readiness_gets_ack_budget_after_handshake(self):
+        stream = LabStream(self.now + timedelta(minutes=15), clock=lambda: self.now,
+                           monotonic=lambda: self.elapsed)
+        stream.command(True)
+        self.elapsed += 4
+        stream.receive(json.dumps({'kind': 'ready', 'pid': 123, 'start_ticks': 456}))
+        self.assertTrue(stream.check_health())
+        self.elapsed += 4
+        self.assertFalse(stream.check_health())
+
     def test_burst_is_bounded_and_reports_loss(self):
         for i in range(1, 1001):
             self.event(i)

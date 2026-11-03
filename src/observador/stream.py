@@ -82,6 +82,8 @@ class LabStream:
                         raise ValueError()
                     # Process identity is checked by NativeSession before this call.
                     self.ready = True
+                    if self.pending_ack_at is not None:
+                        self.pending_ack_at = self.monotonic()
                 elif kind == 'health' and set(data) == {'kind', 'generation', 'dropped', 'callbacks'}:
                     if (type(data['dropped']) is not int or data['dropped'] < 0
                             or type(data['generation']) is not int):
