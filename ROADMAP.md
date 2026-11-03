@@ -43,3 +43,11 @@
 - [ ] Piloto voluntario em 2-3 maquinas apos autorizacao.
 - [ ] Medicao de perda de eventos e overhead.
 - [ ] Expandir a 10 somente apos criterios de aceite.
+
+## Entrega 2 - laboratorio com controle visivel (branch codex/visible-windows-laboratory)
+- [x] Projeto WinForms ficticio dedicado (.NET 8), sem leitura de dados reais.
+- [x] Controlador Windows visivel inicialmente desativado, iniciar/pausar/encerrar, somente alias e papel, sem persistencia.
+- [x] Limite de 15 minutos e testes sinteticos para caminho permitido e expiracao.
+- [ ] Validacao integrada em sessao Windows interativa com evidencia e medicao de latencia.
+- [ ] Vincular instancia por PID + instante de criacao e substituir polling lento antes do piloto.
+- [ ] Fila persistente com cotas, retencao e controles completos de privacidade.
