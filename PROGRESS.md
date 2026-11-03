@@ -153,3 +153,10 @@ somente versoes/hashes/contagens e verificar responsividade, isolamento de segun
 instancia, pausa, fim e custo. CI usa desktop sintetico automatizado e nao e esse
 aceite. Depois do relatorio, revisar cobertura por aplicativo, cifragem/ACL,
 cota total de disco e gates de piloto. Manter PRs 1/2/3/4 em rascunho ate revisao.
+
+**Ajustes finais de ensaio:** preparacao de foreground usa Win32 apenas no PID
+ficticio, mantendo o loop Tk ativo, para evitar bootstrap PowerShell no probe.
+Expiracao nativa e testada com stdin aberto e sem NativeSession: exige termino
+em ate 10s para prazo de 6s, por saida normal ou encerramento proprio do watchdog
+(codigo Windows 4294967295). O fallback e intencional para teardown preso, nao um
+comando Python de parada. Aceite humano continua pendente.

@@ -10,6 +10,7 @@ import unittest
 from observador.lab_controller import LaboratoryWindow
 from observador.native_session import creation_ticks
 from observador.lab_queue import LabEventQueue
+from windows_support import prepare_foreground
 
 
 @unittest.skipUnless(sys.platform == 'win32', 'Windows controller smoke requires Windows')
@@ -59,7 +60,8 @@ class ControllerAutomationTest(unittest.TestCase):
                     if data['status'] == 'blocked':
                         self.skipTest('Hosted foreground desktop unavailable; manual controller validation required')
                     self.assertEqual(data['status'], 'ok')
-                exercise('probe')
+                if not prepare_foreground(window.fixture, tick=window.root.update):
+                    self.skipTest('Hosted foreground desktop unavailable; manual controller validation required')
                 window.persist.set(True)
                 window.start_btn.invoke()
                 pump(lambda: window.session is not None and window.session.stream.health == 'active')
