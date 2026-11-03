@@ -240,8 +240,8 @@
     },
     {
       "path": "tests/test_windows_controller.py",
-      "size_bytes": 4773,
-      "sha256": "a2f355a005f2a4524d60ee112bded3a286c7d83108010f1da89efece66851f97"
+      "size_bytes": 5393,
+      "sha256": "cfb41000880e14b578cffdd98100ed52ce7c92e2510f7f96528986afc731bbcd"
     },
     {
       "path": "tests/test_windows_desktop.py",

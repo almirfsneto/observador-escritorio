@@ -38,13 +38,24 @@ class ControllerAutomationTest(unittest.TestCase):
                 self.assertIsNone(window.session, 'Opening fixture must not start observation')
                 self.assertIsNotNone(window.fixture)
                 def exercise(phase):
-                    result = subprocess.run(
+                    process = subprocess.Popen(
                         ['powershell.exe', '-NoProfile', '-NonInteractive', '-File',
                          str(root / 'tools/exercise_fixture.ps1'), '-TargetPid', str(window.fixture.pid),
                          '-StartTicks', str(creation_ticks(window.fixture.pid)), '-TargetPath', str(target),
-                         '-Phase', phase], text=True, capture_output=True, timeout=15)
-                    self.assertEqual(result.returncode, 0, 'Synthetic GUI exercise failed')
-                    data = json.loads(result.stdout)
+                         '-Phase', phase], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    try:
+                        # Foreground activation sends window messages to Tk too:
+                        # waiting synchronously here would freeze the test's own UI.
+                        pump(lambda: process.poll() is not None, timeout=15)
+                        output, _ = process.communicate(timeout=2)
+                        self.assertEqual(process.returncode, 0, 'Synthetic GUI exercise failed')
+                    finally:
+                        if process.poll() is None:
+                            process.kill()
+                            process.wait(timeout=3)
+                        process.stdout.close()
+                        process.stderr.close()
+                    data = json.loads(output)
                     if data['status'] == 'blocked':
                         self.skipTest('Hosted foreground desktop unavailable; manual controller validation required')
                     self.assertEqual(data['status'], 'ok')
