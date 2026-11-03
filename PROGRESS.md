@@ -162,3 +162,25 @@ em ate 10s para prazo de 6s, por saida normal ou encerramento proprio do watchdo
 comando Python de parada. Aceite humano continua pendente.
 
 **Correcao de encerramento:** o fallback nativo de um segundo agora e armado antes do teardown COM, tambem em EOF/stop/erro e na saida de Main. Isso cobre o caso observado em que o runtime mantinha o processo vivo depois do fim logico. Os testes independentes de EOF e prazo aceitam apenas saida normal ou codigo do watchdog proprio, dentro do timeout; nenhum fallback Python satisfaz esses testes.
+
+### Confirmacao final apos correcoes de EOF e foreground
+
+- Provider: head `8c76fb9acce15fc25bf9b9ffe4c6ea134b9f8a6b`,
+  [CI 41718058154](https://github.com/almirfsneto/observador-escritorio/actions/runs/41718058154),
+  quatro combinacoes Ubuntu/Windows x Python 3.11/3.12 aprovadas.
+- Integracao: head de codigo `9aaf67979d286220864a490ebfc3b87bee131326`,
+  [CI 41718674684](https://github.com/almirfsneto/observador-escritorio/actions/runs/41718674684),
+  quatro jobs aprovados; Windows executou 55 testes sem skips e Linux 49 com seis
+  skips Windows. UIA WPF: 30/30 Invoke, dois controles, 60 eventos e zero descartes
+  de fila. O controlador confirmou exatamente 30 Invoke atraves de UI/SQLite,
+  pausa sem crescimento, retomada e encerramento dos filhos/escritor. Pipeline
+  SQLite/mineracao aprovado. EOF e expiracao independentes tiveram saida nativa
+  normal nesta rodada; o fallback proprio permanece testavel e limitado.
+- Ultima alteracao somente documental registra esta evidencia. Fonte, manifesto,
+  CLI e wheel verificaveis; working tree limpo ao encerrar. PRs 1/2 revisados com
+  correcoes no PR3; PR4 empilhado sobre PR3. Nenhum PR integrado.
+
+**Estado de parada:** desenvolvimento desta etapa concluido e recuperavel. O
+proximo gate e o roteiro humano VALIDACAO_MANUAL_WINDOWS.md, em Windows 10 e 11
+exclusivos de teste. Nao considerar validado em computadores da equipe ou apto
+a producao. Nenhuma automacao permanecera trabalhando depois deste atendimento.
