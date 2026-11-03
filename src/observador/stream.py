@@ -36,6 +36,7 @@ class LabStream:
         self.last_received = monotonic()
         self.last_focus = None
         self.protocol_failure = None
+        self.native_error = None
         self.validation_stage = 'shape'
 
     def alive(self):
@@ -98,8 +99,9 @@ class LabStream:
                         self.health = 'active' if self.enabled else 'paused'
                 elif kind == 'event':
                     self._event(data)
-                elif kind == 'error' and set(data) == {'kind', 'code'} and data['code'] in {
+                elif kind == 'error' and set(data) == {'kind', 'code', 'hresult'} and type(data['hresult']) is int and data['code'] in {
                         'invalid_config', 'subscription_failed', 'backend_failure'}:
+                    self.native_error = data['hresult']
                     self.stop(data['code'])
                 else:
                     raise ValueError()

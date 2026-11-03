@@ -44,8 +44,13 @@ internal sealed class Observer : IDisposable
 
     internal void Subscribe()
     {
-        if (!target.WaitForInputIdle(3000)) throw new InvalidOperationException();
-        target.Refresh();
+        // Input-idle is not guaranteed for all UIA providers. Bind the owned window.
+        var startup = Stopwatch.StartNew();
+        while (startup.ElapsedMilliseconds < 3000 && !target.HasExited) {
+            target.Refresh();
+            if (target.MainWindowHandle != IntPtr.Zero) break;
+            Thread.Sleep(50);
+        }
         root = AutomationElement.FromHandle(target.MainWindowHandle);
         if (root is null) throw new InvalidOperationException();
         Automation.AddAutomationFocusChangedEventHandler(focusHandler);
@@ -201,8 +206,8 @@ internal static class Program
             // Exit also on stdin EOF: a crashed controller must not leave a collector.
             return 0;
         }
-        catch {
-            Console.WriteLine(JsonSerializer.Serialize(new { kind = "error", code = stage }));
+        catch (Exception error) {
+            Console.WriteLine(JsonSerializer.Serialize(new { kind = "error", code = stage, hresult = error.HResult }));
             return 2;
         }
     }
