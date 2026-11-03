@@ -150,8 +150,8 @@
     },
     {
       "path": "src/observador/lab_controller.py",
-      "size_bytes": 8237,
-      "sha256": "bd2a060fb48191b472bac490c0a45fa4df7979753f3dd03d08dee79b5831b133"
+      "size_bytes": 8645,
+      "sha256": "b3dbe44511b63f3d7c49f6beaece857b30ec32d5412d900e8b05d6ea74aa6a50"
     },
     {
       "path": "src/observador/lab_queue.py",
@@ -237,6 +237,11 @@
       "path": "tests/test_stream.py",
       "size_bytes": 5445,
       "sha256": "bd1d781320862b0d33eb56d308aa2f5917781b0c03392f3c792dc61f5f2dbb80"
+    },
+    {
+      "path": "tests/test_windows_controller.py",
+      "size_bytes": 4773,
+      "sha256": "a2f355a005f2a4524d60ee112bded3a286c7d83108010f1da89efece66851f97"
     },
     {
       "path": "tests/test_windows_desktop.py",

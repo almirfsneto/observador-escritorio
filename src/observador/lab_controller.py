@@ -11,8 +11,12 @@ from .lab_queue import AsyncLabQueue
 
 
 class LaboratoryWindow:
-    def __init__(self, tk):
+    def __init__(self, tk, *, fixture_target=None, observer_target=None, data_target=None):
         self.tk = tk
+        self.target = Path(fixture_target) if fixture_target is not None else fixture_path()
+        self.native_target = Path(observer_target) if observer_target is not None else observer_path()
+        self.data_target = (Path(data_target) if data_target is not None else
+                            Path(__file__).resolve().parents[2] / 'lab-data' / 'events.sqlite3')
         self.root = tk.Tk()
         self.root.title('Observador | Laboratorio sintetico')
         self.root.geometry('760x520')
@@ -62,8 +66,8 @@ class LaboratoryWindow:
         self.log.config(state=self.tk.DISABLED)
 
     def launch_fixture(self):
-        target = fixture_path()
-        if not target.is_file() or target.is_symlink() or not observer_path().is_file():
+        target = self.target
+        if not target.is_file() or target.is_symlink() or not self.native_target.is_file():
             self.status_var.set('ERRO: compile SyntheticWpfTaskApp e WindowsObserver em Release.')
             return
         try:
@@ -79,12 +83,12 @@ class LaboratoryWindow:
     def start(self):
         if self.finished or self.fixture is None or self.fixture.poll() is not None or self.session:
             return
-        policy = make_lab_policy(str(fixture_path()), datetime.now().astimezone())
+        policy = make_lab_policy(str(self.target), datetime.now().astimezone())
         try:
-            self.session = NativeSession(self.fixture, fixture_path(), policy.expires_at)
+            self.session = NativeSession(self.fixture, self.target, policy.expires_at,
+                                         executable=self.native_target)
             if self.persist.get():
-                destination = Path(__file__).resolve().parents[2] / 'lab-data' / 'events.sqlite3'
-                self.sink = AsyncLabQueue(destination)
+                self.sink = AsyncLabQueue(self.data_target)
             self.session.set_active(True)
         except (OSError, ValueError):
             self.status_var.set('ERRO: nao foi possivel vincular o observador ao aplicativo ficticio.')
