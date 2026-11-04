@@ -1,10 +1,12 @@
 """Automated real Tk/native lifecycle on Windows, with synthetic data and a temp DB."""
 import json
+from collections import deque
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import time
+import threading
 import unittest
 
 from observador.lab_controller import LaboratoryWindow
@@ -23,14 +25,14 @@ class ControllerAutomationTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             database = Path(temporary) / 'events.sqlite3'
             window = LaboratoryWindow(tk, fixture_target=target, observer_target=observer, data_target=database)
-            def pump(predicate, timeout=12):
+            def pump(predicate, timeout=12, diagnostic=lambda: ''):
                 deadline = time.monotonic() + timeout
                 while time.monotonic() < deadline:
                     window.root.update()
                     if predicate():
                         return
                     time.sleep(.01)
-                self.fail('Controller lifecycle deadline exceeded')
+                self.fail('Controller lifecycle deadline exceeded ' + diagnostic())
             try:
                 window.root.update()
                 self.assertIsNone(window.session)
@@ -44,16 +46,27 @@ class ControllerAutomationTest(unittest.TestCase):
                          str(root / 'tools/exercise_fixture.ps1'), '-TargetPid', str(window.fixture.pid),
                          '-StartTicks', str(creation_ticks(window.fixture.pid)), '-TargetPath', str(target),
                          '-Phase', phase], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    stages = deque(maxlen=8)
+                    allowed = {'stage=bootstrap','stage=runtime_ready','stage=root_ready','stage=controls_ready','stage=exercise_done'}
+                    def drain_stages():
+                        for line in process.stderr:
+                            if line.strip() in allowed:
+                                stages.append(line.strip())
+                    reader = threading.Thread(target=drain_stages, daemon=True)
+                    reader.start()
                     try:
                         # Foreground activation sends window messages to Tk too:
                         # waiting synchronously here would freeze the test's own UI.
-                        pump(lambda: process.poll() is not None, timeout=15)
-                        output, _ = process.communicate(timeout=2)
+                        pump(lambda: process.poll() is not None, timeout=30,
+                             diagnostic=lambda: 'synthetic_stimulator=' + ','.join(stages))
+                        output = process.stdout.read(4097)
+                        self.assertLessEqual(len(output),4096)
                         self.assertEqual(process.returncode, 0, 'Synthetic GUI exercise failed')
                     finally:
                         if process.poll() is None:
                             process.kill()
                             process.wait(timeout=3)
+                        reader.join(timeout=2)
                         process.stdout.close()
                         process.stderr.close()
                     data = json.loads(output)

@@ -84,3 +84,8 @@
 - **Decisão:** manter schema legado, DELETE/FULL, sem spill de cache, admissão por bytes de todo diretório dedicado e reserva conservadora de rollback. Rejeitar links e corrupção; não redefinir banco automaticamente. Contar descarte após shutdown e preservar contagem de commits.
 - **Limite:** não é quota do filesystem/volume nem barreira contra administrador/escritor concorrente externo. A medição é discreta; limites físicos exigem VFS/volume revisado.
 - **Windows:** DACL protegida somente usuário atual e SYSTEM antes de dados; falha fecha a fila. DPAPI só em arquivo experimental exportado, escopo usuário e sem UI; SQLite ativo permanece em claro. Alternativas e riscos em QUESTOES_ARQUITETURA_PRO.md.
+
+## D-019 - Comparação UIA/WinEvent sem fabricar ações de WinForms
+- **Decisão:** probe explícito separado, SetWinEventHook process-scoped e apenas eventos de acessibilidade de botões nativos. Exporta contagens/custo/atraso agregado e não alimenta ui_action.
+- **Motivo:** STATECHANGE não demonstra ativação; absence de Invoke não pode ser corrigida inventando clique. WPF/WinForms são exercitados com controles padrão, mesma rajada e pausa confirmada.
+- **Limites:** objetos filhos sem HWND individual, clicks humanos e aplicativos profissionais não estão cobertos por esta medição. Propor adapter semântico opt-in quando incompatível, sem hooks de conteúdo.

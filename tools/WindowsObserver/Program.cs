@@ -213,7 +213,8 @@ internal static class Program
         {
             if (args.Length != 5) return 2;
             bool synthetic = args[0] == "--protocol-test";
-            if (!synthetic && args[0] != "--laboratory") return 2;
+            bool coverage = args[0] == "--coverage-probe";
+            if (!synthetic && !coverage && args[0] != "--laboratory") return 2;
             int pid = int.Parse(args[1], CultureInfo.InvariantCulture);
             string path = Path.GetFullPath(args[2]);
             long ticks = long.Parse(args[3], CultureInfo.InvariantCulture);
@@ -224,6 +225,9 @@ internal static class Program
             if (!StringComparer.OrdinalIgnoreCase.Equals(target.MainModule?.FileName, path)
                 || target.StartTime.ToUniversalTime().Ticks != ticks) return 2;
             if (!synthetic && Path.GetFileName(path) is not ("SyntheticTaskApp.exe" or "SyntheticWpfTaskApp.exe")) return 2;
+            if (coverage) {
+                using (target) return WinEventCoverage.Run(target, expires);
+            }
             using var observer = new Observer(target, expires, synthetic);
             // A separate watchdog also bounds a stuck UIA call or teardown.
             var watchdog = Stopwatch.StartNew();

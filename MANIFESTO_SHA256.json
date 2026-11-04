@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 10892,
-      "sha256": "1d0a36678d392fce3173def180058f8d4f355de3da416783969818f24870c3e1"
+      "size_bytes": 11573,
+      "sha256": "7cfabfde7476a2ef7f9e318061d591e2ef4ed063c858b2353bf8915d7beb80f0"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 20329,
-      "sha256": "8f2984e773096f6617e5d688e8f92511f48bda41492bcc6d01e66cf0df496386"
+      "size_bytes": 21711,
+      "sha256": "74791230e8d942bf739dc3bff415acb1f2d83b3c78a1fec0b9ef383602137446"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -139,6 +139,11 @@
       "sha256": "ef5e84b6a82157f13cea10ed6d76358e66577da4cee833313655a9bb42166d54"
     },
     {
+      "path": "docs/WINDOWS_COVERAGE.md",
+      "size_bytes": 3189,
+      "sha256": "fc5e0cc185c9ac949a395a21fc72e72cb2e43ced0b59ecf416e5d96f5d0e054f"
+    },
+    {
       "path": "docs/WINDOWS_LAB.md",
       "size_bytes": 3247,
       "sha256": "c0dbfd39b336764e5a8ad1af762a19d561e28af56ba601647659971fd1619f78"
@@ -165,8 +170,8 @@
     },
     {
       "path": "src/observador/acceptance_prepare.py",
-      "size_bytes": 12278,
-      "sha256": "6b1e649e05b8b67db5191bf1d29020db777a139d4b11591f4080b8026ac3b7c4"
+      "size_bytes": 12495,
+      "sha256": "b7b14433c0866b320733e7b65c9841096537e31ee3a7e97af04e58c84c0b9a5f"
     },
     {
       "path": "src/observador/acceptance_report.py",
@@ -270,8 +275,8 @@
     },
     {
       "path": "tests/test_acceptance_prepare.py",
-      "size_bytes": 5412,
-      "sha256": "aa76182dd3f17547106de700154b9a91503c9d237472084d80f6106f55e86ae8"
+      "size_bytes": 5617,
+      "sha256": "4be6238d8cf7905215692bec5d6bc9aed0acd6dc6e537c87741097659403c32b"
     },
     {
       "path": "tests/test_acceptance_report.py",
@@ -335,8 +340,13 @@
     },
     {
       "path": "tests/test_windows_controller.py",
-      "size_bytes": 6071,
-      "sha256": "55b964ed11093f4a1fef2f03d5a67bc14728f82e378d4211751d46f2b29497c2"
+      "size_bytes": 6855,
+      "sha256": "3cdcbdd022e43b51eed7fc90f806907700a33d0ac631685fdb9935c93f0e7804"
+    },
+    {
+      "path": "tests/test_windows_coverage.py",
+      "size_bytes": 4803,
+      "sha256": "febfc8590747da58703b819891ceb1f4873ccae5fb0b667f6541665d3cac8340"
     },
     {
       "path": "tests/test_windows_desktop.py",
@@ -370,8 +380,13 @@
     },
     {
       "path": "tools/WindowsObserver/Program.cs",
-      "size_bytes": 13822,
-      "sha256": "48bb7ab555fec1c92942d09a2b1ed36f49e9c252353cccbb5d08d62c627aace9"
+      "size_bytes": 14013,
+      "sha256": "a11fa3282efbc7cf9b1b3e71eddc078001660be79b861113469b3b14a026a887"
+    },
+    {
+      "path": "tools/WindowsObserver/WinEventCoverage.cs",
+      "size_bytes": 4797,
+      "sha256": "7f0d4cbceafc52eb160a691f431e70ec88ad32cb7e30880d2acc79af866e04e0"
     },
     {
       "path": "tools/WindowsObserver/WindowsObserver.csproj",
@@ -380,8 +395,8 @@
     },
     {
       "path": "tools/exercise_fixture.ps1",
-      "size_bytes": 2851,
-      "sha256": "93a61731f1a7992e99862b3b4acca8f9bac23223eb737bbb907c8c536f3fa64f"
+      "size_bytes": 3115,
+      "sha256": "d09db4b40518a9088cfc794c81e21d121a798cb51e357786e20c9345d56b62f1"
     },
     {
       "path": "tools/synthetic_windows_app.ps1",

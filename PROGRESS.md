@@ -280,6 +280,15 @@ rollback e permissões/DPAPI nativos no Windows. Evidência remota pendente.
 Detalhes e limites: docs/STORAGE_HARDENING.md. Validador e schema de aceite v1
 preservados; nenhum dado real, instalação na equipe, deploy ou merge.
 
+## Execução intensiva — cobertura Windows experimental
+
+Nova branch codex/windows-coverage-probe sobre codex/storage-reliability. Provider
+padrão inalterado; probe WinEvent opcional restrito ao PID de fixture, botões
+nativos e 20s. STATECHANGE não vira ação inferida. Comparação automatizada WPF e
+WinForms, contagens UIA/WinEvent, custo próprio e atraso de callback, pause ACK.
+Linux: 84 descobertos, 74 executados, dez Windows skipped. Compilação e desktop
+Windows dependem da CI em acompanhamento; não equivalem ao aceite humano.
+
 ### Evidência do endurecimento do armazenamento
 
 PR #7: CI 41741273177 no código 7bd09ff, quatro jobs aprovados Linux/Windows
@@ -290,3 +299,16 @@ validador anterior aprovados. Revisão adicional passa a tentar symlink Windows
 em vez de presumir falta de privilégio e recusa WAL/SHM legado sem checkpoint ou
 remoção. Testes dessa revisão serão confirmados na CI subsequente. O SQLite ativo
 continua em claro; não há quota física de volume nem aceite humano.
+
+### Evidência da comparação Windows
+
+PR #8, código b9361c3: CI 41741819622, quatro jobs aprovados. Windows 84
+descobertos/83 executados, um symlink ignorado; Linux 74/dez ignorados. WPF:
+30/30 Invoke em dois controles, sem descartes. WinForms: zero Invoke nesse
+estímulo; probe WinEvent restrito aceitou zero notificações em ambos os caminhos.
+Os filtros conservadores excluíram objetos não suportados (43 WPF/30 WinForms).
+Isso NÃO demonstra cobertura melhor de cliques WinForms. Diagnóstico verificável
+fundamenta adapter complementar, em vez de inferir ações. Probe durou ~2,2s,
+consumiu ~109–141ms de CPU e ~29 MiB de working set pico em rodadas CI; valores
+amostrais do processo próprio, não SLA. Latência reportada zero quando não houve
+callback aceito é ausência de amostra, não atraso zero garantido.
