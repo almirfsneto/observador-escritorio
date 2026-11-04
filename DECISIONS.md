@@ -161,3 +161,8 @@ cegamente número de handle com ownership incerto. Regressões usam falha injeta
 separadas das provas Win32 normais. Não atribuir esse achado ao descarte do PR6.
 Pacote SECURITY_REVIEW_PR18.md organiza revisão externa, sem inventar signoff ou
 enviar mensagens. Consolidação permanece plano por SHA, sem merge/rebase/retarget.
+
+Complemento D-031: verificar retorno real de CancelSynchronousIo;1168 significa
+nenhum IO pendente e é tolerado, demais erros não são silenciados. Regressão
+portável injeta retornos no wrapper, sem alegar falha real de kernel provocada.
+Auditoria dos wrappers compartilhados de job/métricas continua gate explícito.

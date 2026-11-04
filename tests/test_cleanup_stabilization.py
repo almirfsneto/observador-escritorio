@@ -1,6 +1,7 @@
 """Injected cleanup faults, explicitly distinct from actual Windows kernel tests."""
 from concurrent.futures import Future
 import unittest
+from unittest.mock import patch
 from types import SimpleNamespace
 
 from observador.owned_channel import OwnedSyntheticChannel
@@ -35,3 +36,16 @@ class CleanupStabilizationTest(unittest.TestCase):
         channel.close()
         self.assertEqual(joined,[True]);self.assertFalse(channel.snapshot()['shutdown_confirmed'])
         self.assertEqual(channel.snapshot()['cleanup_errors'],1);self.assertEqual(channel.snapshot()['state'],'failed')
+
+    def test_kernel_cancel_distinguishes_no_pending_io_from_actual_error(self):
+        from observador.owned_channel_win32 import Kernel
+        # Exercise the real wrapper with injected API returns, not a real Win32 fault.
+        kernel=Kernel.__new__(Kernel);calls=[]
+        kernel.api=SimpleNamespace(CancelSynchronousIo=lambda handle:calls.append(handle) or False)
+        kernel.cancel_thread(None);self.assertEqual(calls,[])
+        with patch('observador.owned_channel_win32.ctypes.get_last_error',return_value=1168,create=True):
+            kernel.cancel_thread(11)
+        with patch('observador.owned_channel_win32.ctypes.get_last_error',return_value=6,create=True):
+            with self.assertRaisesRegex(OSError,'owned_io_cancel_failed'):kernel.cancel_thread(11)
+        kernel.api.CancelSynchronousIo=lambda handle:True
+        kernel.cancel_thread(11)

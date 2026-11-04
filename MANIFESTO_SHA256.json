@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 23719,
-      "sha256": "9c39bb416bd31adfeb2646122f0ccf6651ce8e6783526057f24f13d154a65762"
+      "size_bytes": 24043,
+      "sha256": "d557b6b56a1a1cbe0a57f5fcc8f9f4d1fb6b7ba28cbaf239ebadc1b0a83275a2"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 54920,
-      "sha256": "8ac8c68095cf91377bdeb3c8bd361148a4dfb8219f6201115f2cc2808d72007b"
+      "size_bytes": 55486,
+      "sha256": "03be68d4400c785b73d8a9db96f6da0d6aae31f04f3030f1c367cbf20e09c940"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -205,8 +205,8 @@
     },
     {
       "path": "docs/SECURITY_REVIEW_PR18.md",
-      "size_bytes": 5836,
-      "sha256": "92ad43bb483a0434cc6222f78428440dde7fe9c094c081073fe09c9135df1615"
+      "size_bytes": 6278,
+      "sha256": "bfed5b6c03ef194bcd85923c4360251409c09f0fd4ce3c8278eeca155afa8911"
     },
     {
       "path": "docs/SOURCE_AUTHENTICATION.md",
@@ -375,8 +375,8 @@
     },
     {
       "path": "src/observador/owned_channel_win32.py",
-      "size_bytes": 7473,
-      "sha256": "2a3c568e5f971a115e3b843479541889b5c64336f1a8c1c9a8e5d24ff5fc52e5"
+      "size_bytes": 7652,
+      "sha256": "6f9f016a1b21d51c68e94becb961e019a25f3ab64683594c44d435fd8e440fc8"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -485,8 +485,8 @@
     },
     {
       "path": "tests/test_cleanup_stabilization.py",
-      "size_bytes": 2076,
-      "sha256": "f6d93586d4e494a7e18dd9ce61ae6748e9519575b865a43539e0f73bee8d1500"
+      "size_bytes": 2979,
+      "sha256": "91440b898a02c454d76aa2f68e1e14b5d03d642c4810f2e2aff2693b851b4bf8"
     },
     {
       "path": "tests/test_cli.py",

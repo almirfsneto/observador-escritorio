@@ -54,6 +54,9 @@ humano Win10/11. Skips exigem motivo e cobertura alternativa explícita.
   chave em argv/env/arquivo/log. Limites da memória Python e mesmo token/admin.
 - [ ] Wire fechado/canônico, limites de tamanho/capacidade, HMAC direcional e
   epoch/sessão/geração/nonce/sequência; replay/adulteração falham fechados.
+- [ ] Auditar retornos Win32 de todos os wrappers compartilhados, incluindo
+  OwnedJob/ProcessProbe (fechamento atualmente não verifica retorno). Não confundir
+  retorno falso de API com OSError injetado; esses caminhos seguem limitação.
 - [ ] Cancelamento, kill do parent, job lifetime, exceções de cleanup e drenagem
   de futures; erro de CloseHandle não permite declarar shutdown confirmado.
 - [ ] Janela de herança concorrente e risco de processo com mesmo privilégio
@@ -79,7 +82,10 @@ causa demonstrada de dropped=1 do PR6: componente e protocolo são distintos.
 Correção filha: tentar todos os fechamentos, concluir futures, tentar join mesmo
 com cancelamento falho; shutdown_confirmed=false, cleanup_errors agregado e
 cleanup_unconfirmed. Slot numérico de handle retido não é reutilizado após falha.
-Testes portáveis injetam OSError em múltiplos recursos e cancelamento. São FALHAS
+O wrapper CancelSynchronousIo agora verifica retorno: ERROR_NOT_FOUND1168
+(sem IO pendente) é corrida normal; outros erros tornam cleanup não confirmado.
+Testes portáveis injetam OSError em múltiplos recursos e cancelamento, incluindo
+retornos da API real encapsulada. São FALHAS
 INJETADAS; os testes normais Win32 reais permanecem exigidos na CI. O revisor deve
 avaliar possíveis handles não liberados quando o próprio kernel falha, risco que
 o código agora expõe e não promete resolver por retry de ownership incerto.

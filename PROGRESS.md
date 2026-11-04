@@ -792,3 +792,11 @@ por SHA, esclarecer descarte/skip/origem desconhecidos, Win10 humano e repetiç�
 da candidata em Win10/11 autorizados. Matriz e critérios em ACCEPTANCE_MATRIX e
 ACCEPTANCE_STABILIZATION; revisão organizada, não concluída, em SECURITY_REVIEW_PR18.
 A próxima atualização é documental; conferir CI do HEAD final no PR19.
+
+Revisão complementar do wrapper: CancelSynchronousIo antes ignorava retorno falso.
+Agora1168/sem IO pendente é corrida normal; outro erro gera OSError tratado como
+cleanup não confirmado. Terceiro teste de falha injetada exercita o wrapper real
+com retornos success/1168/invalid-handle/None. Suite passa a182 descobertos; CI
+do novo código será conferida. Wrappers compartilhados OwnedJob/ProcessProbe
+ainda não verificam CloseHandle: risco explicitado no checklist independente,
+sem alterar o contrato comum de cleanup de todas as entregas nesta correção.

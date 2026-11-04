@@ -87,7 +87,10 @@ class Kernel:
         return int(result.value)
 
     def cancel_thread(self,retained_handle):
-        if retained_handle is not None:self.api.CancelSynchronousIo(retained_handle)
+        if retained_handle is None:return
+        if not self.api.CancelSynchronousIo(retained_handle):
+            # No outstanding synchronous request is a normal cleanup race.
+            if ctypes.get_last_error()!=1168:raise OSError('owned_io_cancel_failed')
 
     def no_inherited_objects(self,owned_process_handle,local_handles):
         """Probe a retained OWNED child; handle-number reuse is not inheritance.
