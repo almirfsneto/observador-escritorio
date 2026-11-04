@@ -104,6 +104,7 @@ internal sealed class Observer : IDisposable
     internal void Ready() => Console.WriteLine(JsonSerializer.Serialize(new {
         kind = "ready", pid = target.Id, start_ticks = target.StartTime.ToUniversalTime().Ticks }));
     internal void Health() => Send(new { kind = "health", dropped = Interlocked.Read(ref dropped), generation,
+        queues = new { output_depth=output.Count, output_capacity=512, focus_depth=focusQueue.Count, focus_capacity=256 },
         callbacks = new { focus = Interlocked.Read(ref focusSeen), invoke = Interlocked.Read(ref invokeSeen),
             toggle = Interlocked.Read(ref toggleSeen), excluded = Interlocked.Read(ref excluded), errors = Interlocked.Read(ref errors) } });
     internal bool IsAlive() => Alive();

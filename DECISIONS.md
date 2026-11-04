@@ -103,3 +103,8 @@
 - **Decisão:** worker MV3 usa prazo UTC e monotônico; mudança de timeOrigin termina coleta, preserva buffer e exige início explícito para outra sessão. Não tentar continuidade silenciosa após suspensão incerta.
 - **Evidência:** fault injection de expiração/timeOrigin em Chromium real; reinício real do worker e aceite humano de 15 minutos continuam separados.
 - **Harness Windows:** timeout de PowerShell foi observado em um job; causas internas não provadas. Etapas estáticas e limite 30s diagnosticam o processo estimulador sem relaxar exigências do coletor ou repetir ações automaticamente. Nova compilação offline inclui fixture WinForms para não depender de artefatos da CI.
+
+## D-023 - Diagnósticos agregados independentes do aceite humano
+- **Decisão:** schema fechado v1 e snapshots por componente, sem identificadores/payloads. Equações por lifetime/estágio, gauges cacheados e lacunas de amostra/proveniência; história recusa replay/regressões sem prometer autenticidade ou exactly-once.
+- **Armazenamento:** distinguir commit conhecido de rejeição/duplicata/outcome incerto. Rollback falho fecha writer e registra incerteza; erro após commit não conta commit como perdido. Erro assíncrono rejeita pendências e não retoma sozinho.
+- **Limites:** snapshots não globais, contadores voláteis, purge inclui DB anterior; orçamento observado não é quota física e SQLite continua em claro. Branch PR6 e JSON de aceite v1 intocados.

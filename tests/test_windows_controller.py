@@ -94,6 +94,13 @@ class ControllerAutomationTest(unittest.TestCase):
                 self.assertEqual(window.event_count, paused_count)
                 window.pause_btn.invoke()
                 pump(lambda: window.session.stream.health == 'active')
+                # Storage health fault injection on synthetic controller only.
+                window.sink.health = 'storage_unavailable'
+                pump(lambda: window.session.stream.health == 'paused')
+                self.assertFalse(window.session.stream.enabled)
+                window.sink.health = 'ready'
+                window.pause_btn.invoke()
+                pump(lambda: window.session.stream.health == 'active')
                 for _ in range(250):
                     window.append('linha ficticia de teste')
                 self.assertLessEqual(int(window.log.index('end-1c').split('.')[0]), 200)
@@ -104,6 +111,10 @@ class ControllerAutomationTest(unittest.TestCase):
                 self.assertIsNotNone(window.fixture.poll())
                 self.assertFalse(window.sink.worker.is_alive())
                 self.assertEqual(window.sink.discarded, 0)
+                from observador.diagnostics import validate_diagnostics
+                diagnostic = validate_diagnostics(window.diagnostics_snapshot())
+                self.assertEqual(diagnostic['writer']['ledger']['written'],window.sink.written)
+                self.assertEqual(diagnostic['writer']['row_balance'],'balanced')
                 store = LabEventQueue(database)
                 try:
                     saved = store.list_events()

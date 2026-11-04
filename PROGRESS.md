@@ -397,3 +397,16 @@ limites e próxima entrega recomendada: diagnóstico fechado de saúde e fault
 injection de journal/filas, depois integração com proveniência/ACK e testes
 reais de suspensão MV3. O desenvolvimento desta execução termina com entregas
 revisáveis; nenhum agente/observador permanece trabalhando continuamente.
+
+## Issue 11 — prioridade 1: diagnósticos e armazenamento — 2026-11-03
+
+Base PR10 502d6d3, branch nova codex/closed-lab-diagnostics. Documentos obrigatórios
+e retomada lidos, baseline 93 descobertos/82 Linux executados/11 específicos
+ignorados. Contrato fechado de agente/filas nativas/Python/writer/orçamento,
+reconciliação por estágio, replay de amostras, exportação local e snapshots sem
+SQL na UI. Native health ganha gauges compatíveis com mensagens antigas.
+Faults BUSY/FULL/IO pré/pós-commit/rollback, TTL/reabertura, fila/shutdown, conflito
+UUID e journal vivo testados. Linux: 108 descobertos, 97 executados/11 ignorados;
+CI Windows/browser pendente. Nenhum resultado representa aceite humano. Próxima
+prioridade desta execução: bridge offline/proveniência/ACK, worker real e negativos
+de mineração. PR6 permanece reservado ao responsável, sem alterações.

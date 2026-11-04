@@ -8,11 +8,13 @@ from pathlib import Path
 from .lab_session import fixture_path, make_lab_policy
 from .native_session import NativeSession, observer_path
 from .lab_queue import AsyncLabQueue
+from .diagnostics import DiagnosticRecorder
 
 
 class LaboratoryWindow:
     def __init__(self, tk, *, fixture_target=None, observer_target=None, data_target=None, root=None):
         self.tk = tk
+        self.diagnostic_recorder = DiagnosticRecorder()
         self.target = Path(fixture_target) if fixture_target is not None else fixture_path()
         self.native_target = Path(observer_target) if observer_target is not None else observer_path()
         self.data_target = (Path(data_target) if data_target is not None else
@@ -167,6 +169,9 @@ class LaboratoryWindow:
 
     def on_events(self, events):
         """Optional synthetic-lab instrumentation; never a raw UI data callback."""
+
+    def diagnostics_snapshot(self):
+        return self.diagnostic_recorder.sample(stream=self.session.stream if self.session else None,writer=self.sink)
 
     def close(self):
         if self.closed:

@@ -28,6 +28,9 @@ class LabStream:
         self.dropped = 0
         self.native_dropped = 0
         self.native_callbacks = {}
+        self.native_queues = None
+        self.last_health_received = None
+        self.flow = dict(received=0,accepted=0,rejected=0,coalesced=0,overflow=0,drained=0,discarded=0)
         self.invalid = 0
         self.last_sequence = 0
         self.sequence_gaps = 0
@@ -51,7 +54,7 @@ class LabStream:
                 return None
             self.generation += 1
             self.enabled = active
-            self.events.clear()
+            self._clear()
             self.last_focus = None
             self.last_sequence = 0
             self.health = 'starting' if active else 'pausing'
@@ -62,14 +65,30 @@ class LabStream:
         with self.lock:
             self.stopped = True
             self.enabled = False
-            self.events.clear()
+            self._clear()
             self.health = reason
+
+    def _clear(self):
+        self.flow['discarded'] += len(self.events)
+        self.events.clear()
+
+    def diagnostics_snapshot(self):
+        with self.lock:
+            self.alive()
+            return dict(enabled=self.enabled,stopped=self.stopped,ready=self.ready,
+                        expired=utc(self.clock())>=self.expires_at or self.monotonic()>=self.deadline,
+                        pending_ack=self.pending_ack_at is not None,flow=dict(self.flow),buffered=len(self.events),
+                        capacity=self.capacity,invalid_messages=self.invalid,sequence_gaps=self.sequence_gaps,
+                        native_callbacks=dict(self.native_callbacks),native_dropped=self.native_dropped,
+                        native_queues=dict(self.native_queues) if self.native_queues else None,
+                        native_age_ms=None if self.last_health_received is None else max(0,(self.monotonic()-self.last_health_received)*1000))
 
     def receive(self, line):
         with self.lock:
             if not self.alive():
                 return
             try:
+                kind = None
                 self.validation_stage = 'shape'
                 if len(line) > 4096:
                     raise ValueError()
@@ -84,7 +103,8 @@ class LabStream:
                     self.ready = True
                     if self.pending_ack_at is not None:
                         self.pending_ack_at = self.monotonic()
-                elif kind == 'health' and set(data) == {'kind', 'generation', 'dropped', 'callbacks'}:
+                elif kind == 'health' and set(data) in ({'kind','generation','dropped','callbacks'},
+                                                       {'kind','generation','dropped','callbacks','queues'}):
                     if (type(data['dropped']) is not int or data['dropped'] < 0
                             or type(data['generation']) is not int):
                         raise ValueError()
@@ -93,6 +113,15 @@ class LabStream:
                             or any(type(value) is not int or value < 0 for value in counters.values())):
                         raise ValueError()
                     self.native_callbacks = counters
+                    if 'queues' in data:
+                        queues=data['queues']
+                        if (type(queues) is not dict or set(queues) != {'output_depth','output_capacity','focus_depth','focus_capacity'}
+                                or any(type(value) is not int for value in queues.values())
+                                or queues['output_capacity'] != 512 or queues['focus_capacity'] != 256
+                                or not 0<=queues['output_depth']<=512 or not 0<=queues['focus_depth']<=256):
+                            raise ValueError()
+                        self.native_queues=queues
+                    self.last_health_received=self.monotonic()
                     self.native_dropped = max(self.native_dropped, data['dropped'])
                 elif kind == 'ack' and set(data) == {'kind', 'generation', 'active'}:
                     if type(data['active']) is not bool or type(data['generation']) is not int:
@@ -103,6 +132,7 @@ class LabStream:
                         self.health = 'active' if self.enabled else 'paused'
                         self.pending_ack_at = None
                 elif kind == 'event':
+                    self.flow['received'] += 1
                     self._event(data)
                 elif kind == 'error' and set(data) == {'kind', 'code', 'hresult'} and type(data['hresult']) is int and data['code'] in {
                         'invalid_config', 'subscription_failed', 'backend_failure',
@@ -114,6 +144,8 @@ class LabStream:
                     raise ValueError()
                 self.last_received = self.monotonic()
             except (ValueError, TypeError, KeyError, OverflowError):
+                if kind == 'event':
+                    self.flow['rejected'] += 1
                 self.invalid += 1
                 self.protocol_failure = self.validation_stage
                 self.stop('protocol_error')
@@ -135,6 +167,7 @@ class LabStream:
         if not self.started_at <= stamp <= utc(self.clock()) + timedelta(milliseconds=100) or stamp >= self.expires_at:
             raise ValueError()
         if not self.ready or not self.enabled or data['generation'] != self.generation:
+            self.flow['rejected'] += 1
             return  # Paused and superseded generations never reach the timeline.
         self.validation_stage = 'sequence'
         if data['sequence'] <= self.last_sequence:
@@ -145,6 +178,7 @@ class LabStream:
         role = ROLES.get(data['role'], 'control')
         signature = (role, data['control_id'])
         if data['action'] == 'focus' and self.last_focus == signature:
+            self.flow['coalesced'] += 1
             return
         self.last_focus = signature if data['action'] == 'focus' else None
         event = Event(1, str(uuid4()), stamp.isoformat(), 'laboratorio-sintetico', self.session,
@@ -155,15 +189,19 @@ class LabStream:
         event.validate()
         if len(self.events) >= self.capacity:
             self.dropped += 1
+            self.flow['overflow'] += 1
             return
         self.events.append(event)
+        self.flow['accepted'] += 1
 
     def drain(self, limit=100):
         with self.lock:
             if not self.alive() or not self.enabled:
-                self.events.clear()
+                self._clear()
                 return []
-            return [self.events.popleft() for _ in range(min(limit, len(self.events)))]
+            events = [self.events.popleft() for _ in range(min(limit, len(self.events)))]
+            self.flow['drained'] += len(events)
+            return events
 
     def check_health(self):
         with self.lock:
