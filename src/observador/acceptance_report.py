@@ -170,6 +170,10 @@ def validate_report(report):
     auto = report['automated_tests']
     if auto['status'] == 'PASSOU' and (not auto['discovered'] or auto['failures'] != 0 or auto['errors'] != 0):
         raise ReportError('unproven_tests_rejected')
+    if auto['discovered'] is not None and auto['skipped'] is not None and auto['skipped']>auto['discovered']:
+        raise ReportError('inconsistent_tests_rejected')
+    if auto['status']=='PASSOU' and (auto['skipped'] is None or auto['skipped']>=auto['discovered']):
+        raise ReportError('unexecuted_tests_rejected')
     for session in report['sessions']:
         if not session['capture_started'] and session['counters']['events_accepted']:
             raise ReportError('unstarted_capture_rejected')
@@ -209,12 +213,27 @@ def new_report(origin='operator_guided'):
     return report
 
 
+def operator_trial_recorded(report):
+    """A declared trial on THIS OS, never approval or cross-version evidence.
+
+    Environment alone, CI and checked boxes without started sessions are insufficient.
+    Failed/incomplete manual results still block acceptance through their own fields.
+    """
+    return (report['origin']=='operator_guided'
+            and report['environment']['os_family'] in ('windows10','windows11')
+            and any(s['capture_started'] for s in report['sessions'])
+            and any(c['status']!='NAO_EXECUTADO' for c in report['manual_checks'].values()))
+
+
 def finalize_report(report):
     result = deepcopy(report)
     validate_report(result)
-    gaps = ['manual_review_required', 'windows10_trial_required', 'windows11_trial_required',
+    gaps = ['manual_review_required',
             'sampling_not_continuous', 'os_peak_covers_process_lifetime',
             'network_absence_not_instrumented', 'pilot_not_authorized']
+    for os in ('windows10','windows11'):
+        if result['environment']['os_family']!=os or not operator_trial_recorded(result):
+            gaps.append(os+'_trial_required')
     if not result['source']['commit']:
         gaps.append('commit_unavailable')
     if result['source']['modified']:

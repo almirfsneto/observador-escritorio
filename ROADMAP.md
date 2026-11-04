@@ -103,3 +103,10 @@
 - [x] Saturação real1024/10000/32 sem reset/monkeypatch, clocks injetados; Linux/Windows3.11/3.12 aprovados.
 - [x] Plano de consolidação/revisão independente, sem merges/rebases em docs/STACK_REVIEW_PLAN.md.
 - [ ] Aprovação independente/outra conta/Windows10/11 e autenticação do WindowsObserver C#; adapter continua OFF.
+
+## Estabilização após relato humano Win11 — PR19
+- [x] Relato humano PR6/Win11 registrado com ressalvas: três ensaios, duas expirações, três limpezas; não equivale a aceite de outra versão.
+- [x] Diagnóstico incremental de skips/descarte/proveniência, regressões de flags por OS e compatibilidade do schema v1.
+- [x] Matriz de aceite por OS/versão e pacote para revisão independente PR18 organizados.
+- [ ] Fechar ressalvas do relato: origem exata desconhecida por ZIP, motivo do skip e causa do descarte não comprovados.
+- [ ] Revisão independente assinada, ensaios humanos Win10 e da nova versão, sem adapter/piloto/merge/rebase.

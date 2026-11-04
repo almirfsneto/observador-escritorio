@@ -43,7 +43,7 @@ class OwnedSyntheticChannel:
         self._epoch=str(uuid4());self.session=str(uuid4());self._generation=0;self._sequence=0;self._ordinal=0
         self._nonce=None;self._binding=None;self._deadline=None;self._last_clock=None;self._messages=0
         self._peer_verified=False;self._bootstrap_closed=False;self._shutdown_confirmed=True
-        self._last_error='none';self._proof_flags=None;self._phase='disabled'
+        self._last_error='none';self._proof_flags=None;self._phase='disabled';self._cleanup_errors=0
 
     @property
     def process(self):return self._process
@@ -56,6 +56,7 @@ class OwnedSyntheticChannel:
                         worker_alive=bool(self._thread and self._thread.is_alive()),
                         process_running=bool(self._process and self._process.poll() is None),
                         shutdown_confirmed=self._shutdown_confirmed,last_error=self._last_error,phase=self._phase,
+                        cleanup_errors=self._cleanup_errors,
                         fixture_exit_code=self._process.returncode if self._process else None,
                         adapter_enabled=False,inbox_ack=False,uia_pause_ack=False)
 
@@ -202,20 +203,30 @@ class OwnedSyntheticChannel:
         finally:
             self._cleanup()
 
+    def _cleanup_problem(self):
+        self._shutdown_confirmed=False;self._cleanup_errors+=1
+        self._last_error='cleanup_unconfirmed';self.state='failed'
+
     def _cleanup(self):
         self._stop.set();self._peer_verified=False;self._key=None
         if self._process and self._process.poll() is None:
             try:self._process.kill()
             except OSError:pass
-        if self._job:self._job.close()
+        if self._job:
+            try:self._job.close()
+            except OSError:self._cleanup_problem()
         if self._process:
             try:self._process.wait(timeout=2)
-            except (OSError,subprocess.TimeoutExpired):self._shutdown_confirmed=False
+            except (OSError,subprocess.TimeoutExpired):self._cleanup_problem()
         if self._kernel:
-            for handle in tuple(self._handles):self._close_handle(handle)
+            for handle in tuple(self._handles):
+                try:self._close_handle(handle)
+                except OSError:self._cleanup_problem()
         with self._lock:
             if self._cancel_handle is not None:
-                self._kernel.close(self._cancel_handle);self._cancel_handle=None
+                try:self._kernel.close(self._cancel_handle)
+                except OSError:self._cleanup_problem()
+                finally:self._cancel_handle=None # Never retry a numeric slot with uncertain ownership.
         while True:
             try:_,_,future=self._queue.get_nowait()
             except queue.Empty:break
@@ -247,7 +258,9 @@ class OwnedSyntheticChannel:
             try:self._process.kill()
             except OSError:pass
         with self._lock:
-            if self._kernel:self._kernel.cancel_thread(self._cancel_handle)
+            if self._kernel:
+                try:self._kernel.cancel_thread(self._cancel_handle)
+                except OSError:self._cleanup_problem()
         if self._thread and self._thread is not threading.current_thread():self._thread.join(timeout=3)
         self._shutdown_confirmed=self._shutdown_confirmed and not bool(self._thread and self._thread.is_alive())
         if self.state!='failed':self.state='closed'

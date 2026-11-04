@@ -1,8 +1,8 @@
 # Plano de consolidação e revisão independente — Issue 17
 
 **Somente plano. Nenhum merge, rebase, squash, retarget ou reescrita de PR anterior executado.**
-PR6 permanece congelado para aceite humano. O trabalho atual altera somente a nova
-branch codex/verified-owned-channel, filha de PR16/294cb390a17b.
+PR6 permanece congelado para aceite humano. A estabilização atual altera somente codex/acceptance-stabilization, filha de
+PR18/233b301. O inventário anterior abaixo descreve a cadeia preservada.
 
 ## Inventário capturado para revisão
 
@@ -25,7 +25,7 @@ Os demais devem permanecer exatamente nesses commits durante esta execução.
 | #13 | `codex/offline-source-bridge` | `cf90de6fd596` | `codex/closed-lab-diagnostics` |
 | #15 | `codex/inbox-retention` | `cb16d85d3a0f` | `codex/offline-source-bridge` |
 | #16 | `codex/synthetic-source-auth-model` | `294cb390a17b` | `codex/inbox-retention` |
-| #18 | `codex/verified-owned-channel` | `22f99e5b9603` | `codex/synthetic-source-auth-model` |
+| #18 | `codex/verified-owned-channel` | `233b3011cba6` | `codex/synthetic-source-auth-model` |
 
 Cadeia: #1→#2→#3→#4→#6→#7→#8→#9→#10→#12→#13→#15→#16→#18.
 Ausência de números intermediários não representa dependência extra.
@@ -98,3 +98,19 @@ Linux143/27 skips e Chromium2 reais sem skips. Ver PROGRESS para rodada falha928
 representa caso aprovado. O HEAD documental final/CI deve ser conferido no PR18.
 A publicação pela API usou árvores/blobs idênticos ao snapshot local e updates
 fast-forward com lease; commits/branches anteriores ficaram intactos.
+
+## Estabilização e relato humano recebido após PR18
+
+Nova entrega filha: codex/acceptance-stabilization sobre PR18/233b301, sem mover
+qualquer ref anterior. Relato humano Win11/versão declarada PR6: três ensaios,
+duas expirações, três cleanups, persistência opcional e avaliações positivas.
+Ressalvas de origem ZIP/commit desconhecido, um skip e um descarte continuam
+abertas; ver ACCEPTANCE_STABILIZATION.md e ACCEPTANCE_MATRIX.md. Não transferir
+aceite ao PR18 ou candidato novo. Win10 humano não foi informado.
+
+Unidade adicional de revisão: diagnósticos/compatibilidade v1/runner de testes e
+correção de cleanup SR-01, isolados na entrega filha. SECURITY_REVIEW_PR18.md
+organiza responsabilidades, reprodução e checklist; assinatura independente está
+PENDENTE, nenhuma pessoa foi presumida revisora. Consolidar só após decisões por
+SHA, cobertura dos skips e nova CI de integração eventualmente autorizada. Este
+plano não executa nem autoriza merge, rebase, retarget ou squash.

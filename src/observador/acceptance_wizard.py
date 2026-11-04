@@ -35,6 +35,16 @@ OBS_LABELS = {
 STATUS_LABELS = {'PASSOU': 'PASSOU', 'FALHOU': 'FALHOU', 'NAO_EXECUTADO': 'NÃO EXECUTADO'}
 
 
+def test_status_text(automatic):
+    status=STATUS_LABELS.get(automatic.get('status'),'FALHOU')
+    found,skipped=automatic.get('discovered'),automatic.get('skipped')
+    if type(found) is not int or type(skipped) is not int or skipped>found:
+        return status+' — contagens não confirmadas; cobertura a revisar'
+    return (status+f' nos testes executados: {found-skipped}; ignorados: {skipped}'+
+            (' — cobertura incompleta, revisar diagnóstico' if skipped else '')+
+            '. Não é aceite humano.')
+
+
 def default_destination(repository):
     base = os.environ.get('LOCALAPPDATA') if sys.platform == 'win32' else None
     directory = Path(base or tempfile.gettempdir()) / 'ObservadorEscritorio' / 'aceites' / uuid4().hex
@@ -135,6 +145,8 @@ class AcceptanceWizard:
 
     def _report_page(self):
         page = self.pages[3]
+        self._text(page, 'Um diagnóstico complementar fechado acompanha o relatório v1: destaca descartes, skips e origem sem atribuição. '
+                   'Ele não concede aceite, não contém eventos/identificadores e também fica fora de Git.')
         self._text(page, 'O JSON contém somente versões/edição/build do Windows, commit, hashes, resultados '
                    'padronizados e medidas agregadas. Não inclui usuário, hostname, IP, títulos, caminhos, '
                    'campos, senhas ou screenshots. Nenhum evento individual entra neste relatório.')
@@ -221,13 +233,24 @@ class AcceptanceWizard:
             self.status.set('Limite de 20 exportações. Abra um novo assistente se precisar de outro registro.')
             return
         try:
-            path = write_report(self.snapshot(), self.repository, self.destination)
+            snapshot=self.snapshot()
+            from .acceptance_review import build_review,write_review,empty_health
+            health=[lab.recorder.native_health.snapshot() if hasattr(lab.recorder,'native_health') else empty_health() for lab in self.labs]
+            details=dict(test_summary=self.preparation.test_diagnostics,native_health=health)
+            build_review(snapshot,**details) # Validate before creating either file.
+            path = write_report(snapshot, self.repository, self.destination)
         except (ReportError, ValueError, OSError):
             self.status.set('Relatório não salvo: confira os resultados padronizados e uma pasta local fora de Git.')
             return
         self.export_count += 1
-        self.output_status.set('Salvo apenas neste computador: ' + str(path))
-        self.status.set('Relatório sanitizado salvo. Aceite humano e revisão continuam obrigatórios; piloto não autorizado.')
+        self.output_status.set('Relatório v1 salvo apenas neste computador: ' + str(path))
+        try:
+            diagnostic=write_review(snapshot,self.repository,self.destination,**details)
+        except (ReportError,ValueError,OSError):
+            self.status.set('Relatório v1 salvo; diagnóstico complementar não foi salvo. Revise a falha local; piloto não autorizado.')
+            return
+        self.output_status.set('Relatório v1: '+str(path)+'\nDiagnóstico complementar: '+str(diagnostic))
+        self.status.set('Relatório e diagnóstico sanitizados salvos localmente. Revisão humana continua pendente; piloto não autorizado.')
 
     def poll(self):
         while True:
@@ -241,7 +264,7 @@ class AcceptanceWizard:
                 self.status.set(ERRORS.get(value, 'Falha de preparação; nenhum detalhe bruto foi salvo. Solicite revisão técnica.'))
             elif kind == 'done':
                 self.status.set('Preparação concluída; testes e avaliação humana são etapas separadas.' if value == 'prepare'
-                                else 'Testes automáticos: ' + self.report['automated_tests']['status'] + '. Itens humanos continuam não executados.')
+                                else 'Testes automáticos: ' + test_status_text(self.report['automated_tests']))
         busy = self.worker is not None and self.worker.is_alive()
         active = self.active_lab()
         if not busy and not self.closing:
@@ -251,7 +274,7 @@ class AcceptanceWizard:
                                 and not active and len(self.labs) < 6 else 'disabled')
             self.export_btn.config(state='normal' if not active else 'disabled')
         self.prep_status.set(' / '.join(key + ': ' + status for key, status in self.report['checks'].items()) +
-                             '\nTestes automáticos: ' + self.report['automated_tests']['status'])
+                             '\nTestes automáticos: ' + test_status_text(self.report['automated_tests']))
         if self.labs:
             data = self.labs[-1].recorder.data
             self.lab_status.set(f'Ensaios: {len(self.labs)} | eventos aceitos: {data["counters"]["events_accepted"]} | '

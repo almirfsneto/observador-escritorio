@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 22257,
-      "sha256": "b78ce033a9738db61698ece7757b11a11ce3dd0eb47ca1175a450afbf8393a4a"
+      "size_bytes": 24043,
+      "sha256": "d557b6b56a1a1cbe0a57f5fcc8f9f4d1fb6b7ba28cbaf239ebadc1b0a83275a2"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 51143,
-      "sha256": "2980a2b7eb4eb61371c6090ec6c051c4c4ad47691590ac1a4e1b52dc4d6731b8"
+      "size_bytes": 56985,
+      "sha256": "331cf325e133b3d1a9d5f0afdabd44b7e29b913aabf20db7f2dbc4a72edd2c35"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 7708,
-      "sha256": "64a57e5885048c5a03643e5541c4eca5b59c413ae211402306f139cb080b4510"
+      "size_bytes": 8360,
+      "sha256": "9066aae68b6f3be2b39e4353b4e7e135c6be7d956bbf4598c453b7b96c80755c"
     },
     {
       "path": "SECURITY.md",
@@ -87,6 +87,21 @@
       "path": "browser-extension/worker.js",
       "size_bytes": 4438,
       "sha256": "f662aa30ec147cdffc88c29c0b0494e08b199f9c814a7f5c17f11cd99915a9af"
+    },
+    {
+      "path": "docs/ACCEPTANCE_MATRIX.md",
+      "size_bytes": 4599,
+      "sha256": "d3f2e5eaf0e9d5dafc81a6115bbe05fabc9231457304dfcb70e6c158f857861d"
+    },
+    {
+      "path": "docs/ACCEPTANCE_REVIEW_SCHEMA.json",
+      "size_bytes": 11318,
+      "sha256": "56a8ffb2644b515868e3cf88ff4f803b56ad452bea27abf27848556aad07c46c"
+    },
+    {
+      "path": "docs/ACCEPTANCE_STABILIZATION.md",
+      "size_bytes": 5998,
+      "sha256": "600bbcb79a84bbc8142c3adba7c701167cb09ceace5de00db0a1eedf4bfe83ac"
     },
     {
       "path": "docs/ACEITE_REPORT_SCHEMA.json",
@@ -180,13 +195,18 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 7855,
-      "sha256": "9a5c5dddf8e8f7ea071c53fe87e57e9c31f4ae4fa8a506bfcfb5cd7041d6cbf5"
+      "size_bytes": 9916,
+      "sha256": "1365b0d0b9ff6f566cbf488cd446141386014b3a889cd5f76019c671dc0b1426"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
       "size_bytes": 3537,
       "sha256": "ff6b26a0efd7d842a20e660e703f4b784943e405413883e701230f8ceb1cc40a"
+    },
+    {
+      "path": "docs/SECURITY_REVIEW_PR18.md",
+      "size_bytes": 6278,
+      "sha256": "bfed5b6c03ef194bcd85923c4360251409c09f0fd4ce3c8278eeca155afa8911"
     },
     {
       "path": "docs/SOURCE_AUTHENTICATION.md",
@@ -195,8 +215,8 @@
     },
     {
       "path": "docs/STACK_REVIEW_PLAN.md",
-      "size_bytes": 7392,
-      "sha256": "370b909d382e3b111057ba92e055e8430abe6056db513273d979ede3a0e29b74"
+      "size_bytes": 8451,
+      "sha256": "c140658e1d506de1ffd2b5d836735e80fb980eea5e8a21a28e9acfb2c1a1d97d"
     },
     {
       "path": "docs/STORAGE_HARDENING.md",
@@ -210,8 +230,8 @@
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
-      "size_bytes": 6368,
-      "sha256": "ef5e84b6a82157f13cea10ed6d76358e66577da4cee833313655a9bb42166d54"
+      "size_bytes": 7422,
+      "sha256": "545bd91e21cd4622c3cf455ea4d9dca14047fd0c58ce21bac24a6ce9e0971e80"
     },
     {
       "path": "docs/WEB_EXTENSION.md",
@@ -250,23 +270,33 @@
     },
     {
       "path": "src/observador/acceptance_prepare.py",
-      "size_bytes": 12495,
-      "sha256": "b7b14433c0866b320733e7b65c9841096537e31ee3a7e97af04e58c84c0b9a5f"
+      "size_bytes": 14082,
+      "sha256": "e99b9ed3d87dac0133393f8208f6311f30286b60d7296b2784db881538b27d38"
     },
     {
       "path": "src/observador/acceptance_report.py",
-      "size_bytes": 13036,
-      "sha256": "6f649a231a9e9b239623c552bd06db8a2ab31ca350a0647adfd2029ec9f400e1"
+      "size_bytes": 14071,
+      "sha256": "e4992dd4adef9173746e2b370f4a95b2c4c9daf1495efdf3816cc2e02f1efc78"
+    },
+    {
+      "path": "src/observador/acceptance_review.py",
+      "size_bytes": 9690,
+      "sha256": "780e5000f21f6630be0074cdbe8e6da527c3d40a6903725da142b02e84c3743a"
     },
     {
       "path": "src/observador/acceptance_session.py",
-      "size_bytes": 7690,
-      "sha256": "3f80728d332fd1b777db14e99dcb8f9baeb0fff5adfad570df3863b0b8de5adc"
+      "size_bytes": 7841,
+      "sha256": "9b6da434321752e2819c2753b64d7b343902e42e59439db2a8ebb2f93714c7f1"
+    },
+    {
+      "path": "src/observador/acceptance_test_runner.py",
+      "size_bytes": 4385,
+      "sha256": "e6be7379370680e35c688e5dfc89c0dad918cdb527e2045dd93859ffb1764699"
     },
     {
       "path": "src/observador/acceptance_wizard.py",
-      "size_bytes": 17879,
-      "sha256": "ca6dfef6fbf0cc2976135d513e9ed57a01a9635ff578a0f85d22bee81ba62508"
+      "size_bytes": 19512,
+      "sha256": "de0a48ef9be2615869a5d9a2af2c570c6af3f2ab8453735fbfdfe65d859b59ce"
     },
     {
       "path": "src/observador/collector.py",
@@ -330,8 +360,8 @@
     },
     {
       "path": "src/observador/owned_channel.py",
-      "size_bytes": 14065,
-      "sha256": "0359b404ef324fe53f5885a88d290b3a0c243254a3cdb7738683f51b53dac5aa"
+      "size_bytes": 14663,
+      "sha256": "5b1d67a73dbd8203bdd06df17ffe8cbd767d6fd24011292f901e3b4e62becd37"
     },
     {
       "path": "src/observador/owned_channel_child.py",
@@ -345,8 +375,8 @@
     },
     {
       "path": "src/observador/owned_channel_win32.py",
-      "size_bytes": 7473,
-      "sha256": "2a3c568e5f971a115e3b843479541889b5c64336f1a8c1c9a8e5d24ff5fc52e5"
+      "size_bytes": 7652,
+      "sha256": "6f9f016a1b21d51c68e94becb961e019a25f3ab64683594c44d435fd8e440fc8"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -439,14 +469,24 @@
       "sha256": "35583a1b6a2e81604b0ff13bf137f363991ef95e59e90cb3ccd6344cc29e9add"
     },
     {
+      "path": "tests/test_acceptance_stabilization.py",
+      "size_bytes": 12257,
+      "sha256": "a1ed98a957a39bcbb8c7a45c4e9b7679140e77b965e9a5a6f5e7d9da06569b7d"
+    },
+    {
       "path": "tests/test_acceptance_windows.py",
-      "size_bytes": 5295,
-      "sha256": "29b8810acc339699a6f04cd676e4f46514d6469c42db06a8bbde44e215b5d643"
+      "size_bytes": 5773,
+      "sha256": "bdd288a8b844b7a743b31c775dce85fd80865ae1b28d0c1055c03bf3be64bdc4"
     },
     {
       "path": "tests/test_browser_extension.py",
       "size_bytes": 15276,
       "sha256": "4be54a301b46dc42de3a2a1760b87bb03465ce672f7efbcfad4f377fd0aa4bf8"
+    },
+    {
+      "path": "tests/test_cleanup_stabilization.py",
+      "size_bytes": 2979,
+      "sha256": "91440b898a02c454d76aa2f68e1e14b5d03d642c4810f2e2aff2693b851b4bf8"
     },
     {
       "path": "tests/test_cli.py",

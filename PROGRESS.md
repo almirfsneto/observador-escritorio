@@ -733,3 +733,92 @@ Próxima tarefa: revisão independente do argumento de capacidade/ACL/herança e
 matriz por outra conta/sessão autorizada, antes de novo entrypoint C# e adapter.
 Plano de consolidação é só proposta por unidades de revisão; não executa merges
 ou rebases. PR6 continua3d4a770 e PR16 continua294cb39. Nenhum observador segue ativo.
+
+## Estabilização após primeiro aceite humano Win11 — 2026-11-04
+
+Base PR18/233b301, branch nova codex/acceptance-stabilization, anteriores intactas.
+Baseline170: Linux143 executados/27 skips. Recebido SOMENTE relato do responsável:
+PR6/Win11,3 ensaios,2 expirações,3 limpezas, persistência opcional funcional e
+avaliações positivas; ressalvas native_drop1,skip1,ZIP sem commit,flagWin11 indevida.
+JSON local não solicitado/lido/versionado; SHA exato/build/skip/cause não inferidos.
+Não transfere aceite humano para PR18 ou esta branch, nem libera piloto.
+
+Correções de cálculo de gaps por OS com execução declarada, falha em todos skipped/
+resumo desconhecido, root Git exato para impedir ZIP herdar commit ancestral,
+runner com categorias fechadas e UI distinguindo execução de cobertura. Diagnóstico
+complementar separado do schema v1 preservado, agregados/saúde cacheada em novas
+sessões e sem taxa/causa/final-health inventados. Salvar v1 e falhar sidecar informa
+resultado parcial corretamente. Fixtures são CONSTRUÍDAS, não JSON do operador.
+11 regressões portáveis novas passaram localmente; Windows/CI ainda a conferir.
+Documento docs/ACCEPTANCE_STABILIZATION.md registra semântica, limites e encerramento.
+
+Autorrevisão SR-01: cleanup de PR18 podia interromper recursos/futures após
+OSError de fechamento. Correção isolada continua os fechamentos/join e marca
+shutdown não confirmado; duas regressões de falha INJETADA, não kernel real.
+Pacote SECURITY_REVIEW_PR18.md organiza revisão independente ainda PENDENTE;
+ACCEPTANCE_MATRIX.md separa OS/versão e gates, STACK_REVIEW_PLAN atualizado sem
+convergência executada. Suite local181:154 executados/27 skips Windows/browser;
+11 regressões novas executadas sem skips. Compileall, wheel e diff conferidos.
+CI Windows e Chromium do novo HEAD ainda pendentes de publicação/execução.
+
+### Evidência CI da estabilização — PR19 / código51b0691
+
+https://github.com/almirfsneto/observador-escritorio/pull/19 (draft sobre PR18).
+Commits117fbb6 (cleanup) e51b0691 (aceite/diagnóstico).
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/41843386924
+confirmada5/5 jobs, sem falhas. Logs de cada job consultados:
+
+| Job | Descobertos | Executados | Ignorados / lacuna |
+| --- | --- | --- | --- |
+| Ubuntu Python3.11 |181|154|27:25 Windows +2 browser|
+| Ubuntu Python3.12 |181|154|27:25 Windows +2 browser|
+| Windows Server2025 Python3.11 |181|179|2 browser dedicado|
+| Windows Server2025 Python3.12 |181|179|2 browser dedicado|
+| Chromium real dedicado |2|2|0|
+
+Os11 testes novos executaram em ambos os Windows/Linux; cleanup adversarial é
+falha injetada. Guiado/exportação complementar e demais testes Win32 executaram
+realmente no runner Windows, incluindo os casos de canal do PR18. Não houve skip
+de foreground nesta rodada, mas isso não identifica o skip histórico do operador.
+Skips browser no núcleo foram executados no job Chromium separado; não se tornam
+aprovação do validador offline do operador. Execução estruturada local classificou
+25 Windows/2 browser/0 unclassified. Manifesto132 arquivos, schema v1/lançador
+intactos e nenhum JSON local do operador.
+
+Inventário remoto conferido: todos os14 PRs anteriores continuam drafts com HEADs
+e bases preservados, PR6=3d4a770, PR18=233b301. Sem merge/rebase/retarget, adapter
+OFF, nenhuma instalação/coleta real/piloto. Próximos gates: revisão independente
+por SHA, esclarecer descarte/skip/origem desconhecidos, Win10 humano e repetição
+da candidata em Win10/11 autorizados. Matriz e critérios em ACCEPTANCE_MATRIX e
+ACCEPTANCE_STABILIZATION; revisão organizada, não concluída, em SECURITY_REVIEW_PR18.
+A próxima atualização é documental; conferir CI do HEAD final no PR19.
+
+Revisão complementar do wrapper: CancelSynchronousIo antes ignorava retorno falso.
+Agora1168/sem IO pendente é corrida normal; outro erro gera OSError tratado como
+cleanup não confirmado. Terceiro teste de falha injetada exercita o wrapper real
+com retornos success/1168/invalid-handle/None. Suite passa a182 descobertos; CI
+do novo código será conferida. Wrappers compartilhados OwnedJob/ProcessProbe
+ainda não verificam CloseHandle: risco explicitado no checklist independente,
+sem alterar o contrato comum de cleanup de todas as entregas nesta correção.
+
+### Evidência final do código de cancelamento — ed6099c
+
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/41844547231
+confirmada5/5 jobs.182 descobertos: Linux3.11/3.12,155 executados/27 skips
+(25 Windows e2 browser); Windows Server2025 3.12,180 executados/2 skips
+browser; Windows3.11,179 executados/3 skips (2 browser +1 foreground indisponível
+no ensaio guiado). Chromium dedicado2 executados/0 skips. Logs consultados,
+12 regressões novas executadas em Linux/Windows. Job Windows3.11 demorou mais,
+mas concluiu aprovado nos executados; nenhuma causa da demora foi inferida.
+O teste guiado3.11 NÃO executou nessa rodada;3.12 executou. Não confundir esse
+skip conhecido de CI com o skip histórico desconhecido do operador. A anotação
+inicial de dois skips em ambos os Windows foi corrigida ao conferir o log3.11.
+Rodadas documentais abfd1a2/41844243856 e41844251334 foram CANCELADAS pela
+concorrência ao publicar a correção seguinte; não contadas como aprovadas.
+Suite local182:155 executados/27 skips; compileall e manifesto verificados.
+
+Critérios de encerramento técnico: CI do candidato, regressões e matriz documentada.
+Critérios de aceite continuam abertos: revisão independente por SHA, auditoria dos
+wrappers compartilhados, origem/skip/descarte históricos e ensaios humanos por
+OS/versão. PR19 permanece draft, PR6 e anteriores intactos. Último commit apenas
+registra esta evidência; resultado dos checks do HEAD final também consta no PR19.

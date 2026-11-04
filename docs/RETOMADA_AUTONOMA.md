@@ -1,8 +1,42 @@
-# Retomada autônoma — Issue 17 / canal Windows isolado
+# Retomada autônoma — estabilização após PR18
+
+## Ponto atual obrigatório
+
+Continuar da branch **codex/acceptance-stabilization**, filha de
+PR18/233b3011cba6a9647bcf5e98d0a18e551b29fe3c. PR19: códigoed6099c, CI41844547231 cinco jobs aprovados
+(Linux155/27 skips; Windows3.12 180/2 skips; Windows3.11 179/3 skips;
+Chromium2/0;182 descobertos). O terceiro skip3.11 é foreground no ensaio guiado,
+não aprovado nessa rodada; teste executado no3.12. Não inferir causa do skip humano. Consultar HEAD final em
+PROGRESS.md; não usar main isoladamente. PR6 permanece congelado no SHA abaixo.
+Leia também ACCEPTANCE_STABILIZATION.md, ACCEPTANCE_MATRIX.md e
+SECURITY_REVIEW_PR18.md. Prioridade: estabilização/revisão, não adapter novo.
+Auditar retornos CloseHandle dos wrappers compartilhados OwnedJob/ProcessProbe;
+correção filha já trata CancelSynchronousIo,1168 normal e demais erros explícitos.
+
+Relato humano sintético Win11 usando versão declarada PR6: 3 ensaios, 2 expirações,
+3 cleanups, persistência opcional e avaliações positivas. Commit ZIP desconhecido,
+um skip e um descarte não atribuídos; não solicitar JSON local para Git. Esse
+relato é evidência positiva com ressalvas, não validação humana de PR18/filha.
+
+Próximo passo: confirmar CI do HEAD da estabilização e revisão independente do
+pacote de segurança. Executar testes/casos humanos faltantes só em laboratório
+autorizado. Separar falhas injetadas, CI Win32 real e aceite humano Win10/11.
+Retomada em branch nova a partir desta entrega, sem tocar PR6:
+
+```
+git fetch origin codex/acceptance-stabilization
+git switch -c codex/acceptance-independent-review FETCH_HEAD
+PYTHONPATH=src python -m unittest discover -s tests -v
+```
+
+Nenhum merge/rebase, adaptador OFF e piloto bloqueado. O histórico técnico abaixo
+descreve a base PR18, não afirma que todas as lacunas humanas seguem sem relato.
+
+# Histórico da base — Issue 17 / canal Windows isolado
 
 ## Branch correta e histórico preservado
 
-Continuar de **codex/verified-owned-channel (PR18)**, filha de
+Base anterior: **codex/verified-owned-channel (PR18)**, filha de
 codex/synthetic-source-auth-model (PR16/294cb390a17b907ce31dbe3ddad3c32e55b43673).
 Nunca main/PR16 isolados para continuar o novo canal. Não alterar/rebasear/integrar
 PRs anteriores. Todos permanecem drafts. **PR6/codex/guided-windows-acceptance
@@ -33,8 +67,8 @@ OFFLINE_BRIDGE.md, DIAGNOSTICS.md, STORAGE_HARDENING.md e a Issue17.
   PID reuse forçado. Clock24h/TTL de inbox são injetados, não espera real24h.
   TTL curto natural3s não substitui ensaio humano15min ou sono/energia.
 - **Não implementado/ligado:** adapter WPF→canal→inbox e autenticação do
-  WindowsObserver C# antigo. NativeSession/C#/lançador e JSON de aceite v1 estão
-  intocados. ACK da fixture IPC não confirma pausa UIA, commit ou negócio.
+  WindowsObserver C# antigo. NativeSession/C#/lançador e schema JSON de aceite v1 estão
+  intocados na base; a filha acrescenta diagnóstico separado. ACK da fixture IPC não confirma pausa UIA, commit ou negócio.
 
 ## Evidências a consultar por commit
 
@@ -119,5 +153,5 @@ código para aprovar piloto ou adapter. Se revisão permitir continuação técn
 novo entrypoint C# deve provar origem pelo próprio canal antes de qualquer WPF
 capturado entrar no inbox; UIA ACK e inbox ACK permanecem separados.
 
-Nenhum processo de observação foi instalado ou permanece ativo; a única execução
-Windows foi sintética em CI. NativeSession/C#/aceite v1 e branchPR6 preservados.
+Nenhum processo de observação foi instalado ou permanece ativo; as execuções Windows desta tarefa foram sintéticas em CI. O responsável
+relatou separadamente execução humana Win11/PR6, conforme a seção inicial. NativeSession/C#/aceite v1 e branchPR6 preservados.
