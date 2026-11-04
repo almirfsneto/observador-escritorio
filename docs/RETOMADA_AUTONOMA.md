@@ -1,3 +1,22 @@
+# Retomada atual — complemento AI02 após estudo AI03
+
+Continuar de codex/cleanup-worker-lifetime, filha de PR24/b974356 e PR23/5c37576.
+AI01/02: binding retido e cleanup independente; complemento impede abandono do
+worker daemon após main retornar. AI03 permanece SOMENTE em tests/ e design.
+Suíte local211:173 executados/38 skips. Regressão real de intérprete com atraso
+artificial falhou antes e passou após correção; não é teste de kernel Windows.
+
+CI GitHub Actions falha antes das etapas nos cinco jobs, causa não exposta nesta
+sessão. Os SETE casos Windows novos desta tarefa NÃO executaram. Não usar CIs
+do PR21 ou nomes REAL dos testes como evidência desta revisão. Restaurar Actions
+e reexecutar CI completa dos três PRs antes de aceitar as provas nativas.
+A política Chromium local bloqueia extensão, sem workaround. Revisor técnico
+IA nesta conversa deve fixar os três SHAs e conferir diffs/evidências por base.
+Assinatura humana, AI04, isolamento mesmo token/admin e piloto seguem abertos.
+Worker não daemon pode manter processo aguardando API travada; não há deadline
+global comprovado. PR6 e anteriores preservados, adapter OFF, sem merge/rebase,
+deploy, instalação ou dados reais. Histórico anterior abaixo.
+
 # Retomada atual — estudo AI03, filha de PR23
 
 Continuar de codex/suspended-launch-study, base codex/legacy-binding-cleanup
