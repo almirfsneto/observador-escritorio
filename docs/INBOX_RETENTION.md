@@ -58,9 +58,13 @@ Não é fronteira contra escritor SQL não cooperante com o mesmo privilégio.
 INSERTs, receipt, IDs e high-water pertencem ao mesmo commit. Purge remove somente
 payloads/receipts numa transação separada e preserva markers. Fault pré-commit é
 rollback; falha/kill pós-commit exige conferir receipt, não reenviar como lote novo.
-Qualquer falha de manutenção/escrita fecha admissão com código estático. Depois de
-falha pode-se recuperar receipt vivo por leitura; reabertura é requerida para nova
-admissão. Abertura em disco sem espaço pode falhar antes de permitir leitura.
+Qualquer falha de manutenção/escrita fecha admissão com código estático. Falha
+APÓS retorno bem-sucedido de commit permite recuperar receipt vivo por leitura.
+Exceção no próprio retorno de commit ou rollback falho fecha a conexão: jamais
+ler um receipt possivelmente não commitado daquela conexão. Exigir reabertura e
+consulta do histórico persistido, mesmo quando in_transaction já é false.
+Snapshot marca reopen_required=true, counts=null e uncertain_transactions; não
+inventa rollback/commit. Reabertura é requerida para nova admissão. Abertura em disco sem espaço pode falhar antes de permitir leitura.
 
 Principal 4 MiB; agregado padrão 13631488 bytes, reserva 4390920 bytes para rollback,
 1 MiB de espaço livre mínimo, até 64 arquivos, 128 receipts vivos/10000 payloads.
@@ -73,7 +77,8 @@ contra mesmo usuário/admin. SQLite ativo/inbox continuam em claro.
 
 retention_snapshot() é síncrono da thread dona, **não chamar na UI**: contagens
 persistidas e counters voláteis events_purged/receipts_purged/ack_recovered/
-receipt_unavailable/capacity_rejected/storage_errors/clock_regressions + budget.
+receipt_unavailable/capacity_rejected/storage_errors/clock_regressions/
+uncertain_transactions + budget; counts desconhecidos são null.
 Purge conhecido conta após commit; falha pós-commit não desfaz contagem. Após kill,
 RAM desaparece: consultar estado SQLite, não inferir perda pelos counters.
 
@@ -83,7 +88,8 @@ RAM desaparece: consultar estado SQLite, não inferir perda pelos counters.
 Testa fronteiras exatas, IDs/sequências após purge, regressões de relógio/restart,
 ACK com budget cheio, duas instâncias, lock SQLite real, FULL via max_page_count,
 BUSY/FULL/IO injetados, migração, invariant fuzz com seed fixa e os._exit real antes/
-depois de commits de ingestão e purge. integrity_check na recuperação. Dados e
+depois de commits de ingestão e purge. Rollback falho, retorno de commit incerto
+e EOF de arquivo truncado também são negativos explícitos. integrity_check na recuperação. Dados e
 artefatos descartáveis. Não simula perda de energia física/SSD nem aceite humano.
 EOF de processo dono perde RAM e libera handles; journal é recuperado na reabertura.
 Chromium dedicado continua exercitando ACK/retry e stop/restart real do worker.

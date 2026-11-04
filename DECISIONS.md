@@ -127,6 +127,7 @@
 - **Recuperação:** retry vivo é leitura independente de quota; receipt vencido produz receipt_expired_or_unknown, não negação de commit. Clock regressivo fecha admissão/congela purge; avanço UTC ainda é risco explícito.
 - **Alternativas:** apagar IDs junto ao payload permitiria replay; hash/Bloom limitado introduziria colisões/falsos positivos; histórico ilimitado viola orçamento. Cap conservador requer revisão antes de qualquer uso contínuo.
 - **Limites:** SQLite claro, orçamento lógico/amostrado, limpeza somente quando executada, sem relógio confiável/admin-proof, exactly-once ou aceite humano. Contratos anteriores/PR6 preservados.
+- **Revisão D-027:** rollback falho ou exceção no retorno de commit invalida/fecha conexão e requer reopen; SQLite pode expor linhas ainda não commitadas na conexão original. in_transaction=false não resolve resultado ambíguo. Diagnóstico null/uncertain evita ACK fabricado. Erro após retorno de commit bem-sucedido permanece conhecido, com leitura histórica válida.
 
 ## D-028 — Autenticação modelada não habilita canal sem peer comprovado
 - **Decisão:** aplicar Issue14/P2.6: especificação de ameaças/protocolo, modelo HMAC/challenge em memória e probe de handle próprio Windows; nenhum IPC/adaptador ligado. Identidade declarada no simulador é premissa, não prova de origem.

@@ -80,3 +80,14 @@ Probe kernel Windows testa somente filho próprio da fixture; não confundir com
 peer do canal. Antes de opt-in: handle/peer bidirecional, entrega de chave privada,
 herança mínima, DACLs adversariais/EOF/truncamento/timeout/cancelamento/colisão.
 Confirmar resultados/head no PR e atualizar evidências após qualquer mudança.
+
+Revisão adicional P1: rollback falho/exceção no retorno de commit fecham a conexão,
+reopen_required=true e counts=null. Nunca recuperar ACK de leitura local que pode
+conter receipt não commitado. Reabrir e consultar SQLite. Erro posterior a commit
+retornado com sucesso é caso diferente/recuperável por leitura. 18 testes de
+retenção/139 totais (Linux127/12 skips) após essa revisão; conferir CI atual.
+
+Integração da correção de conexão incerta de P1: agora149 descobertos, Linux136
+executados/13 skips; Windows esperado147/2 browsers separados, somente declarar
+após CI do head. Modelo/probe continuam isolados. Não promover CI antiga às novas
+regressões; consultar PR15/PR16 e commits finais.
