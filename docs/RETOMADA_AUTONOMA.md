@@ -1,7 +1,11 @@
 # Retomada atual — Issue 20 / fechamento verificado
 
 Continuar de **codex/verified-handle-cleanup**, filha de PR19/bee7d1c. Consultar
-PR e CI do HEAD em PROGRESS e nos checks do PR. Não usar main isoladamente.
+PR21 e CI do HEAD em PROGRESS e nos checks do PR.
+Código7740254/CI41857555311: cinco jobs aprovados;195 descobertos, Linux164/31
+skips; Windows3.11 193/2 skips,3.12 192/3 (foreground guiado); Chromium2/0.
+Push do mesmo código executou guiado3.12 (193/2). Quatro provas novas Win32 reais
+passaram nos dois Pythons, nove negativos são injetados, não reuso real de PID. Não usar main isoladamente.
 Ler docs/HANDLE_LIFETIME_REVIEW.md e Issue20 além dos documentos obrigatórios.
 CloseHandle falho mantém referência em failed sem retry; Job exige processos
 zerados e fechamento efetivo; métricas duplicam handle Popen retido, sem PID.
@@ -11,6 +15,10 @@ git fetch origin codex/verified-handle-cleanup
 git switch -c codex/handle-cleanup-independent-review FETCH_HEAD
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
+
+Inventário residual: NativeSession.creation_ticks ainda tem fechamento sem
+verificação e lookup PID; revisar separadamente, sem presumir cobertura por A3
+das métricas. Nenhuma falha de campo alegada.
 
 Prioridade seguinte: revisor distinto do implementador conferir diff/ownership/
 callers (critério6 da Issue), usando SHAs e evidências finais. Não há sign-off

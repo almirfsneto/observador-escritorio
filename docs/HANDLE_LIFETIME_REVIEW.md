@@ -74,3 +74,13 @@ não é CloseHandle e não foi reclassificado nesta entrega.
   PENDENTE. Triagem da Issue e esta autorrevisão não são sign-off final independente.
   Revisar ownership, consulta do job, referência em construtor falho e cleanup dos
   callers antes de qualquer autorização futura. CI não é aceite humano Win10/11.
+
+## Inventário residual fora de A1–A4
+
+A busca secundária encontrou também CloseHandle sem verificação em
+NativeSession.creation_ticks (e abertura por PID naquele helper legado). Não é
+o coletor de métricas desta Issue. O entrypoint legado fica intacto para manter
+a entrega focada; precisa revisão separada de fechamento/identidade e testes
+próprios antes de ampliar confiança no coletor. Não alegar que todos os wrappers
+Win32 do repositório foram saneados por esta correção. Nenhuma falha de campo
+nesse helper foi reproduzida. Adaptador e gates de piloto continuam fechados.

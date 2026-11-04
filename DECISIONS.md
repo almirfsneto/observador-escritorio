@@ -185,3 +185,8 @@ Falha protegida de handle real será distinguida de BOOL/identidade injetados;
 reuso real de PID e falha em campo não são alegados. A janela Popen→assignJob
 preexistente e fronteira mesmo token/admin não são resolvidas por esta correção.
 Revisão distinta exigida pela Issue continua gate humano, não substituída pela CI.
+
+Evidência D-032: código7740254/CI41857555311 teve cinco jobs aprovados. As falhas
+de CloseHandle protegido em job/probe foram REAIS e controladas nos dois Windows;
+falhas de terminate/query/identidade continuam INJETADAS. Não promover skips ou
+CI a aceite humano. Revisão distinta do implementador permanece pendente.

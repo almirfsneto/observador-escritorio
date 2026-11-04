@@ -840,3 +840,55 @@ handles sintéticos protegidos contra fechamento e job com descendente próprio.
 Critério de revisão distinta do implementador permanece pendente; nenhuma
 aprovação independente simulada. Detalhes em docs/HANDLE_LIFETIME_REVIEW.md.
 PR6/schema v1 e branches anteriores preservados, adapter OFF e nenhum piloto.
+
+### Issue20 — evidência Windows real e CI do código7740254
+
+PR21 em rascunho sobre PR19, código cb8b27f e regressão7740254.
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/41857555311
+(rodada PR): CINCO jobs aprovados; logs de todos consultados.
+
+| Ambiente | Descobertos | Executados | Ignorados |
+| --- | --- | --- | --- |
+| Ubuntu Python3.11, por job |195|164|31:29 Windows +2 browser|
+| Ubuntu Python3.12, por job |195|164|31:29 Windows +2 browser|
+| Windows Server2025 Python3.11 |195|193|2 browser dedicado|
+| Windows Server2025 Python3.12 |195|192|2 browser +1 foreground do ensaio guiado|
+| Chromium dedicado |2|2|0|
+
+Na rodada push41857540952, Windows3.12 também concluiu aprovado:193 executados/
+2 skips; o ensaio guiado executou ali. Push3.11 concluiu aprovado:192 executados/
+3 skips (2 browser e1 foreground guiado). A rodada push também teve CINCO jobs
+aprovados, todos os logs conferidos. Skips de foreground são lacunas explícitas,
+não testes aprovados nem identificação do skip humano histórico.
+
+Os13 novos testes executaram em ambos os Windows: nove negativos injetados e
+quatro nativos reais. REPRODUZIDO EM KERNEL, de modo controlado: CloseHandle
+retorna falha para job/probe próprios deliberadamente protegidos com
+HANDLE_FLAG_PROTECT_FROM_CLOSE. Referência preservada/cleanup_unconfirmed; teste
+remove proteção e libera o handle ainda comprovadamente próprio em cleanup.
+Job com pai/descendente confirmou ActiveProcesses>=2 antes e zero após término;
+prova do mesmo objeto duplicado/não herdado, ticks e recusa após exit passou.
+Não é falha espontânea de campo, exploração ou reuso real de PID demonstrado.
+
+SIMULADO/INJETADO: falhas de terminate/query/timeout, identidade inicial falsa,
+falhas de token/probes/múltiplos recursos e atribuição ao job após spawn. Incluem
+futures drenados, reader.join, stdout fechado e recusa de retry após incerteza.
+Não atribuir esses cenários ao kernel real nem ao descarte histórico do PR6.
+
+Suite local195:164 executados/31 skips, categorias29 Windows/2 browser/zero
+unclassified. Compileall, wheel, diff e manifesto135 arquivos verificados;
+schema v1 e CMD iguais à base. Critério6 (revisor distinto do implementador)
+permanece PENDENTE; a Issue20 não recebe sign-off independente por esta execução.
+Sem merge/rebase/deploy/instalação, adaptador OFF, nenhum dado real ou piloto.
+Última atualização documental terá seus checks de HEAD conferidos no PR21.
+
+Inventário residual: NativeSession.creation_ticks ainda fecha sem verificar BOOL
+e abre por PID. Fora dos wrappers A1–A4/métricas; entrypoint legado não alterado
+nesta entrega focada. Exige revisão separada antes de ampliar confiança/piloto;
+não é falha observada de campo. Ver HANDLE_LIFETIME_REVIEW para a fronteira.
+
+As rodadas cb8b27f/41857235380 e41857457482 foram canceladas pela concorrência
+ao publicar a regressão seguinte, não contadas como aprovadas. A entrega não
+encerra o critério6 sem revisão por pessoa distinta. Próxima tarefa: revisor
+auditar diff focado e confirmar ownership/teardown usando provas por SHA; depois
+tratar o inventário residual em entrega própria, sem habilitar adapter ou piloto.

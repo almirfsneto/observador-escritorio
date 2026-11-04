@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 25270,
-      "sha256": "d03cc80a15855f685ee543da3853b2710acb8583b4ab2c9dad039da14dce47a5"
+      "size_bytes": 25593,
+      "sha256": "5fd66b12bb9b785bfa690260059625484e37c24b69cab17d185c20c521c12249"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 58178,
-      "sha256": "7450bfd495626b9dbe386ed2ac359d424e3ea3aa44cef8cceb17ae3ff087633a"
+      "size_bytes": 61397,
+      "sha256": "3086a2e6be03c367b962943bae91d56efdf4a214ff00f2cf1faf4af2fc3b63fe"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -150,8 +150,8 @@
     },
     {
       "path": "docs/HANDLE_LIFETIME_REVIEW.md",
-      "size_bytes": 5099,
-      "sha256": "91b4a430ff0f7a73e1c8fb5bb25d83a1243ecfabfcde40eb2e6ca1d42895abf8"
+      "size_bytes": 5695,
+      "sha256": "e50e55696d8ebf24e520b6b662b261c97b03338fc31701126b670eecd78ca68b"
     },
     {
       "path": "docs/INBOX_RETENTION.md",
@@ -200,8 +200,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 11032,
-      "sha256": "84a32b9f706020397a1a63bb7f8b53feaaf10156b13d924aa3744d0ed10b8b5d"
+      "size_bytes": 11560,
+      "sha256": "55a940523324ddea22555facc2f47fad350ce181f9d04ca815905601b54149c7"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
