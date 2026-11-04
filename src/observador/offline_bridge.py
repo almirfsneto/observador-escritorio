@@ -268,16 +268,24 @@ class OfflineBridge:
     def authorize(self,source):
         source=deepcopy(validate_source(source))
         with self.lock:
-            if self.state!='disabled' or len(self.bindings)>=3:raise BridgeError('bridge_authorization_closed')
+            saved=self.conn.execute('SELECT source_json FROM sources WHERE instance=?',(source['instance'],)).fetchone()
+            recovery_only=self.state in ('expired','failed') and saved is not None
+            if (self.state!='disabled' and not recovery_only) or len(self.bindings)>=3:raise BridgeError('bridge_authorization_closed')
+            self._assert_owner()
             if source['kind']=='web' and any(v['kind']=='web' and v['tab_slot']==source['tab_slot'] and v['instance']!=source['instance'] for v in self.bindings.values()):raise BridgeError('bridge_tab_not_authorized')
             if source['kind']=='windows' and any(v['kind']=='windows' and v['instance']!=source['instance'] for v in self.bindings.values()):raise BridgeError('bridge_source_limit')
             saved=self.conn.execute('SELECT source_json FROM sources WHERE instance=?',(source['instance'],)).fetchone()
             if saved and saved[0]!=canonical(source):raise BridgeError('bridge_provenance_conflict')
             if self.conn.execute('SELECT COUNT(*) FROM sources').fetchone()[0]>=32 and not saved:raise BridgeError('bridge_source_limit')
-            self.budget.check()
-            with self.conn:
-                self.conn.execute('BEGIN IMMEDIATE');self._assert_owner()
-                self.conn.execute('INSERT OR IGNORE INTO sources VALUES (?,?,0,0)',(source['instance'],canonical(source)))
+            if not saved:
+                try:
+                    self.budget.check()
+                    with self.conn:
+                        self.conn.execute('BEGIN IMMEDIATE');self._assert_owner()
+                        self.conn.execute('INSERT INTO sources VALUES (?,?,0,0)',(source['instance'],canonical(source)))
+                except (sqlite3.Error,OSError):
+                    self.state='failed';self.metrics['storage_errors']+=1
+                    raise BridgeError('bridge_authorization_persist_failed') from None
             self.bindings[source['instance']]=source
 
     def _expire(self):

@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 35263,
-      "sha256": "9310145035c984485f50e908a399e1a04fd440f1c4ecba38f100759fe2d5d49b"
+      "size_bytes": 35674,
+      "sha256": "f49ac84ae36377c028d4aeb2847d2d17a5c8346a53234baf84937eeba20a25e8"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -35,8 +35,8 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 4590,
-      "sha256": "c92115fccb6cb91211a024e02490f77e4d3b122915f805bd34ca78de991876d9"
+      "size_bytes": 4637,
+      "sha256": "8da3cbc8f573268ff0bb7b2073be3d880f03598a50b101a9fcd505aaf3512dfc"
     },
     {
       "path": "ROADMAP.md",
@@ -155,8 +155,8 @@
     },
     {
       "path": "docs/OFFLINE_BRIDGE.md",
-      "size_bytes": 5340,
-      "sha256": "97ca27cdb3454ea577c9b4f52f5e3d259f9454eaa575e74daff21c08f3c0f069"
+      "size_bytes": 5388,
+      "sha256": "b4a71f91c08b45bce9cea652a830c49c52f055c7bb68d04ddb6106cc1a4e7835"
     },
     {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
@@ -310,8 +310,8 @@
     },
     {
       "path": "src/observador/offline_bridge.py",
-      "size_bytes": 25958,
-      "sha256": "a73066d03b354849106e228f8ed20b48c465973324a1cca3a0c670717565d9c7"
+      "size_bytes": 26497,
+      "sha256": "8116ff726347187fbc44715e32cf78a69f241d02692bc073361bf0939e0480d2"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -425,8 +425,8 @@
     },
     {
       "path": "tests/test_inbox_retention.py",
-      "size_bytes": 13241,
-      "sha256": "7d5e6280e092584cca8f4243c82649f04595ca7fcda4c187ac44e37b34b6166b"
+      "size_bytes": 14362,
+      "sha256": "cfa5790bb4ecd0091460975b388e3f89861f0324eed55606e7eae01188070343"
     },
     {
       "path": "tests/test_lab_queue.py",

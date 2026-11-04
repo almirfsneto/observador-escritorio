@@ -52,8 +52,6 @@ class RetentionTest(unittest.TestCase):
     def test_no_reuse_after_purge_even_with_fresh_epoch_and_sequences(self):
         b=self.active(self.open());old=self.batch(b);b.ingest(old)
         self.advance(86401);b.purge();b.close()
-        # Remove close cleanup for the explicitly closed connection.
-        self._cleanups.pop()
         b=self.active(self.open());fresh=self.batch(b,2)
         for change in ('batch_id','event_id','source_sequence','batch_sequence'):
             candidate=deepcopy(fresh)
@@ -70,9 +68,10 @@ class RetentionTest(unittest.TestCase):
         self.advance(1800);b.purge();self.advance(-3600)
         self.assertEqual(b.purge()['events'],0);self.assertEqual(b.state,'expired')
         self.assertEqual(b.ingest(batch),ack)
-        b.close();self._cleanups.pop();b=self.open()
+        b.close();b=self.open()
         self.assertEqual(b.state,'expired')
-        with self.assertRaises(BridgeError):b.authorize(self.p)
+        b.authorize(self.p);self.assertEqual(b.ingest(batch),ack)
+        with self.assertRaises(BridgeError):b.control('start')
         self.assertEqual(b.retention_snapshot()['counts']['events'],1)
 
     def test_monotonic_expiry_does_not_imply_payload_purge(self):
@@ -181,7 +180,7 @@ class RetentionTest(unittest.TestCase):
             b.conn.execute('ALTER TABLE receipts DROP COLUMN committed_ms')
             b.conn.execute('DROP TABLE batch_markers');b.conn.execute('DROP TABLE event_markers')
             b.conn.execute('DELETE FROM meta WHERE key="retention_ms"');b.conn.execute('PRAGMA user_version=1')
-        b.close();self._cleanups.pop();self.advance(86401)
+        b.close();self.advance(86401)
         b=self.open();b.authorize(self.p)
         self.assertEqual(b.ingest(batch),ack)
         self.assertEqual(b.conn.execute('PRAGMA user_version').fetchone()[0],2)
@@ -234,3 +233,21 @@ raise RuntimeError('crash_not_reached')
                 else:
                     with self.assertRaises(BridgeError):b.ingest(batch)  # Old epoch, no fabricated ACK.
             finally:b.close()
+
+    def test_v1_global_id_collision_rolls_back_migration_without_erasing_history(self):
+        b=self.active(self.open());batch=self.batch(b);b.ingest(batch)
+        with b.conn:
+            b.conn.execute('ALTER TABLE events DROP COLUMN committed_ms')
+            b.conn.execute('ALTER TABLE receipts DROP COLUMN committed_ms')
+            b.conn.execute('DROP TABLE batch_markers');b.conn.execute('DROP TABLE event_markers')
+            b.conn.execute('DELETE FROM meta WHERE key="retention_ms"');b.conn.execute('PRAGMA user_version=1')
+            b.conn.execute('INSERT INTO events SELECT ?,event_id,source_sequence,payload_json FROM events',('synthetic_other_source',))
+        b.close()
+        with self.assertRaises(BridgeError):self.open()
+        conn=sqlite3.connect(self.path)
+        try:
+            self.assertEqual(conn.execute('PRAGMA user_version').fetchone()[0],1)
+            self.assertEqual(conn.execute('SELECT COUNT(*) FROM events').fetchone()[0],2)
+            self.assertNotIn('committed_ms',{r[1] for r in conn.execute('PRAGMA table_info(events)')})
+            self.assertEqual(conn.execute('PRAGMA integrity_check').fetchone()[0],'ok')
+        finally:conn.close()

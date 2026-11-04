@@ -81,4 +81,5 @@ O SQLite ativo continua em claro; WinForms permanece com cobertura limitada.
 Issue 11: [diagnóstico fechado e faults sintéticos](docs/DIAGNOSTICS.md),
 [ponte offline por arquivos/ACK](docs/OFFLINE_BRIDGE.md) e
 [retomada atualizada](docs/RETOMADA_AUTONOMA.md). A ponte não possui socket nem
-autenticação de peers/retenção temporal de inbox; continua restrita a laboratório.
+autenticação de peers; retenção temporal e markers do inbox estão em
+`docs/INBOX_RETENTION.md`. Continua restrita a laboratório.

@@ -60,11 +60,11 @@ não atribuem rotina causal entre desktop e web.
 
 ## Persistência, ordem e testes
 
-Inbox separado: formato próprio app-id/version 1, DACL/diretório privado, cap 4 MiB
+Inbox separado: formato próprio app-id/version 2 (migração v1 transacional), DACL/diretório privado, cap 4 MiB
 no principal, orçamento agregado/reserva, máximo 32 fontes persistidas, 128 receipts
-e 10 mil eventos. Recusa WAL/SHM, links, outros formatos e Git. Sem expurgo temporal
-nesta versão: expiração encerra admissão, não apaga receipts; retenção/exportação
-controlada ainda exige projeto antes de piloto. SQLite ativo fica **em claro**.
+e 10 mil eventos. Recusa WAL/SHM, links, outros formatos e Git. Retenção v2:
+payload 1h/receipt 24h, markers permanentes limitados e high-water preservados;
+contrato completo em INBOX_RETENTION.md. Expiração de sessão não implica purge. SQLite ativo fica **em claro**.
 Mesmo orçamento lógico não é quota física, proteção contra admin ou auditoria.
 
 source_events retorna listas separadas ordenadas por source_sequence. Não impõe

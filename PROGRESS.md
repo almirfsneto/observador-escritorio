@@ -504,3 +504,9 @@ seed 1401/100 operações. CI Linux/Windows/Chromium a conferir no PR desta entr
 Limites/contrato em docs/INBOX_RETENTION.md. PR6 intacto; sem coleta, rede de dados,
 instalação, deploy, merge ou afirmação de piloto. Próxima prioridade: análise de
 ameaças/autenticação verificável; não ligar transporte sem prova de origem.
+
+Revisão P1: recuperação read-only de fonte conhecida funciona também quando a
+reabertura detecta clock regressivo, sem permitir start; tentativa de migração
+v1 com colisão global de IDs dá rollback integral e conserva versão/payloads.
+15 testes novos de retenção, 136 totais (Linux124 executados/12 skips). README e
+contrato offline apontam a retenção v2 para evitar descrição obsoleta sem TTL.
