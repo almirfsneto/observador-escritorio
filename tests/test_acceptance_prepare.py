@@ -75,6 +75,9 @@ class PreparationTest(unittest.TestCase):
             self.assertIn('<clear />', runner.config)
             self.assertIn('8.0.408', runner.assert_sdk)
             self.assertTrue(all('--no-restore' in cmd for cmd in runner.commands if cmd[1]=='build'))
+            builds = [cmd for cmd in runner.commands if cmd[1]=='build']
+            self.assertEqual(len(builds),3)
+            self.assertTrue(any('SyntheticTaskApp.csproj' in cmd[2] for cmd in builds))
             self.assertFalse(any('install' in cmd for cmd in runner.commands))
             self.assertTrue(prep.verify_artifacts())
             binary = binaries(root)['provider']
