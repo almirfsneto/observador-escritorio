@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 17758,
-      "sha256": "d9ea38dbc724072bd84e0842f110e291f04b37411b8d51acb2c6f25460c8b8bc"
+      "size_bytes": 18137,
+      "sha256": "a79281503c2682fde3246a45f46d03f3a9cae0841b0a3bf559de91d472f325e5"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 36562,
-      "sha256": "838e2966cb6fe97dbd40bf8b9c2a0b7adefd1de0587e8b3b7f950f9f5d29fa2a"
+      "size_bytes": 37550,
+      "sha256": "f281381156414624b0f00a6857ef23952954e99c9716fa5f9a201a396f65833e"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -135,8 +135,8 @@
     },
     {
       "path": "docs/INBOX_RETENTION.md",
-      "size_bytes": 5918,
-      "sha256": "d79e4bdcaec08b682cad8cf74e42b5fe38bab13ac355118d770473d81d57d24e"
+      "size_bytes": 6452,
+      "sha256": "eb4155029fd00c9439c7a2a08da7b9bdd09e37f5d647fe0af59e764493de45a9"
     },
     {
       "path": "docs/LAB_ENTREGA_2.md",
@@ -175,8 +175,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 3721,
-      "sha256": "afe497303d53d394ee02fa23306fa13bf24f2f0442e0b978e83dc76010ea8e33"
+      "size_bytes": 4136,
+      "sha256": "30ac0ab9e1ce2e63de946b73771a8c0d9af1c36e9760b2954391da451aeda1ab"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -310,8 +310,8 @@
     },
     {
       "path": "src/observador/offline_bridge.py",
-      "size_bytes": 26497,
-      "sha256": "8116ff726347187fbc44715e32cf78a69f241d02692bc073361bf0939e0480d2"
+      "size_bytes": 27637,
+      "sha256": "e4fd12dbb1877051c5bb7c8503a33b64958db3a4dc029f5056c312fc0ce304fd"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -425,8 +425,8 @@
     },
     {
       "path": "tests/test_inbox_retention.py",
-      "size_bytes": 14972,
-      "sha256": "dbbd415e29c6b244155b0e972353aeb125339e73b027364a52e2586df8ada5d8"
+      "size_bytes": 17615,
+      "sha256": "facf4a5a71684d47f6052da3f42e647d530be912ef94468bbc9405d231e9b54d"
     },
     {
       "path": "tests/test_lab_queue.py",

@@ -1,5 +1,6 @@
 """Offline synthetic inbox and explicit file ACKs. No socket, daemon or auto capture."""
 from copy import deepcopy
+from contextlib import contextmanager
 from datetime import datetime,timezone
 import hashlib
 import json
@@ -153,7 +154,7 @@ class OfflineBridge:
         if fault_plan is not None and type(fault_plan) is not LabFaultPlan:raise BridgeError('bridge_fault_plan_rejected')
         self.fault_plan=fault_plan
         self.metrics=dict(events_purged=0,receipts_purged=0,ack_recovered=0,receipt_unavailable=0,
-                          capacity_rejected=0,storage_errors=0,clock_regressions=0)
+                          capacity_rejected=0,storage_errors=0,clock_regressions=0,uncertain_transactions=0)
         self._clock_floor=int(self.clock().timestamp()*1000)
         self._mono_floor=self.monotonic()
         self.state='disabled';self.bindings={};self.lock=threading.RLock()
@@ -167,6 +168,7 @@ class OfflineBridge:
         if any(self.path.with_name(self.path.name+suffix).exists() for suffix in ('-wal','-shm')):raise BridgeError('bridge_wal_rejected')
         for entry in self.path.parent.iterdir():secure_file(entry)
         self.conn=sqlite3.connect(self.path,timeout=.05)
+        self.usable=True
         try:
             secure_file(self.path)
             if existed and (self.conn.execute('PRAGMA application_id').fetchone()[0]!=0x4f425342 or self.conn.execute('PRAGMA user_version').fetchone()[0] not in (1,2)):
@@ -220,6 +222,34 @@ class OfflineBridge:
                 self.conn.execute('SELECT COUNT(*) FROM event_markers').fetchone()[0]>MAX_EVENT_MARKERS):
             raise BridgeError('bridge_marker_capacity_reached')
 
+    @contextmanager
+    def _transaction(self):
+        """Never expose connection-local uncommitted receipts after failed rollback.
+
+        A commit exception has unknown outcome even if autocommit is restored;
+        discard the connection and resolve only by reopening the durable inbox.
+        """
+        self._ensure_usable()
+        commit_attempted=False
+        try:
+            self.conn.execute('BEGIN IMMEDIATE')
+            yield
+            commit_attempted=True
+            self.conn.commit()
+        except Exception:
+            uncertain=commit_attempted
+            try:
+                if self.conn.in_transaction:
+                    self._hit('before_rollback');self.conn.rollback();self._hit('after_rollback')
+            except Exception:uncertain=True
+            if uncertain:
+                self.metrics['uncertain_transactions']+=1
+                self.usable=False;self.state='failed';self.conn.close()
+            raise
+
+    def _ensure_usable(self):
+        if not self.usable:raise BridgeError('bridge_reopen_required')
+
     def _hit(self,stage):
         if self.fault_plan:self.fault_plan.hit(stage)
 
@@ -243,8 +273,8 @@ class OfflineBridge:
         with self.lock:
             try:
                 self.budget.check()
-                with self.conn:
-                    self.conn.execute('BEGIN IMMEDIATE');self._assert_owner()
+                with self._transaction():
+                    self._assert_owner()
                     now=self._retention_now()
                     events=self.conn.execute('DELETE FROM events WHERE committed_ms<=?',(now-EVENT_TTL_MS,)).rowcount
                     receipts=self.conn.execute('DELETE FROM receipts WHERE committed_ms<=?',(now-RECEIPT_TTL_MS,)).rowcount
@@ -259,15 +289,16 @@ class OfflineBridge:
 
     def retention_snapshot(self):
         '''Owner-thread diagnostic, not for UI callbacks; counters are process-local.'''
-        counts={table:self.conn.execute('SELECT COUNT(*) FROM '+table).fetchone()[0]
+        counts={table:self.conn.execute('SELECT COUNT(*) FROM '+table).fetchone()[0] if self.usable else None
                 for table in ('events','receipts','event_markers','batch_markers','sources')}
         return dict(schema_version=1,kind='synthetic_inbox_retention',state=self.state,counts=counts,
-                    counters=dict(self.metrics),budget=self.budget.snapshot(),physical_quota=False)
+                    counters=dict(self.metrics),budget=self.budget.snapshot(),physical_quota=False,reopen_required=not self.usable)
 
 
     def authorize(self,source):
         source=deepcopy(validate_source(source))
         with self.lock:
+            self._ensure_usable()
             saved=self.conn.execute('SELECT source_json FROM sources WHERE instance=?',(source['instance'],)).fetchone()
             recovery_only=self.state in ('expired','failed') and saved is not None
             if (self.state!='disabled' and not recovery_only) or len(self.bindings)>=3:raise BridgeError('bridge_authorization_closed')
@@ -280,8 +311,8 @@ class OfflineBridge:
             if not saved:
                 try:
                     self.budget.check()
-                    with self.conn:
-                        self.conn.execute('BEGIN IMMEDIATE');self._assert_owner()
+                    with self._transaction():
+                        self._assert_owner()
                         self.conn.execute('INSERT INTO sources VALUES (?,?,0,0)',(source['instance'],canonical(source)))
                 except (sqlite3.Error,OSError):
                     self.state='failed';self.metrics['storage_errors']+=1
@@ -294,6 +325,7 @@ class OfflineBridge:
         self.last_clock=now
 
     def _assert_owner(self):
+        self._ensure_usable()
         if self.conn.execute('SELECT value FROM meta WHERE key="epoch"').fetchone()[0]!=self.epoch:
             self.state='failed'
             raise BridgeError('bridge_owner_replaced')
@@ -316,8 +348,7 @@ class OfflineBridge:
             else:self.state='stopped'
             self.generation+=1
             try:
-                self.conn.execute('BEGIN IMMEDIATE')
-                with self.conn:
+                with self._transaction():
                     self._assert_owner()
                     self.conn.execute('UPDATE meta SET value=? WHERE key="generation"',(str(self.generation),))
             except (sqlite3.Error,OSError,BridgeError):
@@ -375,8 +406,7 @@ class OfflineBridge:
                 scope='durable_local_inbox_not_business_completion',status='committed')
             try:
                 self.budget.check();self._hit('before_transaction')
-                with self.conn:
-                    self.conn.execute('BEGIN IMMEDIATE')
+                with self._transaction():
                     self._assert_owner()
                     progress=self.conn.execute('SELECT last_batch,last_sequence FROM sources WHERE instance=?',(instance,)).fetchone()
                     if progress!=(last_batch,last_sequence):raise BridgeError('bridge_progress_changed')
@@ -406,4 +436,4 @@ class OfflineBridge:
         return result
 
     def close(self):
-        self.state='stopped';self.conn.close()
+        self.state='stopped';self.usable=False;self.conn.close()

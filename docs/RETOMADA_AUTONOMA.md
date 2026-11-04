@@ -63,3 +63,9 @@ dedicados, marcar só etapas feitas e salvar JSON fora de Git. Nenhum piloto,
 coleta de pessoas/dado jurídico, instalação na equipe, captura oculta, autostart,
 deploy, transmissão externa ou merge autorizado. Nenhum processo observa após
 estes testes; não existe desenvolvimento contínuo depois da execução.
+
+Revisão adicional P1: rollback falho/exceção no retorno de commit fecham a conexão,
+reopen_required=true e counts=null. Nunca recuperar ACK de leitura local que pode
+conter receipt não commitado. Reabrir e consultar SQLite. Erro posterior a commit
+retornado com sucesso é caso diferente/recuperável por leitura. 18 testes de
+retenção/139 totais (Linux127/12 skips) após essa revisão; conferir CI atual.

@@ -259,3 +259,50 @@ raise RuntimeError('crash_not_reached')
             self.assertNotIn('committed_ms',{r[1] for r in conn.execute('PRAGMA table_info(events)')})
             self.assertEqual(conn.execute('PRAGMA integrity_check').fetchone()[0],'ok')
         finally:conn.close()
+
+    def test_failed_rollback_cannot_return_uncommitted_receipt(self):
+        for stage in ('before_rollback','after_rollback'):
+            path=Path(self.tmp.name)/stage/'db.sqlite3'
+            b=OfflineBridge(path,clock=lambda:self.now);b.authorize(self.p);b.control('start')
+            batch=self.batch(b)
+            b.fault_plan=LabFaultPlan({'before_commit':['io'],stage:['io']})
+            with self.assertRaises(BridgeError):b.ingest(batch)
+            self.assertFalse(b.usable)
+            self.assertTrue(b.retention_snapshot()['reopen_required'])
+            self.assertIsNone(b.retention_snapshot()['counts']['receipts'])
+            with self.assertRaisesRegex(BridgeError,'^bridge_reopen_required$'):b.ingest(batch)
+            b.close();b=OfflineBridge(path,clock=lambda:self.now)
+            try:
+                b.authorize(self.p)
+                self.assertEqual(b.retention_snapshot()['counts']['receipts'],0)
+                self.assertEqual(b.conn.execute('PRAGMA integrity_check').fetchone()[0],'ok')
+                with self.assertRaises(BridgeError):b.ingest(batch)
+            finally:b.close()
+
+    def test_commit_return_uncertain_requires_reopen_even_when_transaction_closed(self):
+        b=self.active(self.open());batch=self.batch(b)
+        class AmbiguousCommit:
+            def __init__(self,conn):self.conn=conn
+            def __getattr__(self,key):return getattr(self.conn,key)
+            def commit(self):
+                self.conn.commit()
+                raise OSError('synthetic_commit_return_lost')
+        def hit(stage):
+            if stage=='before_commit':b.conn=AmbiguousCommit(b.conn)
+        b._hit=hit
+        with self.assertRaises(BridgeError):b.ingest(batch)
+        self.assertFalse(b.usable)
+        with self.assertRaisesRegex(BridgeError,'^bridge_reopen_required$'):b.ingest(batch)
+        b.close();b=self.open();b.authorize(self.p)
+        self.assertEqual(b.ingest(batch)['written_count'],1)
+        self.assertEqual(b.retention_snapshot()['counts']['events'],1)
+        self.assertEqual(b.conn.execute('PRAGMA integrity_check').fetchone()[0],'ok')
+
+    def test_truncated_file_eof_never_admits_partial_batch(self):
+        from observador.offline_bridge import read_batch
+        b=self.active(self.open());payload=canonical(self.batch(b)).encode()
+        path=Path(self.tmp.name)/'partial.json'
+        for end in (0,1,len(payload)//2,len(payload)-1):
+            path.write_bytes(payload[:end])
+            with self.assertRaisesRegex(BridgeError,'^bridge_batch_rejected$'):read_batch(path)
+        self.assertEqual(b.retention_snapshot()['counts']['batch_markers'],0)

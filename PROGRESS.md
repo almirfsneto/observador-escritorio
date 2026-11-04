@@ -523,3 +523,17 @@ kill passa a inspecionar SQLite ANTES do construtor fazer purge, distinguindo
 pré/pós-commit de purge por linhas efetivamente recuperadas; depois reabertura
 confirma receipt/markers/integridade. Código não muda nessa revisão de evidência.
 Windows CI é automação sintética Server2025, não aceite Windows10/11 humano.
+
+### P1 — correção de rollback/commit incerto na revisão adversarial
+
+Identificado risco de ler receipt ainda não commitado se rollback da conexão
+falhasse. Transação explícita agora fecha conexão em rollback falho OU exceção
+no próprio retorno de commit, mesmo quando in_transaction=false. Não reutiliza
+conexão incerta; snapshot counts=null/reopen_required=true/uncertain_transactions,
+ACK só após reabertura. Falha posterior a commit retornado com sucesso continua
+caso distinto, com receipt durável recuperável. Três regressões adicionais cobrem
+rollback pré/pós falha, commit realizado seguido de retorno perdido, e EOF de
+JSON truncado. 18 testes de retenção/139 totais: Linux127 executados/12 skips.
+Nova CI obrigatória nesta revisão; evidência anterior não é atribuída a ela.
+Medição local anterior:32 lotes/64 eventos fictícios,~30,2ms, pico agregado lógico
+observado184920 bytes em132 amostras, reserva4390920/limite13631488; não quota/SLA.
