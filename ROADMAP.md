@@ -92,5 +92,5 @@
 ## Issue 14 — retenção e autenticação sintéticas
 - [x] Implementar TTL separado de payload/receipt, markers permanentes limitados e ACK recuperável.
 - [x] Testes de crash, replay após purge, conflitos, clocks, quota e migração v1.
-- [ ] Confirmar matriz Linux/Windows e Chromium nos novos heads.
+- [x] P1/6d521cf: cinco jobs CI41759340778 aprovados; 139 testes e Chromium2 reais.
 - [ ] Análise de ameaças, pareamento autenticado e integração exclusivamente sintética revisada.

@@ -529,7 +529,7 @@ Windows CI é automação sintética Server2025, não aceite Windows10/11 humano
 Identificado risco de ler receipt ainda não commitado se rollback da conexão
 falhasse. Transação explícita agora fecha conexão em rollback falho OU exceção
 no próprio retorno de commit, mesmo quando in_transaction=false. Não reutiliza
-conexão incerta; snapshot counts=null/reopen_required=true/uncertain_transactions,
+conexão incerta; snapshot counts.*=null/reopen_required=true/uncertain_transactions,
 ACK só após reabertura. Falha posterior a commit retornado com sucesso continua
 caso distinto, com receipt durável recuperável. Três regressões adicionais cobrem
 rollback pré/pós falha, commit realizado seguido de retorno perdido, e EOF de
@@ -537,3 +537,13 @@ JSON truncado. 18 testes de retenção/139 totais: Linux127 executados/12 skips.
 Nova CI obrigatória nesta revisão; evidência anterior não é atribuída a ela.
 Medição local anterior:32 lotes/64 eventos fictícios,~30,2ms, pico agregado lógico
 observado184920 bytes em132 amostras, reserva4390920/limite13631488; não quota/SLA.
+
+### P1 — confirmação da revisão de segurança
+
+PR15 / código6d521cf / [CI41759340778](https://github.com/almirfsneto/observador-escritorio/actions/runs/41759340778):
+5/5 jobs aprovados. Python3.11/3.12: Linux127 executados/12 skips; Windows137
+executados/2 browsers separados skipped;139 descobertos. Chromium2 reais sem
+skips. Rollback falho e retorno de commit incerto executados nos quatro jobs,
+com reabertura/integridade e nenhum ACK da conexão descartada. 18 novos testes
+de retenção; EOF/truncamento também negativo. Manifesto/wheel/compileall/diff
+verificados. Esta atualização final é documental; CI do HEAD também será conferida.

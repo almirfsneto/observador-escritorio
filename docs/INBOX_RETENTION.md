@@ -63,7 +63,7 @@ APÓS retorno bem-sucedido de commit permite recuperar receipt vivo por leitura.
 Exceção no próprio retorno de commit ou rollback falho fecha a conexão: jamais
 ler um receipt possivelmente não commitado daquela conexão. Exigir reabertura e
 consulta do histórico persistido, mesmo quando in_transaction já é false.
-Snapshot marca reopen_required=true, counts=null e uncertain_transactions; não
+Snapshot marca reopen_required=true, counts.*=null e uncertain_transactions; não
 inventa rollback/commit. Reabertura é requerida para nova admissão. Abertura em disco sem espaço pode falhar antes de permitir leitura.
 
 Principal 4 MiB; agregado padrão 13631488 bytes, reserva 4390920 bytes para rollback,
