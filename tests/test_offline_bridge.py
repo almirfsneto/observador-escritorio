@@ -83,6 +83,8 @@ class OfflineBridgeTest(unittest.TestCase):
                     with self.assertRaises(BridgeError):bridge.ingest(bad)
                 bad=deepcopy(batch);bad['events'][0]['password']='SECRET'
                 with self.assertRaisesRegex(BridgeError,'^bridge_batch_rejected$'):bridge.ingest(bad)
+                bad=deepcopy(batch);bad['events'][0]['event_id']='AAAAAAAA-AAAA-4AAA-8AAA-AAAAAAAAAAAA'
+                with self.assertRaises(BridgeError):bridge.ingest(bad)
                 bad=deepcopy(batch);bad['batch_sequence']=2
                 with self.assertRaises(BridgeError):bridge.ingest(bad)
                 bridge.ingest(batch)

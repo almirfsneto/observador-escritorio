@@ -305,8 +305,8 @@
     },
     {
       "path": "src/observador/offline_bridge.py",
-      "size_bytes": 19404,
-      "sha256": "ca1ad57485e401b8048f5d27ce5caab74e6fd6ab396281e8c6a8dec1cbcffc63"
+      "size_bytes": 19437,
+      "sha256": "76ead416572081cede87d76cd172dcda2ffda643a70b86c414d339a869c03bea"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -440,8 +440,8 @@
     },
     {
       "path": "tests/test_offline_bridge.py",
-      "size_bytes": 8441,
-      "sha256": "1ca727ac468e05bd1e6907b433a98474e6912c6807d386f90320d34ddd3277da"
+      "size_bytes": 8616,
+      "sha256": "1e89b25eee276828d9755aba2cd648a874c033b9701b929985ba355979ec7bcd"
     },
     {
       "path": "tests/test_queue_faults.py",

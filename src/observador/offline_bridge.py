@@ -70,6 +70,7 @@ def validate_batch(batch):
                 validate_archive_event(event)
         previous=0;identities=set()
         for event in events:
+            uuid(event.event_id)
             if event.session_id!=source['instance'] or event.event_id in identities:raise ValueError()
             sequence=number(event.metadata.get('source_sequence'))
             if sequence<=previous:raise ValueError()
