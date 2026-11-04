@@ -390,8 +390,8 @@
     },
     {
       "path": "tests/test_browser_extension.py",
-      "size_bytes": 13869,
-      "sha256": "cf5bbd8c5c17f1d191995755394fbcdb845280a7b9ce359cadd1e9a175deba69"
+      "size_bytes": 15276,
+      "sha256": "4be54a301b46dc42de3a2a1760b87bb03465ce672f7efbcfad4f377fd0aa4bf8"
     },
     {
       "path": "tests/test_cli.py",

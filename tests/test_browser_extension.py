@@ -54,33 +54,50 @@ class BrowserExtensionTest(unittest.TestCase):
                     self.assertTrue(batch['events'])
                     ack=bridge.ingest(batch)
                     self.assertEqual(bridge.ingest(batch),ack)
-                    # ACTUAL target termination in this disposable browser profile.
+                    # Chromium preserves its DevTools agent host across worker restarts.
+                    # Observe WorkerStopped's Inspector notification and a new JS time origin.
                     cdp=context.browser.new_browser_cdp_session()
-                    restarted=[];destroyed=[]
-                    context.on('serviceworker',lambda value:restarted.append(value))
                     targets=cdp.send('Target.getTargets')['targetInfos']
                     matches=[target for target in targets if target['type']=='service_worker' and target['url']==worker.url]
                     self.assertEqual(len(matches),1,'Owned extension worker target is ambiguous')
                     target_id=matches[0]['targetId']
-                    cdp.on('Target.targetDestroyed',lambda data:destroyed.append(True) if data['targetId']==target_id else None)
-                    cdp.send('Target.setDiscoverTargets',{'discover':True})
-                    origin=worker.evaluate('performance.timeOrigin')
-                    result=cdp.send('Target.closeTarget',{'targetId':target_id})
-                    self.assertTrue(result['success'],'Owned worker target could not be closed')
-                    deadline=time.monotonic()+10
-                    while (not restarted or not destroyed) and time.monotonic()<deadline:page.wait_for_timeout(100)
-                    self.assertTrue(destroyed,'No actual worker target destruction observed')
-                    self.assertTrue(restarted,'Worker did not actually restart')
-                    replacement=[w for w in restarted if w.url==worker.url][-1]
-                    self.assertNotEqual(replacement.evaluate('performance.timeOrigin'),origin)
+                    session_id=cdp.send('Target.attachToTarget',{'targetId':target_id,'flatten':False})['sessionId']
+                    responses={};lifecycle=[];command_id=[0]
+                    def received(data):
+                        if data['sessionId']!=session_id:return
+                        message=json.loads(data['message'])
+                        if 'id' in message:responses[message['id']]=message
+                        elif message.get('method')=='Inspector.targetCrashed':lifecycle.append('worker_stopped')
+                    cdp.on('Target.receivedMessageFromTarget',received)
+                    def worker_command(method,params=None):
+                        command_id[0]+=1;identifier=command_id[0]
+                        cdp.send('Target.sendMessageToTarget',{'sessionId':session_id,
+                            'message':json.dumps(dict(id=identifier,method=method,params=params or {}))})
+                        deadline=time.monotonic()+8
+                        while identifier not in responses and time.monotonic()<deadline:page.wait_for_timeout(50)
+                        self.assertIn(identifier,responses,'Owned worker did not answer CDP command')
+                        response=responses.pop(identifier)
+                        self.assertNotIn('error',response,'Owned worker CDP command failed')
+                        return response['result']
+                    worker_command('Inspector.enable')
+                    worker_command('Runtime.enable')
+                    origin=worker_command('Runtime.evaluate',{'expression':'performance.timeOrigin','returnByValue':True})['result']['value']
+                    self.assertTrue(cdp.send('Target.closeTarget',{'targetId':target_id})['success'])
+                    deadline=time.monotonic()+8
+                    while not lifecycle and time.monotonic()<deadline:page.wait_for_timeout(50)
+                    self.assertTrue(lifecycle,'No actual WorkerStopped lifecycle event observed')
+                    worker_command('Runtime.runIfWaitingForDebugger')
                     page.wait_for_function("document.getElementById('observador-lab-status').textContent.includes('ENCERRADO')")
+                    replacement_origin=worker_command('Runtime.evaluate',{'expression':'performance.timeOrigin','returnByValue':True})['result']['value']
+                    self.assertNotEqual(replacement_origin,origin)
                     retry=download_batch()
                     self.assertEqual(canonical(retry),canonical(batch))
                     self.assertEqual(bridge.ingest(retry),ack)
                     acknowledgment=Path(profile)/'ack.json';acknowledgment.write_text(json.dumps(ack))
                     popup.locator('#bridge-ack').set_input_files(acknowledgment)
                     expect(popup.locator('#bridge-status')).to_have_text('ACK confirmado')
-                    pending=replacement.evaluate('async(id)=>(await chrome.storage.session.get("sessions")).sessions[id].bridge.pending',tab_id)
+                    expression='chrome.storage.session.get("sessions").then(d=>d.sessions['+str(tab_id)+'].bridge.pending)'
+                    pending=worker_command('Runtime.evaluate',{'expression':expression,'awaitPromise':True,'returnByValue':True})['result']['value']
                     self.assertIsNone(pending)
                     self.assertEqual(len(bridge.source_events()[0]['events']),len(batch['events']))
                     print('SYNTHETIC_BRIDGE_RESTART_VERIFIED',json.dumps(dict(events=len(batch['events']),worker_restarted=True,
