@@ -612,3 +612,20 @@ docs/RETOMADA_AUTONOMA.md e SOURCE_AUTHENTICATION.md; implementar/verificar cana
 herdado de filho próprio e gates nativos adversariais antes do opt-in. SQLite em
 claro, limite lógico, autenticação e aceite Windows10/11/Chrome/Edge/LGPD continuam
 pendentes; não apto a piloto. Nenhuma rotina de observação segue ativa após os testes.
+
+## Issue17 — canal privado Windows, Etapa A isolada — 2026-11-04
+
+Base obrigatória PR16/294cb39 conferida, nova codex/verified-owned-channel.
+Documentos obrigatórios/Issue/retomada lidos. Baseline149: Linux136 executados,
+13 skips. Revisão NativeSession/C#: ready.pid identifica alvo, não emissor;
+stdio antigo sem MAC e comandos JSON sem framing autenticado não serão promovidos
+a canal comprovado. Permanecem intocados junto ao PR6/aceite v1.
+
+Nova fixture IPC isolada Python -I -S -B, Win32 CreatePipe/lista4 handles/parent
+query limitado/Popen retido/Job, chave32 pelo pipe privado+EOF e challenge HMAC
+bidirecional vinculado a identidades/código/epoch/sessão. Framing estrito16KiB,
+64 mensagens, pausa/reproof, worker/timeout/cancelamento/cleanup. Sem adapter,
+UIA nova, rede ou coleta. Testes iniciais: três wire portáveis aprovados; três
+Windows reais aguardam CI, skips Linux não representam prova. Contrato/riscos em
+docs/OWNED_CHANNEL.md. Próximas etapas independentes: adversariais/capacidade e
+plano de revisão/consolidação sem merge/rebase de branches anteriores.

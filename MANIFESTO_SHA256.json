@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 19810,
-      "sha256": "e00e04bf8cb9fa004981872c416307a723e69093a5fd2b996307ec8511ff9fa7"
+      "size_bytes": 20691,
+      "sha256": "3e8d39571ab7020f5f5f87fe416d63e8bfd45ad37028ad6ca55ad21d51f4bc37"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 42758,
-      "sha256": "f91448404289f183cbc07d44feb065f272c962bd62385df20aa5c34ba0eaaa1e"
+      "size_bytes": 43856,
+      "sha256": "61a643cb7fab7cc9939fdeaa554b3771674d5f2eebe19a68ca33556328e525a9"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -157,6 +157,11 @@
       "path": "docs/OFFLINE_BRIDGE.md",
       "size_bytes": 5388,
       "sha256": "b4a71f91c08b45bce9cea652a830c49c52f055c7bb68d04ddb6106cc1a4e7835"
+    },
+    {
+      "path": "docs/OWNED_CHANNEL.md",
+      "size_bytes": 5483,
+      "sha256": "9d70dbb6de9aff240ed8d5ea01bfc29550cd9a6c8579a7be85858ccfd326c8f5"
     },
     {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
@@ -319,6 +324,26 @@
       "sha256": "e4fd12dbb1877051c5bb7c8503a33b64958db3a4dc029f5056c312fc0ce304fd"
     },
     {
+      "path": "src/observador/owned_channel.py",
+      "size_bytes": 13066,
+      "sha256": "088bbc3428c81e653441628d136dfd0fbe41c5cb5e1a87445955eb879a260776"
+    },
+    {
+      "path": "src/observador/owned_channel_child.py",
+      "size_bytes": 7151,
+      "sha256": "4113a20b875f74a3266f29775f4f48c1bdfb2bf21e6801c8704efe8e7e37f7ca"
+    },
+    {
+      "path": "src/observador/owned_channel_protocol.py",
+      "size_bytes": 5611,
+      "sha256": "5af35489a37fd6feaa02794f00168750c654d92eae2a44b6d1fbfc2e875be1d3"
+    },
+    {
+      "path": "src/observador/owned_channel_win32.py",
+      "size_bytes": 6142,
+      "sha256": "5a9518594b70367d5a90c3b3e12f95977d1b516ce37ac214767ffae1c6dac2f4"
+    },
+    {
       "path": "src/observador/private_directory.py",
       "size_bytes": 6443,
       "sha256": "e5509b8d22792a68dada9334934e555d0e130544c95c3cee0c517f3f77037867"
@@ -467,6 +492,11 @@
       "path": "tests/test_offline_bridge.py",
       "size_bytes": 8616,
       "sha256": "1e89b25eee276828d9755aba2cd648a874c033b9701b929985ba355979ec7bcd"
+    },
+    {
+      "path": "tests/test_owned_channel.py",
+      "size_bytes": 5579,
+      "sha256": "9b8e51f81d30c0aaa55aa28ebd87cdcf9504f9bd6df84b06bca798636294812a"
     },
     {
       "path": "tests/test_queue_faults.py",

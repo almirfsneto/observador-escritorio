@@ -136,3 +136,8 @@
 - **Prova pendente:** associação do peer do canal com PID/criação/caminho/sessão, herança mínima/entrega de chave, ACLs adversariais, colisão/EOF/cancelamento reais. Mesmo usuário/admin não são fronteira de proteção demonstrada. Modelo transporte/inbox/producer pause têm ACKs distintos.
 - **Evidência D-028:** CI41758466029 executou o probe nativo nos dois Pythons Windows e modelo em quatro jobs; isso prova identidade do filho retido, não do peer de transporte. Integração continua fechada até associação ao canal e testes adversariais reais.
 - **Evidência integrada D-028:** bc23073/CI41759416977, cinco jobs, Windows147/Linux136 executados por Python e Chromium2 reais; skips explícitos. Probe nativo continua parcial, IPC/adaptador seguem desligados. Próxima tarefa/requisitos em RETOMADA_AUTONOMA.md/SOURCE_AUTHENTICATION.md.
+
+## D-029 — Canal de capacidade herdada, isolado do protocolo de aceite
+- **Decisão:** Etapa A com fixture IPC Python isolada e Win32 pipes anônimos/lista explícita de quatro handles. Chave só pelo bootstrap herdado; Popen retido/identidades kernel e prova HMAC associam canal ao filho possuído. Sem endpoint público ou attach a PID.
+- **Alternativa:** mudar C#/NativeSession em uso pelo aceite aumentaria a superfície de regressão; preservar e testar entrypoint novo primeiro. Named pipes acrescentam ACL/squatting/peer API; não necessários ao experimento herdado.
+- **Limite:** não é isolamento de mesmo token/admin/injeção/checkout adulterado, nem consulta PID do peer via API de named pipe. Python é fixture IPC real executada em Windows, não UIA nem modelo em memória. Adapter permanece OFF e afirmações dependem de CI Windows real/revisão independente.
