@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 15825,
-      "sha256": "cc2d50c550bb35bb6c616dfb98bd6ffa8e4ee2a8b8976a9105b7fa7da6f0f28d"
+      "size_bytes": 16775,
+      "sha256": "9827b7bf3e4927f9311cb3c4d290a9d9e953635572517b19e337d3ac6c260540"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 30493,
-      "sha256": "3a5695e5477e1514f806abf21cf76f471c42b6a2ac278df693214cd33208c9b3"
+      "size_bytes": 34113,
+      "sha256": "ca4d623cee27e6215f4a77cb56b0844c2cb85bbf4560a32c0f3540804550d0b3"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -35,13 +35,13 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 4285,
-      "sha256": "5e14fed1f8bf5313701d22fcb2bb1556eddd38f341c987097d793e759b2a423b"
+      "size_bytes": 4589,
+      "sha256": "0bccd7a12f992b8e8e3638492436072a614d31c6ca82a0364a7a67529c80ff89"
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 5440,
-      "sha256": "635c844dcb83bd521a6ecfe1da83d4d0fac18af91884ffb294548a30275b2b49"
+      "size_bytes": 6237,
+      "sha256": "4d4fcbf84ccde6614f187cc16b5fce28ffa8a2f5774d399dfc614c20d79153d4"
     },
     {
       "path": "SECURITY.md",
@@ -170,8 +170,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 3702,
-      "sha256": "2120362bddcf455bff1fcd772e0294c9b2b29e858d12e89fe51154e5b91a5752"
+      "size_bytes": 5428,
+      "sha256": "fb6dddfbb8bae34dbd8143886a998d7b2654c5af72e89eb98a2dcab684dc9edc"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -185,8 +185,8 @@
     },
     {
       "path": "docs/TASK_DISCOVERY.md",
-      "size_bytes": 5981,
-      "sha256": "3786ef5025dc17d60a4ec9c0a4ff97b1c18fcbc20052bf59ab84c7c24eae7a83"
+      "size_bytes": 6075,
+      "sha256": "7fda3ae461442857b7bbd73a0bd8cc1aea618ff775701eb3d5e24c6fb6324a01"
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",

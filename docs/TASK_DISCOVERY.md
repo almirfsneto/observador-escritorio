@@ -3,8 +3,9 @@
 O detector legado `discover_patterns` e comandos anteriores continuam intactos.
 `discover_tasks` acrescenta projeção fechada, normalização por categoria de app,
 tipo/ação/papel (nunca alvo ou ID efêmero), deduplicação por UUID com rejeição de
-conflitos, segmentação por sessão/gap (30s) e corte em 64 eventos. Ordena UTC e
-source_sequence; empate sem sequência usa ordem de entrada, não UUID aleatório.
+conflitos, segmentação por sessão/gap (30s) e corte em 64 eventos. Ordena por
+sequência local quando disponível; sem ela usa UTC/entrada com lacuna explícita,
+nunca UUID aleatório como evidência temporal.
 
 Enumera sequências **contíguas** de 2–8 etapas. Contagens exatas usam intervalos
 não sobrepostos. Suprime subpadrão fechado só se todas suas ocorrências estiverem
@@ -18,7 +19,7 @@ O ranking usa frequência e extensão de sequência, depois duração observada.
 span entre primeiro/último evento não é tempo de trabalho efetivo e inclui espera.
 Confiança high/moderate/low é **heurística**, baseada em suporte/sessões e semântica
 conhecida, não probabilidade calibrada. UIA genérico Invoke/click/toggle recebe
-baixa confiança: normalizar papel não descobre significado de botões iguais.
+baixa confiança; click genérico é excluído. Normalizar papel não descobre significado de botões iguais.
 Retornos A-B-A e operações adjacentes repetidas são sinais para revisão, nunca
 prova de retrabalho, qualidade ou produtividade individual.
 
@@ -43,7 +44,7 @@ extra/renomeação repetida), sem informações de clientes. Resultado: primeira
 família baixar/renomear/mover/cadastrar com oito ocorrências, oito sessões e três
 variantes. Detector legado no mesmo corpus: zero padrões (IDs diferentes por
 sessão); novo motor: cinco famílias candidatas, alternativas/não aditivas.
-450 eventos/100 rotinas foram processados localmente em cerca de 0,012s; isto é
+Na versão PR10, 450 eventos/100 rotinas foram processados localmente em cerca de 0,012s; isto é
 medição pontual do executor, não SLA nem benchmark Windows/produção.
 
 ## Comparação técnica de alternativas livres

@@ -79,3 +79,12 @@
 - [ ] Integração browser/agente, ordenação multi-origem e durabilidade/ACK de exportação.
 - [ ] Calibração do minerador com corpus sintético maior e comparação executada de bibliotecas auditadas.
 - [ ] Aceite humano Windows 10/11 e Chrome/Edge em perfil descartável; nenhum piloto autorizado.
+
+## Issue 11 — diagnósticos e contrato offline
+- [x] PR12: diagnóstico fechado v1, contadores por fase, budget observado e faults BUSY/FULL/IO/rollback/commit/shutdown.
+- [x] PR13: bridge de arquivos sintéticos, proveniência declarada, gates, ACK transacional/idempotência e fonte/ordem separadas.
+- [x] Chromium: stop/restart REAL do worker, buffer/retry/ACK local; Linux/Windows 3.11/3.12 em CI.
+- [x] Negativos e métricas em corpus rotulado inteiramente sintético, sem afirmação de acurácia externa.
+- [ ] Retenção do inbox/receipts com recuperação após restart e limites adicionais.
+- [ ] IPC autenticado/adaptador Windows opt-in e coordenação confirmada de produtores.
+- [ ] Dataset independente, calibração, Chrome/Edge e Windows 10/11 humanos; PR6 permanece reservado.
