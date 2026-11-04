@@ -1,6 +1,7 @@
 param([int]$TargetPid, [long]$StartTicks, [string]$TargetPath, [string]$Phase = 'burst')
 $ErrorActionPreference = 'Stop'
 try {
+    [Console]::Error.WriteLine('stage=bootstrap')
     $target = Get-Process -Id $TargetPid
     if ($target.StartTime.ToUniversalTime().Ticks -ne $StartTicks -or
         $target.Path -ne $TargetPath -or [IO.Path]::GetFileName($target.Path) -notin @('SyntheticTaskApp.exe', 'SyntheticWpfTaskApp.exe')) {
@@ -16,6 +17,7 @@ public static class FixtureDesktop {
  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
 }
 '@
+    [Console]::Error.WriteLine('stage=runtime_ready')
     $startup = [Diagnostics.Stopwatch]::StartNew()
     do {
         $target.Refresh()
@@ -31,6 +33,7 @@ public static class FixtureDesktop {
     }
     if ($Phase -eq 'probe') { '{"status":"ok"}'; exit 0 }
     $root = [System.Windows.Automation.AutomationElement]::FromHandle($handle)
+    [Console]::Error.WriteLine('stage=root_ready')
     $all = $root.FindAll([System.Windows.Automation.TreeScope]::Descendants,
                         [System.Windows.Automation.Condition]::TrueCondition)
     $buttons = @()
@@ -43,6 +46,7 @@ public static class FixtureDesktop {
             $buttons += $element
         }
     }
+    [Console]::Error.WriteLine('stage=controls_ready')
     if ($Phase -eq 'password') {
         if ($null -eq $password) { throw 'Missing synthetic password control' }
         $password.SetFocus()
@@ -57,6 +61,7 @@ public static class FixtureDesktop {
             }
         }
     } else { throw 'Invalid test phase' }
+    [Console]::Error.WriteLine('stage=exercise_done')
     '{"status":"ok"}'
 } catch {
     '{"status":"error","reason":"synthetic_exercise_failed"}'
