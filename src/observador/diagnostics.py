@@ -14,7 +14,7 @@ ERRORS = ('none','busy','full','io','projection','post_commit','rollback_failed'
 GAPS = ('component_snapshots_not_atomic','native_sample_unavailable','native_sample_stale','native_queue_unavailable',
         'writer_unavailable','volatile_counters_reset_on_restart','budget_not_os_quota','sampling_not_continuous',
         'native_and_python_phases_differ','purge_includes_preexisting_rows','commit_outcome_uncertain',
-        'human_acceptance_pending','row_balance_not_proven')
+        'human_acceptance_pending','row_balance_not_proven','writer_shutdown_incomplete')
 BUDGET = obj(dict(limit_bytes=COUNT,reserve_bytes=COUNT,observed_bytes=nullable(COUNT),
                   peak_observed_bytes=nullable(COUNT),observations=COUNT,physical_quota={'const':False}))
 SCHEMA = {'$schema':'https://json-schema.org/draft/2020-12/schema',**obj({
@@ -57,7 +57,7 @@ def validate_diagnostics(document):
                       'starting' if p['enabled'] and p['pending_ack'] else 'active' if p['enabled'] else
                       'pausing' if p['pending_ack'] else 'paused')
             if (state!=expected or (p['stopped'] and (p['enabled'] or p['buffered']))
-                    or (p['expired'] and not p['stopped'])):raise ValueError()
+                    or (p['expired'] and not p['stopped']) or (state=='active' and not p['ready'])):raise ValueError()
         elif state!='disabled':raise ValueError()
         if n and n['queues']:
             if n['queues']['output_depth']>512 or n['queues']['focus_depth']>256:raise ValueError()
@@ -66,7 +66,8 @@ def validate_diagnostics(document):
             if (l['received']!=l['enqueued']+l['ingress_rejected']
                     or l['enqueued']!=sum(l[key] for key in ('buffered','inflight','written','duplicates','write_rejected','uncertain'))
                     or not 1<=w['capacity_batches']<=64 or l['buffered']>100*w['capacity_batches']
-                    or l['inflight']>100 or (not w['worker_alive'] and (l['buffered'] or l['inflight']))):raise ValueError()
+                    or l['inflight']>100 or (not w['worker_alive'] and (l['buffered'] or l['inflight']))
+                    or (w['health']=='ready' and not w['worker_alive'] and not w['shutdown'])):raise ValueError()
             if w['storage']:
                 b=w['storage']['budget']
                 if (b['observations']==0)!=(b['observed_bytes'] is None):raise ValueError()
@@ -85,6 +86,7 @@ def validate_diagnostics(document):
         if w is None or w['storage'] is None:required.add('writer_unavailable')
         if w and w['ledger']['uncertain']:required.add('commit_outcome_uncertain')
         if w and w['row_balance']!='balanced':required.add('row_balance_not_proven')
+        if w and w['health']=='shutdown_timeout':required.add('writer_shutdown_incomplete')
         if not required<=set(document['gaps']):raise ValueError()
         return document
     except (ReportError,ValueError,TypeError,KeyError,OverflowError):
@@ -117,6 +119,7 @@ class DiagnosticRecorder:
         if w is None or w['storage'] is None:gaps.append('writer_unavailable')
         if w and w['ledger']['uncertain']:gaps.append('commit_outcome_uncertain')
         if w and w['row_balance']!='balanced':gaps.append('row_balance_not_proven')
+        if w and w['health']=='shutdown_timeout':gaps.append('writer_shutdown_incomplete')
         return validate_diagnostics(dict(schema_version=1,kind='synthetic_lab_diagnostics',pilot_authorized=False,
             sample_sequence=self.sequence,scope='component_lifetimes_not_global',
             agent=dict(state=state,uptime_ms=max(0,(self.clock()-self.started)*1000)),native=native,python=p,writer=w,gaps=gaps))

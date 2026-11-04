@@ -82,6 +82,7 @@ class DiagnosticsTest(unittest.TestCase):
         bad=deepcopy(base);bad['python']['flow']['received']=1;variants.append(bad)
         bad=deepcopy(base);bad['agent']['state']='disabled';variants.append(bad)
         bad=deepcopy(base);bad['python']['stopped']=True;variants.append(bad)
+        bad=deepcopy(base);bad['python']['ready']=False;variants.append(bad)
         bad=deepcopy(base);bad['gaps']=[];variants.append(bad)
         for bad in variants:
             with self.assertRaisesRegex(DiagnosticError,'^diagnostic_document_rejected$'):

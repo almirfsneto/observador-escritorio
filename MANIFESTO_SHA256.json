@@ -115,8 +115,8 @@
     },
     {
       "path": "docs/DIAGNOSTICS_SCHEMA.json",
-      "size_bytes": 15337,
-      "sha256": "948e9078e240524995b33f64785cdecf9a8d94bd888320b59c8b7e6ea5124b8c"
+      "size_bytes": 15377,
+      "sha256": "acf89ae523b3e925576268a259cb9d975cddb95ef8ae5416be49bfeae7980ac8"
     },
     {
       "path": "docs/EVENT_SCHEMA.md",
@@ -245,8 +245,8 @@
     },
     {
       "path": "src/observador/diagnostics.py",
-      "size_bytes": 11597,
-      "sha256": "3451028e8c5ee241cd6249f6b0c06263d6622efd18a9e2e966cf4d42f7667738"
+      "size_bytes": 11943,
+      "sha256": "162754e89aee67142919dc1cbcca9c12db213fa3bdc5aabfe767cbf5fa87530d"
     },
     {
       "path": "src/observador/discovery.py",
@@ -385,8 +385,8 @@
     },
     {
       "path": "tests/test_diagnostics.py",
-      "size_bytes": 6945,
-      "sha256": "9042b7925a45628c2b85f96245899019aa9a1328bb7f51305c5533e29cb40cff"
+      "size_bytes": 7022,
+      "sha256": "492d906f155b0c4942982ffbe87ffb8055fc32e54dfa191082319bd7aa01c07d"
     },
     {
       "path": "tests/test_discovery.py",
@@ -415,8 +415,8 @@
     },
     {
       "path": "tests/test_queue_faults.py",
-      "size_bytes": 8921,
-      "sha256": "8a68e7f4e576989213b010865e375b9c2cc63e3573335077d5211253bd77c5ac"
+      "size_bytes": 9948,
+      "sha256": "6cc6b99efe8ff806ae6c07292dab1cd9d1a7e19ca744caaa2b2f431ce4308f42"
     },
     {
       "path": "tests/test_storage_hardening.py",

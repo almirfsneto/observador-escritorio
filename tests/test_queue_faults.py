@@ -137,6 +137,26 @@ class QueueFaultTest(unittest.TestCase):
             self.assertFalse(sink.worker.is_alive())
             self.assertEqual(sink.diagnostics_snapshot()['ledger']['write_rejected'],1)
 
+    def test_shutdown_timeout_is_a_gap_and_does_not_deadlock_snapshots(self):
+        release=threading.Event()
+        real=LabEventQueue
+        def stalled(*args,**kwargs):
+            release.wait(5)
+            return real(*args,**kwargs)
+        with tempfile.TemporaryDirectory() as tmp,patch('observador.lab_queue.LabEventQueue',side_effect=stalled):
+            sink=AsyncLabQueue(Path(tmp)/'queue/db.sqlite3')
+            try:
+                sink.submit([event()])
+                sink.close()
+                sample=DiagnosticRecorder().sample(writer=sink)
+                self.assertEqual(sample['writer']['health'],'shutdown_timeout')
+                self.assertIn('writer_shutdown_incomplete',sample['gaps'])
+                self.assertTrue(sample['writer']['worker_alive'])
+            finally:
+                release.set();sink.worker.join(timeout=2)
+            self.assertFalse(sink.worker.is_alive())
+            self.assertEqual(DiagnosticRecorder().sample(writer=sink)['writer']['ledger']['written'],1)
+
     def test_abrupt_exit_after_and_before_commit_recovers_without_false_persistent_counters(self):
         for commit in (False,True):
             with tempfile.TemporaryDirectory() as tmp:
