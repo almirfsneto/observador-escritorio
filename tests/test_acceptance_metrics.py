@@ -46,7 +46,8 @@ class MetricsTest(unittest.TestCase):
         elapsed[0] += .5
         sampler.sample()
         metric = data['metrics']['processes']['fixture']
-        self.assertEqual(opened, [123])
+        self.assertEqual(len(opened), 1)
+        self.assertEqual(opened[0].pid, 123)  # Factory receives the owned object, never a bare PID.
         self.assertAlmostEqual(metric['cpu_single_core_sample_peak_percent'], 20)
         self.assertEqual(metric['ram_working_set_sample_peak_bytes'], 2048)
         self.assertEqual(metric['samples'], 2)

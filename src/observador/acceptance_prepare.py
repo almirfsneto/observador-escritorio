@@ -92,8 +92,13 @@ class CommandRunner:
         self.lock = threading.RLock()
         self.current = None
         self.job = None
+        self.cleanup_confirmed = True
+        self.cleanup_errors = 0
+        self.last_error = 'none'
 
     def run(self, arguments, *, cwd, timeout=180):
+        if not self.cleanup_confirmed:
+            raise PreparationError('cleanup_unconfirmed')
         if self.cancelled.is_set():
             raise PreparationError('preparation_cancelled')
         environment = dict(os.environ)
@@ -106,17 +111,23 @@ class CommandRunner:
         with self.lock:
             if self.cancelled.is_set():
                 raise PreparationError('preparation_cancelled')
-            self.job = OwnedJob()
+            try:
+                self.job = OwnedJob()
+            except OSError as error:
+                self.job = getattr(error, 'resource', None)
+                if self.job is not None:
+                    self._cleanup_problem()
+                    raise PreparationError('cleanup_unconfirmed') from None
+                raise PreparationError('owned_job_unavailable') from None
             try:
                 self.current = subprocess.Popen(arguments, cwd=cwd, env=environment,
                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace',
                     creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
                 self.job.assign(self.current)
             except OSError:
-                if self.current and self.current.poll() is None:
-                    self.current.kill()
-                    self.current.wait(timeout=3)
-                self.job.close()
+                if self.current is not None:
+                    self._cleanup_problem()  # Assignment failed: descendant containment is unproved.
+                self._cleanup(self.current, None)
                 raise PreparationError('command_unavailable') from None
             process = self.current
         def read():
@@ -132,24 +143,39 @@ class CommandRunner:
         reader.start()
         try:
             process.wait(timeout=timeout)
-            return process.returncode, ''.join(chunks) if not reader.is_alive() else self._finish_output(reader, chunks)
         except subprocess.TimeoutExpired:
-            self._terminate()
             raise PreparationError('command_timeout') from None
         finally:
-            with self.lock:
-                if process.poll() is None:
-                    process.kill()
-                    process.wait(timeout=3)
-                self.job.close()
-                reader.join(timeout=2)
-                process.stdout.close()
-                self.current = self.job = None
+            self._cleanup(process, reader)
+        return process.returncode, ''.join(chunks)
 
-    @staticmethod
-    def _finish_output(reader, chunks):
-        reader.join(timeout=2)
-        return ''.join(chunks)
+    def _cleanup_problem(self):
+        self.cleanup_confirmed = False
+        self.cleanup_errors += 1
+        self.last_error = 'cleanup_unconfirmed'
+
+    def _cleanup(self, process, reader):
+        with self.lock:
+            self._terminate()
+            if process is not None:
+                try:
+                    process.wait(timeout=3)
+                except (OSError, subprocess.TimeoutExpired):
+                    self._cleanup_problem()
+            if reader is not None:
+                reader.join(timeout=2)
+                if reader.is_alive():
+                    self._cleanup_problem()
+            if process is not None and process.stdout is not None and (reader is None or not reader.is_alive()):
+                try:
+                    process.stdout.close()
+                except OSError:
+                    self._cleanup_problem()
+            if self.cleanup_confirmed:
+                self.current = self.job = None
+            # On failure retain resource references; run() refuses another launch.
+            if not self.cleanup_confirmed:
+                raise PreparationError('cleanup_unconfirmed') from None
 
     def cancel(self):
         self.cancelled.set()
@@ -158,9 +184,15 @@ class CommandRunner:
     def _terminate(self):
         with self.lock:
             if self.job:
-                self.job.close()  # Only this command's owned job and descendants.
+                try:
+                    self.job.close()
+                except OSError:
+                    self._cleanup_problem()
             if self.current and self.current.poll() is None:
-                self.current.kill()
+                try:
+                    self.current.kill()
+                except OSError:
+                    self._cleanup_problem()
 
 
 def parse_tests(code, output):

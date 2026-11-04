@@ -1,28 +1,54 @@
 """Sample only explicitly registered owned process handles, never enumerate processes."""
 import ctypes
 from ctypes import wintypes
-import os
+import subprocess
 import sys
 import time
 
+from .win32_handles import close_handle_once, declare_close_handle
+
 
 class ProcessProbe:
-    def __init__(self, pid):
+    def __init__(self, process=None):
         if sys.platform != 'win32':
             raise OSError('metrics_unavailable')
+        if process is not None and (not isinstance(process, subprocess.Popen) or process.poll() is not None):
+            raise OSError('metrics_unavailable')
+        self.handle = None
+        self.close_state = 'open'
         self.kernel = ctypes.WinDLL('kernel32', use_last_error=True)
-        self.kernel.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
-        self.kernel.OpenProcess.restype = wintypes.HANDLE
-        self.kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+        declare_close_handle(self.kernel)
+        self.kernel.GetCurrentProcess.restype = wintypes.HANDLE
+        self.kernel.DuplicateHandle.argtypes = [wintypes.HANDLE, wintypes.HANDLE, wintypes.HANDLE,
+            ctypes.POINTER(wintypes.HANDLE), wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        self.kernel.DuplicateHandle.restype = wintypes.BOOL
+        self.kernel.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+        self.kernel.WaitForSingleObject.restype = wintypes.DWORD
         self.kernel.GetProcessTimes.argtypes = [wintypes.HANDLE] + [ctypes.POINTER(wintypes.FILETIME)] * 4
         self.kernel.GetProcessTimes.restype = wintypes.BOOL
         self.kernel.K32GetProcessMemoryInfo.argtypes = [wintypes.HANDLE, ctypes.c_void_p, wintypes.DWORD]
         self.kernel.K32GetProcessMemoryInfo.restype = wintypes.BOOL
-        self.handle = self.kernel.OpenProcess(0x1000 | 0x10, False, pid)
-        if not self.handle:
+        current = self.kernel.GetCurrentProcess()
+        # Retain process locally throughout duplication. No OpenProcess/PID lookup.
+        source = int(process._handle) if process is not None else current
+        self.creation = self._creation(source)
+        duplicate = wintypes.HANDLE()
+        if not self.kernel.DuplicateHandle(current, source, current, ctypes.byref(duplicate),
+                                           0x1000 | 0x10 | 0x100000, False, 0):
             raise OSError('metrics_unavailable')
+        self.handle = duplicate.value
+
+    def _creation(self, handle):
+        if self.kernel.WaitForSingleObject(handle, 0) != 258:
+            raise OSError('metrics_unavailable')
+        values = [wintypes.FILETIME() for _ in range(4)]
+        if not self.kernel.GetProcessTimes(handle, *(ctypes.byref(v) for v in values)):
+            raise OSError('metrics_unavailable')
+        return values[0].dwHighDateTime << 32 | values[0].dwLowDateTime
 
     def read(self):
+        if self.close_state != 'open' or self._creation(self.handle) != self.creation:
+            raise OSError('metrics_unavailable')
         class Memory(ctypes.Structure):
             _fields_ = [('cb', wintypes.DWORD), ('faults', wintypes.DWORD)] + [
                 (name, ctypes.c_size_t) for name in ('peak', 'working', 'ppeak', 'p', 'npeak', 'n', 'page', 'pagepeak')]
@@ -39,9 +65,7 @@ class ProcessProbe:
                 int(memory.working), int(memory.peak))
 
     def close(self):
-        if self.handle:
-            self.kernel.CloseHandle(self.handle)
-            self.handle = None
+        close_handle_once(self, self.kernel)
 
 
 class OwnedSampler:
@@ -50,28 +74,39 @@ class OwnedSampler:
         self.probes = {}
         self.previous = {}
         self.closed = False
+        self.failed_probes = {}
         self.last_sample = float('-inf')
 
     def register(self, role, process=None, *, current_controller=False):
         if self.closed:
             return
-        if role not in self.session['metrics']['processes'] or role in self.probes:
+        if role not in self.session['metrics']['processes'] or role in self.probes or role in self.failed_probes:
             return
         if current_controller != (role == 'controller'):
             raise ValueError('owned_role_required')
         if not current_controller and (process is None or process.poll() is not None):
             return
-        pid = os.getpid() if current_controller else process.pid
         try:
-            probe = self.factory(pid)
+            probe = self.factory(None if current_controller else process)
             first = probe.read()
             self.probes[role] = probe
             self.previous[role] = (self.clock(), first[0], first[1])
             self._record(role, first, None)
         except OSError:
             if 'probe' in locals():
-                probe.close()
+                self._close_probe(role, probe)
             self.session['metrics']['processes'][role]['availability'] = 'unavailable'
+
+    def _close_probe(self, role, probe):
+        try:
+            probe.close()
+        except OSError:
+            self.failed_probes[role] = probe
+            self.session['metrics']['processes'][role]['availability'] = 'unavailable'
+
+    @property
+    def cleanup_confirmed(self):
+        return self.closed and not self.failed_probes
 
     def _record(self, role, values, cpu):
         metric = self.session['metrics']['processes'][role]
@@ -101,7 +136,7 @@ class OwnedSampler:
                 self.previous[role] = (now, creation, value[1])
             except OSError:
                 # Exit/access failure ends this handle's sampling; no PID lookup/reuse.
-                probe.close()
+                self._close_probe(role, probe)
                 del self.probes[role]
                 if not self.session['metrics']['processes'][role]['samples']:
                     self.session['metrics']['processes'][role]['availability'] = 'unavailable'
@@ -110,8 +145,8 @@ class OwnedSampler:
         if self.closed:
             return
         self.sample(force=True)
-        for probe in self.probes.values():
-            probe.close()
+        for role, probe in self.probes.items():
+            self._close_probe(role, probe)
         self.probes.clear()
         self.closed = True
 
@@ -120,6 +155,10 @@ class OwnedJob:
     """Kill-on-close job for this launcher's own preparation commands and descendants."""
     def __init__(self):
         self.handle = None
+        self.close_state = 'open'
+        self.cleanup_confirmed = False
+        self.processes_confirmed = False
+        self._teardown_failed = False
         if sys.platform != 'win32':
             return
         self.api = ctypes.WinDLL('kernel32', use_last_error=True)
@@ -138,19 +177,67 @@ class OwnedJob:
         self.api.SetInformationJobObject.restype = wintypes.BOOL
         self.api.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
         self.api.AssignProcessToJobObject.restype = wintypes.BOOL
-        self.api.CloseHandle.argtypes = [wintypes.HANDLE]
+        declare_close_handle(self.api)
+        self.api.TerminateJobObject.argtypes = [wintypes.HANDLE, wintypes.UINT]
+        self.api.TerminateJobObject.restype = wintypes.BOOL
+        self.api.QueryInformationJobObject.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p,
+                                                      wintypes.DWORD, ctypes.c_void_p]
+        self.api.QueryInformationJobObject.restype = wintypes.BOOL
         self.handle = self.api.CreateJobObjectW(None, None)
         value = Extended()
         value.basic.flags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
         if not self.handle or not self.api.SetInformationJobObject(self.handle, 9, ctypes.byref(value), ctypes.sizeof(value)):
-            self.close()
+            try:
+                self.close()
+            except OSError as error:
+                error.resource = self  # Caller retains a failed constructor's owner too.
+                raise
             raise OSError('owned_job_unavailable')
 
     def assign(self, process):
+        if self.close_state != 'open':
+            raise OSError('cleanup_unconfirmed')
         if self.handle and not self.api.AssignProcessToJobObject(self.handle, int(process._handle)):
             raise OSError('owned_job_unavailable')
 
+    def _confirm_empty(self):
+        class Accounting(ctypes.Structure):
+            _fields_ = [(name, ctypes.c_int64) for name in ('user', 'kernel', 'period_user', 'period_kernel')] + [
+                (name, wintypes.DWORD) for name in ('faults', 'total', 'active', 'terminated')]
+        deadline = time.monotonic() + 2
+        while True:
+            value = Accounting()
+            if not self.api.QueryInformationJobObject(self.handle, 1, ctypes.byref(value), ctypes.sizeof(value), None):
+                raise OSError('cleanup_unconfirmed')
+            if value.active == 0:
+                self.processes_confirmed = True
+                return
+            if time.monotonic() >= deadline:
+                raise OSError('cleanup_unconfirmed')
+            time.sleep(.01)
+
     def close(self):
-        if self.handle:
-            self.api.CloseHandle(self.handle)
-            self.handle = None
+        if self._teardown_failed:
+            raise OSError('cleanup_unconfirmed')
+        if self.close_state == 'closed':
+            return
+        problem = False
+        if self.handle is not None:
+            try:
+                # Do not infer descendant exit from closing the last job handle.
+                if not self.api.TerminateJobObject(self.handle, 1):
+                    raise OSError('cleanup_unconfirmed')
+                self._confirm_empty()
+            except OSError:
+                problem = True
+            try:
+                close_handle_once(self, self.api)
+            except OSError:
+                problem = True
+        else:
+            self.close_state = 'closed'
+            self.processes_confirmed = True
+        self.cleanup_confirmed = not problem and self.processes_confirmed and self.close_state == 'closed'
+        self._teardown_failed = not self.cleanup_confirmed
+        if self._teardown_failed:
+            raise OSError('cleanup_unconfirmed')

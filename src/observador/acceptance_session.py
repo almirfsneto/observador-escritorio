@@ -173,4 +173,5 @@ class AcceptanceLaboratory(LaboratoryWindow):
                     queue_discarded=self.sink.discarded, queue_purged=self.sink.purged)
             children = [self.fixture, self.secondary, self.session.process if self.session else None]
             self.recorder.data['children_stopped'] = (all(child is None or child.poll() is not None for child in children)
-                and (self.sink is None or not self.sink.worker.is_alive()))
+                and (self.sink is None or not self.sink.worker.is_alive())
+                and self.sampler.cleanup_confirmed)

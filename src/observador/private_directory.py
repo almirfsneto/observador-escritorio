@@ -5,6 +5,9 @@ import os
 from pathlib import Path
 import stat
 import sys
+from types import SimpleNamespace
+
+from .win32_handles import close_handle_once, declare_close_handle
 
 
 def reject_links(path):
@@ -24,7 +27,7 @@ class WindowsSecurity:
         self.kernel = ctypes.WinDLL('kernel32', use_last_error=True)
         self.kernel.GetCurrentProcess.restype = wintypes.HANDLE
         self.kernel.LocalFree.argtypes = [ctypes.c_void_p]
-        self.kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+        declare_close_handle(self.kernel)
         self.api.OpenProcessToken.argtypes = [wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE)]
         self.api.GetTokenInformation.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)]
         self.api.ConvertSidToStringSidW.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -36,9 +39,12 @@ class WindowsSecurity:
         self.api.ConvertSecurityDescriptorToStringSecurityDescriptorW.argtypes = [ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, ctypes.POINTER(ctypes.c_void_p), ctypes.c_void_p]
 
     def user_sid(self):
+        if getattr(self, '_failed_token', None) is not None:
+            raise OSError('cleanup_unconfirmed')
         token, size = wintypes.HANDLE(), wintypes.DWORD()
         if not self.api.OpenProcessToken(self.kernel.GetCurrentProcess(), 8, ctypes.byref(token)):
             raise OSError('storage_acl_unavailable')
+        resource = SimpleNamespace(handle=token.value, close_state='open')
         try:
             self.api.GetTokenInformation(token, 1, None, 0, ctypes.byref(size))
             data = ctypes.create_string_buffer(size.value)
@@ -53,7 +59,11 @@ class WindowsSecurity:
             finally:
                 self.kernel.LocalFree(text)
         finally:
-            self.kernel.CloseHandle(token)
+            try:
+                close_handle_once(resource, self.kernel)
+            except OSError:
+                self._failed_token = resource
+                raise
 
     def restrict(self, path, directory=False):
         flags = 'OICI' if directory else ''

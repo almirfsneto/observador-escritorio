@@ -15,6 +15,7 @@ from .acceptance_report import (MANUAL_STEPS, OBSERVATIONS, STATUSES, ReportErro
 from .acceptance_session import AcceptanceLaboratory
 
 ERRORS = {
+    'cleanup_unconfirmed': 'A limpeza dos recursos próprios não foi confirmada. Interrompa o ensaio e solicite revisão técnica.',
     'dotnet8_required': 'SDK .NET 8 não encontrado. Peça ao TI para instalar previamente; nada será instalado aqui.',
     'python_tk_required': 'É necessário Python 3.11 ou superior com Tk. Peça ao TI para corrigir a dependência.',
     'offline_build_failed': 'Compilação local falhou. SDK/packs precisam estar disponíveis offline. Nada foi baixado.',
