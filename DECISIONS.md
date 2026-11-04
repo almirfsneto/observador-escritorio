@@ -98,3 +98,8 @@
 - **Decisão:** motor novo paralelo ao legado; normaliza roles/ações sem alvos livres, segmenta sessões/gaps e agrupa edit-distance<=1 com âncoras. Intervalos não sobrepostos por família; famílias são hipóteses alternativas, não totais aditivos. IDs conflitantes são erro.
 - **Inferência:** confiança heurística não probabilística, spans não são trabalho efetivo, retrabalho são sinais, economia é null salvo hipótese explícita. UIA genérico sem significado recebe baixa confiança.
 - **Alternativas:** PrefixSpan MIT e PM4Py AGPL-3.0 consultados e não incorporados; auditoria transitiva/benchmark pendentes. Limites e evidências em docs/TASK_DISCOVERY.md.
+
+## D-022 - Encerramento conservador do worker web e diagnóstico do estimulador
+- **Decisão:** worker MV3 usa prazo UTC e monotônico; mudança de timeOrigin termina coleta, preserva buffer e exige início explícito para outra sessão. Não tentar continuidade silenciosa após suspensão incerta.
+- **Evidência:** fault injection de expiração/timeOrigin em Chromium real; reinício real do worker e aceite humano de 15 minutos continuam separados.
+- **Harness Windows:** timeout de PowerShell foi observado em um job; causas internas não provadas. Etapas estáticas e limite 30s diagnosticam o processo estimulador sem relaxar exigências do coletor ou repetir ações automaticamente. Nova compilação offline inclui fixture WinForms para não depender de artefatos da CI.

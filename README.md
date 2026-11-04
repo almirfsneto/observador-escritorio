@@ -67,3 +67,13 @@ fictícios, abra o laboratório desativado e inicie o ensaio explicitamente. Pre
 os itens humanos e salve JSON sanitizado fora de Git. O assistente não instala
 nada nem faz upload. Veja `docs/VALIDACAO_MANUAL_WINDOWS.md`; CI não substitui
 aceite humano e nenhum relatório libera piloto.
+
+## Entregas experimentais posteriores ao assistente
+
+Somente laboratório sintético, ainda sem autorização de piloto:
+[armazenamento/ACL/arquivo DPAPI](docs/STORAGE_HARDENING.md),
+[diagnóstico WPF/WinForms](docs/WINDOWS_COVERAGE.md),
+[extensão MV3 local](docs/WEB_EXTENSION.md) e
+[descoberta de microtarefas](docs/TASK_DISCOVERY.md).
+O SQLite ativo continua em claro; WinForms permanece com cobertura limitada.
+[Retomada autônoma e próximos testes](docs/RETOMADA_AUTONOMA.md).

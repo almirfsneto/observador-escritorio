@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 12994,
-      "sha256": "ac97e495dced8914336e55b62331d649d505bac14ce2dc30724ee5ddffb56eef"
+      "size_bytes": 13777,
+      "sha256": "4ba7576caf6950dba2f2dc58befed639f97b02cb96ccc1990f52e6e85862214a"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 23884,
-      "sha256": "c915a8644c093d43b566564198dca0bf8e426ba02dcba59bbaa052d5de899f43"
+      "size_bytes": 27858,
+      "sha256": "14f8c33a059a652e94ac2dd39051755496bb4b6e2146cd2fbf7115626e2fa978"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -35,8 +35,8 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 3800,
-      "sha256": "81fb8af1d4ae0e7cd9970762a6f7bc6b9a48f35d3a895c4c0972d4b0034c6e85"
+      "size_bytes": 4285,
+      "sha256": "5e14fed1f8bf5313701d22fcb2bb1556eddd38f341c987097d793e759b2a423b"
     },
     {
       "path": "ROADMAP.md",
