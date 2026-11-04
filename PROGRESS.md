@@ -510,3 +510,19 @@ reabertura detecta clock regressivo, sem permitir start; tentativa de migração
 v1 com colisão global de IDs dá rollback integral e conserva versão/payloads.
 15 testes novos de retenção, 136 totais (Linux124 executados/12 skips). README e
 contrato offline apontam a retenção v2 para evitar descrição obsoleta sem TTL.
+
+## Issue 14 — P2 análise de autenticação e simulador — 2026-11-04
+
+Branch codex/synthetic-source-auth-model sobre P1/448c3aa. Threat model e protocolo
+em docs/SOURCE_AUTHENTICATION.md: arquivos/SHA não autenticam; pareamento precisa
+peer kernel bidirecional e canal privado de chave, não JSON declarado. Conforme
+P2.6, entrega especificação/simulador/testes negativos, **sem IPC inseguro ou
+integração controlador→inbox habilitada**. Não declarar autenticação realizada.
+Modelo HMAC/challenge com default off, expiração, gerações, replay/restart,
+limites e escopo explícito de ACK; 100 mutações seed1402, benchmark64 frames só
+em memória (~10–14ms local, amostra variável, não SLA). Probe Windows separado
+confere handle de filho próprio/caminho/criação/sessão, sem coletar; teste nativo
+aguarda CI, não equivale a autenticar peer de canal. Novos testes: nove modelos
+Linux aprovados, um probe Windows skipped; matriz/Chromium pendentes no novo PR.
+Próxima etapa técnica: implementar/verificar canal nativo e gates adversariais
+antes de qualquer adapter opt-in; nenhuma decisão humana rotineira é necessária.

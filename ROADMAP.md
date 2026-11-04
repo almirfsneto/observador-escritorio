@@ -94,3 +94,5 @@
 - [x] Testes de crash, replay após purge, conflitos, clocks, quota e migração v1.
 - [ ] Confirmar matriz Linux/Windows e Chromium nos novos heads.
 - [ ] Análise de ameaças, pareamento autenticado e integração exclusivamente sintética revisada.
+- [x] P2: threat model, protocolo/simulador fechado, negativos/fuzz e probe separado de identidade de filho Windows.
+- [ ] P2: peer do canal verificado, chave entregue por handle privado, testes adversariais/IPC e adapter opt-in; NÃO habilitados pelo simulador.

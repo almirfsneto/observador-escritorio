@@ -100,3 +100,15 @@ receipt_expired_or_unknown não significa ausência de commit. Não resetar inbo
 para contornar limite. CI nova ainda precisa ser conferida no PR/head; baseline
 121 e 14 testes novos locais. Próximo estágio: P2 em branch filha distinta,
 ameaças/autenticação com testes negativos; nenhum IPC inseguro será habilitado.
+
+## Atualização Issue 14 / P2 — base mais recente
+
+codex/synthetic-source-auth-model é filha de codex/inbox-retention. Usar a filha
+para continuar, mantendo os dois PRs separados/draft. Ler SOURCE_AUTHENTICATION.md
+e INBOX_RETENTION.md antes de implementar canal. Modelo HMAC não autentica peer;
+probe de filho Windows não associa peer ao canal. IPC/controller adapter continuam
+desligados conforme P2.6. Não passar resultado do modelo a OfflineBridge.authorize.
+Implementar primeiro canal herdado de filho próprio + vínculo kernel, entrega de
+chave/herança mínima e EOF/cancelamento/negativos Windows; só depois opt-in fixture.
+Nada de host NativeMessaging instalado. Tests novos de modelo+probe: nove rodados
+Linux/um Windows skip; evidências CI serão registradas após conclusão.

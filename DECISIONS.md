@@ -127,3 +127,8 @@
 - **Recuperação:** retry vivo é leitura independente de quota; receipt vencido produz receipt_expired_or_unknown, não negação de commit. Clock regressivo fecha admissão/congela purge; avanço UTC ainda é risco explícito.
 - **Alternativas:** apagar IDs junto ao payload permitiria replay; hash/Bloom limitado introduziria colisões/falsos positivos; histórico ilimitado viola orçamento. Cap conservador requer revisão antes de qualquer uso contínuo.
 - **Limites:** SQLite claro, orçamento lógico/amostrado, limpeza somente quando executada, sem relógio confiável/admin-proof, exactly-once ou aceite humano. Contratos anteriores/PR6 preservados.
+
+## D-028 — Autenticação modelada não habilita canal sem peer comprovado
+- **Decisão:** aplicar Issue14/P2.6: especificação de ameaças/protocolo, modelo HMAC/challenge em memória e probe de handle próprio Windows; nenhum IPC/adaptador ligado. Identidade declarada no simulador é premissa, não prova de origem.
+- **Alternativas:** arquivos com MAC sem pareamento privado e loopback sem autenticação rejeitados. Preferir pipes herdados de filho próprio antes de named pipes com ACL/peer kernel bidirecional. NativeMessaging só avaliação futura, sem instalar host.
+- **Prova pendente:** associação do peer do canal com PID/criação/caminho/sessão, herança mínima/entrega de chave, ACLs adversariais, colisão/EOF/cancelamento reais. Mesmo usuário/admin não são fronteira de proteção demonstrada. Modelo transporte/inbox/producer pause têm ACKs distintos.
