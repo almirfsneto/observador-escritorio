@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 21785,
-      "sha256": "52bbf7554f8c8c8b9a65de712e834906a6232df1d75fc31ab48f67c29f199075"
+      "size_bytes": 22257,
+      "sha256": "b78ce033a9738db61698ece7757b11a11ce3dd0eb47ca1175a450afbf8393a4a"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 48480,
-      "sha256": "e5636a74d1127d68bd668c84e90ca04b84dd3aacf8d66ea6163728afa06e7dba"
+      "size_bytes": 51143,
+      "sha256": "2980a2b7eb4eb61371c6090ec6c051c4c4ad47691590ac1a4e1b52dc4d6731b8"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 7697,
-      "sha256": "70655782c37c7bac7a9fc8185ac14f261d03003fca7bcc1567e58a7a8324ff1d"
+      "size_bytes": 7708,
+      "sha256": "64a57e5885048c5a03643e5541c4eca5b59c413ae211402306f139cb080b4510"
     },
     {
       "path": "SECURITY.md",
@@ -160,8 +160,8 @@
     },
     {
       "path": "docs/OWNED_CHANNEL.md",
-      "size_bytes": 10690,
-      "sha256": "8d9eadc495edd625768432513ffdab9fe29ae2e62aa1f889bf04fc1de4adbc25"
+      "size_bytes": 12079,
+      "sha256": "ccc25d3a79f4a550dc2e8b2bba46158c8d4441430de1d88963489040d9759446"
     },
     {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
@@ -180,8 +180,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 6928,
-      "sha256": "64a241b394a842e0b1ce41871a02888735b8455d143b288f6cde132dff3f9805"
+      "size_bytes": 7855,
+      "sha256": "9a5c5dddf8e8f7ea071c53fe87e57e9c31f4ae4fa8a506bfcfb5cd7041d6cbf5"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -195,8 +195,8 @@
     },
     {
       "path": "docs/STACK_REVIEW_PLAN.md",
-      "size_bytes": 6856,
-      "sha256": "01af151980388c57775f5862e6238083e01547cac0f9f334ec227b192c4c5279"
+      "size_bytes": 7392,
+      "sha256": "370b909d382e3b111057ba92e055e8430abe6056db513273d979ede3a0e29b74"
     },
     {
       "path": "docs/STORAGE_HARDENING.md",

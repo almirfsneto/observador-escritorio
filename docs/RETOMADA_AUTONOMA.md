@@ -52,9 +52,10 @@ reais, incluindo kill do parent, WPF/descendente/decoy não herdados, lista alar
 recusada ANTES da geração da chave, replay, duas instâncias, cancelamento e inbox.
 Causa interna da antiga prontidão vazia não foi provada; rodada revista passou.
 
-Revisão posterior retém HANDLE do worker para CancelSynchronousIo, protegido por
-lock curto até liberação; não reabre ID reciclável de thread. Conferir CI do HEAD
-final no PR18 para essa alteração. Não atribuir prova antiga ao runtime novo.
+Revisão0588d8a / CI41814049436 também teve CINCO jobs aprovados, mesmos170 testes
+e contagens. Handle retido do worker/CancelSynchronousIo foi exercitado nos dois
+Windows, com não herança e liberação após cancelar IO pendente. Não reabre thread
+ID. Commit final documental registra essa prova; conferir CI do HEAD no PR18.
 
 
 Caminho git receive-pack apresentou500/commit_refs; publicação suportada pela API
@@ -106,3 +107,17 @@ não é aceite humano Chrome/Edge/Windows10/11. Não contornar política unpacke
 local. Worker restart real é WorkerStopped/Inspector.targetCrashed+nova timeOrigin,
 não mutação de variável. PR6 tem roteiro VALIDACAO_MANUAL_WINDOWS.md para operador,
 relatório fora de Git e gates humanos/LGPD pendentes. Nenhum piloto está autorizado.
+
+## Fechamento e próxima execução
+
+Documentação final registra código0588d8a/CI41814049436: cinco jobs;14 novos casos
+Windows reais, sete novos portáveis/capacidade, mais o baseline. Compileall,
+wheel sem dependências runtime novas e manifesto124 arquivos verificados.
+A próxima atividade é revisão independente do protocolo/ACL/herança e execução
+entre contas/sessões autorizadas, seguindo STACK_REVIEW_PLAN.md. Não basta mais
+código para aprovar piloto ou adapter. Se revisão permitir continuação técnica,
+novo entrypoint C# deve provar origem pelo próprio canal antes de qualquer WPF
+capturado entrar no inbox; UIA ACK e inbox ACK permanecem separados.
+
+Nenhum processo de observação foi instalado ou permanece ativo; a única execução
+Windows foi sintética em CI. NativeSession/C#/aceite v1 e branchPR6 preservados.

@@ -3,7 +3,7 @@
 Implementação inicial em owned_channel.py/protocol.py/win32.py/child.py. **Não há
 adapter de captura nem ligação ao NativeSession, WindowsObserver ou OfflineBridge.**
 Chamar start() é opt-in explícito e inicia somente fixture IPC Python (-I -S -B),
-sem UIA/DOM/conteúdo/rede. O código ainda precisa de evidência Windows no PR atual.
+sem UIA/DOM/conteúdo/rede. Evidência por commit e limites de ameaça estão registrados abaixo; adapter segue OFF.
 
 ## Argumento de autenticação e limites
 
@@ -156,3 +156,24 @@ sob lock curto para cancelamento e fechamento. Nenhum OpenThread por ID. O handl
 não entra nos quatro herdados, e é liberado em cleanup. Teste de IO pendente exige
 flag não herdável, cancelamento e referência liberada. Nova CI do HEAD é requerida
 para atribuir prova a essa alteração; não extrapolar a partir da revisão anterior.
+
+## Confirmação do cancelamento e limites finais
+
+0588d8a / [CI41814049436](https://github.com/almirfsneto/observador-escritorio/actions/runs/41814049436):
+CINCO jobs aprovados. Windows3.11/3.12 executaram168 testes/2 browsers separados
+skipped; Linux143/27 skips;170 descobertos. Job Chromium2 reais sem skips. Os14
+novos testes Windows do canal passaram, inclusive handle retido não herdável,
+referência liberada após IO cancelado, parent-kill/cleanup e rejeição de lista
+alargada antes de geração da chave. Causa interna da antiga prontidão vazia não
+foi isolada, mas duas revisões completas seguintes passaram; investigar recidiva
+por fases fixas, sem transformar em skip/retry cego.
+
+Comprovado: canal entre processos IPC próprios e capacidades testadas. Simulado:
+modelo PR16; clocks24h e ticks alterados de casos negativos. Não implementado:
+canal autenticado C# do provider/adapter WPF. Não exercitado: outra conta/sessão
+real e aceite humano Win10/11/Chrome/Edge; não há promessa contra mesmo token/admin.
+SQLite/inbox e budget não mudam: claros e logicamente limitados. Sem piloto.
+
+Commits documentais posteriores não mudam runtime/testes; a CI do HEAD final é
+conferida no PR18. Matriz/ordem de revisão e plano de convergência sem operações
+executadas em STACK_REVIEW_PLAN.md. Nenhum merge/rebase/retarget foi realizado.

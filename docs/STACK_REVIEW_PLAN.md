@@ -89,3 +89,12 @@ Consultar PROGRESS.md e OWNED_CHANNEL.md para hashes/runs e resultados exatos do
 HEAD, inclusive as primeiras falhas/correções que eventualmente ocorram. Não usar
 o plano como autorização de merge, instalação, transmissão, coleta ou piloto.
 
+
+## Evidência de execução para iniciar a revisão
+
+Código0588d8a, CI41814049436:5/5 jobs; Windows168 executados/2 skips por Python,
+Linux143/27 skips e Chromium2 reais sem skips. Ver PROGRESS para rodada falha928b301
+(harness3.12) e duas revisões posteriores aprovadas260900d/0588d8a. Nenhum skip
+representa caso aprovado. O HEAD documental final/CI deve ser conferido no PR18.
+A publicação pela API usou árvores/blobs idênticos ao snapshot local e updates
+fast-forward com lease; commits/branches anteriores ficaram intactos.

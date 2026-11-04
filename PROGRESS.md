@@ -696,3 +696,40 @@ IO pendente. Nova CI do HEAD requerida. Sem mudança no adapter (OFF).
 Wheel sem dependências novas, compileall e manifesto conferidos. Plano completo
 em STACK_REVIEW_PLAN.md; RETOMADA aponta PR18 e diferencia comprovado/modelo/
 clock injetado/pendente. Nenhum PR anterior recebeu merge/rebase/retarget.
+
+### Issue17 — evidência final do runtime e estado para revisão independente
+
+PR18 / código0588d8a / [CI41814049436](https://github.com/almirfsneto/observador-escritorio/actions/runs/41814049436):
+CINCO jobs aprovados.170 descobertos: Linux3.11/3.12 143 executados/27 skips,
+Windows3.11/3.12 168 executados/2 browsers separados skipped. Chromium2 reais
+aprovados sem skips (MV3/restart/receipt/ACK), nenhum caso foi aprovado via skip.
+14 novos testes Windows do canal +4 portáveis de wire/default-off +3 de capacidade
+somados ao baseline149. Endpoints/decoy/descendentes/WPF inspecionados como objetos
+reais; lista alargada recusada antes da chave, argv/env sem chave inicial, segredo
+por bootstrap32+EOF, handshake/identidades/HMAC verificados em processos reais.
+Parent-kill encerrou descendente; IO pendente cancelou por HANDLE retido e liberado,
+não thread ID reaberto. Worker/filhos encerrados, cap64 falha fechada e duas
+instâncias/pausa/restart/replay/inbox exercitados.24h/TTL de retenção são clocks
+injetados, não espera física; PID reuse forçado não foi alegado.
+
+A revisão260900d/CI41812922153 já havia passado5/5;0588 comprova também a correção
+de retenção do handle de worker. Falha de prontidão do harness3.12 em928b301 foi
+registrada: causa interna do stdout vazio não isolada, sem falsificar aprovação;
+as duas rodadas posteriores completas passaram. Investigar recidiva por fases,
+nunca afrouxar schema/identidade ou repetir cegamente até passar.
+
+Limites preservados: fixture IPC Python autenticada não é o WindowsObserver C#;
+NativeSession/C#/lançador/schema de aceite v1 intocados. Adapter WPF continua OFF,
+sem nova captura. Outra conta/sessão e humanosWin10/11/Chrome/Edge não executados;
+mesmo token/admin/injeção/checkout adulterado não são fronteiras comprovadas.
+SQLite/inbox em claro, quota lógica/amostrada, não OS/SSD/backups. Gates humanos e
+LGPD/revisão independente permanecem, não apto a piloto. Nenhum dado real, equipe,
+serviço/host/autostart, deploy, merge/rebase/retarget ou transmissão de capturas.
+
+PROGRESS/DECISIONS/ROADMAP/RETOMADA, OWNED_CHANNEL e STACK_REVIEW_PLAN atualizados.
+Manifesto124 arquivos, compileall, wheel sem dependências runtime novas e diff
+conferidos. Última atualização é documental; CI do HEAD será conferida no PR.
+Próxima tarefa: revisão independente do argumento de capacidade/ACL/herança e
+matriz por outra conta/sessão autorizada, antes de novo entrypoint C# e adapter.
+Plano de consolidação é só proposta por unidades de revisão; não executa merges
+ou rebases. PR6 continua3d4a770 e PR16 continua294cb39. Nenhum observador segue ativo.
