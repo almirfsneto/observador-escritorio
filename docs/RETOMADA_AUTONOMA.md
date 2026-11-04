@@ -1,3 +1,21 @@
+# Retomada atual — estudo AI03, filha de PR23
+
+Continuar de codex/suspended-launch-study, base codex/legacy-binding-cleanup
+(PR23/5c37576). Ler Issue22, LEGACY_BINDING_CLEANUP e SUSPENDED_LAUNCH_STUDY.
+AI01/02 implementados na base; AI03 é apenas arquitetura + harness em tests/.
+Nenhum launcher em uso foi convertido. Suspenso→assign→resume mantém gap de
+morte pré-assign; não declarar resolvido. Quatro casos nativos novos pendentes.
+
+Prioridade: restaurar execução do GitHub Actions (jobs falham antes das etapas,
+sem causa exposta; retry controlado não resolveu), reexecutar CI completa nas
+duas branches, corrigir eventuais falhas e apresentar SHAs para revisão técnica
+IA nesta conversa. Linux/skips não comprovam Windows; Chromium local bloqueia
+extensões por política. Não alterar cobrança/permissões/política como workaround.
+
+PR6/anteriores intactos, schema v1/CMD preservados, adapter OFF; sem merge/rebase,
+instalação, deploy, dados reais ou piloto. AI04 e assinatura humana continuam
+abertos. Não usar main isoladamente. Histórico e evidências anteriores abaixo.
+
 # Retomada atual — Issue22 / AI01 e AI02
 
 Branch codex/legacy-binding-cleanup, filha de PR21/8abbb5b. Ver PR/HEAD/CI em

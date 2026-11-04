@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 26719,
-      "sha256": "d0d2fd67f9109d02bdd82bd6f62ad2b82432ff2944f0f8b4f24b14a55baa1d16"
+      "size_bytes": 27444,
+      "sha256": "eb0941080f0d9929b555a9c0e4c9d70cee9803c357071a3283710473c4534d00"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 63803,
-      "sha256": "32705e234fc5ae86cb2d7de6124f83198ba22fd9920907f2d2d0beef0de32b3c"
+      "size_bytes": 65129,
+      "sha256": "c2a8a422a8f22f22f84ee6a5e7553ab01b052db8a3373fac279807dc54f470be"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -205,8 +205,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 12524,
-      "sha256": "b8f351e6d3a9b4ac9b6430cce87bb64b388fecba616835fc11b5ef1ccf876e8e"
+      "size_bytes": 13628,
+      "sha256": "3e688875026fbc25c489d1c4388da79d4ed39df3c199117abb18b21df2608f75"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -232,6 +232,11 @@
       "path": "docs/STORAGE_HARDENING.md",
       "size_bytes": 3783,
       "sha256": "3ed28eaa298c135d6ea5e13d44b0554e7820bd6ed79c605d0b7b4ef414ff3b1d"
+    },
+    {
+      "path": "docs/SUSPENDED_LAUNCH_STUDY.md",
+      "size_bytes": 4445,
+      "sha256": "d6aa67a398067c7e3e6e0eda3f60018c8a7c00966e467dec669bed7701589a14"
     },
     {
       "path": "docs/TASK_DISCOVERY.md",
@@ -300,8 +305,8 @@
     },
     {
       "path": "src/observador/acceptance_test_runner.py",
-      "size_bytes": 4432,
-      "sha256": "2f8eb057d34b713a3e402ee62ac0589e08b8602861ffcc5f286a9006badd5aa6"
+      "size_bytes": 4456,
+      "sha256": "44dbeff497263c553bb0351fe11b74e41bded3b0fc05df354ae688104c78b23a"
     },
     {
       "path": "src/observador/acceptance_wizard.py",
@@ -474,6 +479,11 @@
       "sha256": "46431de20d8a2da28775e27bc8477bbdb162c698956803b030ad2b08fc02929a"
     },
     {
+      "path": "tests/isolated_suspended_spawn.py",
+      "size_bytes": 6408,
+      "sha256": "2379fe3f4ab0d9796505a6e7914174914801231e5a5cab56851ea57c1ffe2d67"
+    },
+    {
       "path": "tests/test_acceptance_launcher.py",
       "size_bytes": 1575,
       "sha256": "f24772f5eb80d89476f844b94a64bcba9a69ff8c367097a3082df88ffdb54168"
@@ -612,6 +622,11 @@
       "path": "tests/test_stream.py",
       "size_bytes": 5445,
       "sha256": "bd1d781320862b0d33eb56d308aa2f5917781b0c03392f3c792dc61f5f2dbb80"
+    },
+    {
+      "path": "tests/test_suspended_study.py",
+      "size_bytes": 6222,
+      "sha256": "bdca017e8fcefc0751cd57844c9e3bfda378666ee5874ec9ac71812ddaa3c406"
     },
     {
       "path": "tests/test_task_discovery.py",

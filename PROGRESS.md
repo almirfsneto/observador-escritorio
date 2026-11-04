@@ -930,3 +930,24 @@ Revisor técnico deve considerar patch ainda SEM comprovação Windows desta rev
 Próximo passo independente viável: finalizar estudo AI03 em filha separada, sem
 alterar Popen→assign dos launchers existentes ou habilitar adapter. Nova revisão
 IA por SHA não é assinatura humana; AI04 continua integralmente aberto.
+
+## Issue22 — AI03, estudo isolado
+
+Branch codex/suspended-launch-study sobre PR23/5c37576. Design compara launcher
+atual, criação suspensa e Job na criação. Suspender/assign/resume não resolve
+morte do launcher antes do assign; essa limitação permanece explicitamente aberta.
+Experimento exclusivamente em tests/, não empacotado no runtime; nenhum launcher
+em uso foi trocado. Quatro casos Windows preparados: pre-resume/membership/
+decoy/descendente, falhas injetadas, crash pós-assign e crash pré-assign com
+capacidade retida pela raiz para cleanup. Nenhum deles executou em Windows nesta
+sessão; nomes REAL são condicionais à execução futura, não evidência presente.
+
+Contrato em docs/SUSPENDED_LAUNCH_STUDY.md. CI será solicitada no PR desta filha;
+bloqueio pré-etapas do PR23 registrado, sem novas tentativas cegas nem alteração
+de política/cobrança/permissões. AI04 segue aberto. Nenhuma captura, adapter ou
+piloto; todos os PRs anteriores e o schema de aceite v1 ficam intactos.
+
+Verificação local da filha AI03:210 descobertos,172 executados/38 skips
+(36 Windows/2 browser), nenhum skip contado como aprovado. Os quatro novos
+casos Windows não executaram; sintaxe/importação compilaram no Linux. As únicas
+mudanças em src/ na filha são a categoria de skip do runner, não launchers.
