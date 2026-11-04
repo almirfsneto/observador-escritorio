@@ -510,7 +510,7 @@
     },
     "gaps": {
       "type": "array",
-      "maxItems": 13,
+      "maxItems": 14,
       "uniqueItems": true,
       "items": {
         "type": "string",
@@ -527,7 +527,8 @@
           "purge_includes_preexisting_rows",
           "commit_outcome_uncertain",
           "human_acceptance_pending",
-          "row_balance_not_proven"
+          "row_balance_not_proven",
+          "writer_shutdown_incomplete"
         ]
       }
     }
