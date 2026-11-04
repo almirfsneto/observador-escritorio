@@ -529,7 +529,7 @@ Windows CI é automação sintética Server2025, não aceite Windows10/11 humano
 Identificado risco de ler receipt ainda não commitado se rollback da conexão
 falhasse. Transação explícita agora fecha conexão em rollback falho OU exceção
 no próprio retorno de commit, mesmo quando in_transaction=false. Não reutiliza
-conexão incerta; snapshot counts=null/reopen_required=true/uncertain_transactions,
+conexão incerta; snapshot counts.*=null/reopen_required=true/uncertain_transactions,
 ACK só após reabertura. Falha posterior a commit retornado com sucesso continua
 caso distinto, com receipt durável recuperável. Três regressões adicionais cobrem
 rollback pré/pós falha, commit realizado seguido de retorno perdido, e EOF de
@@ -537,6 +537,16 @@ JSON truncado. 18 testes de retenção/139 totais: Linux127 executados/12 skips.
 Nova CI obrigatória nesta revisão; evidência anterior não é atribuída a ela.
 Medição local anterior:32 lotes/64 eventos fictícios,~30,2ms, pico agregado lógico
 observado184920 bytes em132 amostras, reserva4390920/limite13631488; não quota/SLA.
+
+### P1 — confirmação da revisão de segurança
+
+PR15 / código6d521cf / [CI41759340778](https://github.com/almirfsneto/observador-escritorio/actions/runs/41759340778):
+5/5 jobs aprovados. Python3.11/3.12: Linux127 executados/12 skips; Windows137
+executados/2 browsers separados skipped;139 descobertos. Chromium2 reais sem
+skips. Rollback falho e retorno de commit incerto executados nos quatro jobs,
+com reabertura/integridade e nenhum ACK da conexão descartada. 18 novos testes
+de retenção; EOF/truncamento também negativo. Manifesto/wheel/compileall/diff
+verificados. Esta atualização final é documental; CI do HEAD também será conferida.
 
 ## Issue 14 — P2 análise de autenticação e simulador — 2026-11-04
 
@@ -577,3 +587,28 @@ ou autenticação real alegada. Próxima execução: canal Windows herdado do fi
 próprio com herança mínima, peer/kernel, EOF/cancelamento/ACL/colisão/timeout,
 antes do adapter opt-in. Não é necessário pedir escolha técnica rotineira.
 SQLite claro, orçamento não físico e aceite humano/LGPD continuam bloqueando piloto.
+
+### Issue14 — evidência integrada final e retomada
+
+PR16 / código integrado bc23073 / [CI41759416977](https://github.com/almirfsneto/observador-escritorio/actions/runs/41759416977):
+5/5 jobs aprovados após correção de rollback/commit incerto.149 descobertos:
+Linux3.11/3.12 136 executados/13 skips; Windows3.11/3.12 147 executados/2 browsers
+separados skipped. Chromium2 ensaios reais sem skips, worker restart/receipt/ACK.
+18 regressões de retenção + nove modelos + um probe Windows somados ao baseline.
+Probe confirmou filho próprio/caminho/criação/sessão, rejeitando incompatíveis,
+com transport_peer_verified=false/inbox_integrated=false. Modelo64 frames mediu
+~10,6/16,0ms Linux e10,8/18,1ms Windows, envelope2015 bytes; só amostras Python em
+memória, não IPC/SLA. Counters/bytes não são quota física nem aceite humano.
+
+P1/PR15 permanece separada; última sincronização de documentos/evidências não
+altera runtime nem testes de bc23073. CI final dos dois HEADs será conferida nos
+PRs, sem atribuir skips a êxito. PROGRESS/DECISIONS/ROADMAP/RETOMADA e manifesto
+atualizados. PR6 preservado em3d4a770, PR13 emcf90de6; nenhum merge de PR, instalação,
+dado real, captura oculta, deploy, host ou transmissão externa de capturas.
+
+P2 encerra na alternativa segura P2.6, com spec/simulador/negativos e prova parcial;
+canal/adapter NÃO habilitados. Retomada: codex/synthetic-source-auth-model, ler
+docs/RETOMADA_AUTONOMA.md e SOURCE_AUTHENTICATION.md; implementar/verificar canal
+herdado de filho próprio e gates nativos adversariais antes do opt-in. SQLite em
+claro, limite lógico, autenticação e aceite Windows10/11/Chrome/Edge/LGPD continuam
+pendentes; não apto a piloto. Nenhuma rotina de observação segue ativa após os testes.

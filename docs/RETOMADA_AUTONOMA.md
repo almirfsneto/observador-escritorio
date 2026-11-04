@@ -1,16 +1,14 @@
-# Retomada autônoma — Issue 14 / retenção e modelo de autenticação
+# Retomada autônoma — Issue 14
 
-## Base e branches preservadas
+## Base integrada e preservação do aceite
 
-P2 PR16: codex/synthetic-source-auth-model sobre P1/PR15 (usar P2 para continuar).
-P1 PR15: codex/inbox-retention sobre codex/offline-source-bridge (PR13/cf90de6).
-Não usar main/PR13 isolados para continuar retenção. Todos os anteriores são drafts,
-sem merge. Não modificar codex/guided-windows-acceptance (PR6), congelada em
-3d4a77052b3dc9cf77805dd73f0bfd6d5dae674c para o aceite humano.
+Entregas em draft, sem merge:
+- PR15: codex/inbox-retention sobre PR13/codex/offline-source-bridge/cf90de6.
+- PR16: codex/synthetic-source-auth-model sobre PR15. Usar esta filha para continuar.
 
-Ler AGENTS/SPEC/SECURITY/ROADMAP/DECISIONS/PROGRESS e INBOX_RETENTION.md,
-OFFLINE_BRIDGE.md, DIAGNOSTICS.md, STORAGE_HARDENING.md, WEB_EXTENSION.md,
-TASK_DISCOVERY.md, QUESTOES_ARQUITETURA_PRO.md. Consultar Issue14 e PR15/CI atuais.
+**Não modificar codex/guided-windows-acceptance (PR6), commit
+3d4a77052b3dc9cf77805dd73f0bfd6d5dae674c**, reservado ao aceite humano. PR13 e
+anteriores preservados. Não usar main/PR13 isolados para retomar as alterações.
 
 ```
 git fetch origin codex/synthetic-source-auth-model
@@ -18,76 +16,86 @@ git switch -c codex/verified-owned-channel FETCH_HEAD
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-## Evidência e semântica atual
+Depois do checkout, ler AGENTS.md, SPEC.md, SECURITY.md, ROADMAP.md, DECISIONS.md,
+PROGRESS.md, docs/INBOX_RETENTION.md, docs/SOURCE_AUTHENTICATION.md,
+OFFLINE_BRIDGE.md, DIAGNOSTICS.md, STORAGE_HARDENING.md, WEB_EXTENSION.md,
+TASK_DISCOVERY.md e QUESTOES_ARQUITETURA_PRO.md. Consultar Issue14/PR15/PR16.
+SOURCE_AUTHENTICATION.md e o modelo/probe pertencem à filha PR16.
 
-Baseline cf90de6:121 descobertos/Linux109 executados/12 skips. P1 código448c3aa,
-CI41757902728:5/5 jobs;136 descobertos/Linux124 executados/12 skips,
-Windows134/2 skips browser separado; Chromium2 reais sem skips. Revisão final
-acrescenta observação do DB recuperado antes da retenção do construtor. Conferir
-CI do HEAD, não inferir que código posterior já foi testado remotamente.
+## Evidência de código verificada
 
-Payload1h/receipt24h desde admissão local, NÃO desde relógio da fonte. IDs globais
-batch/event + high-water por fonte sem TTL; caps bloqueiam admissão sem eviction.
-Retry vivo recupera mesmo ACK por leitura, até com quota sem espaço de escrita.
-Após janela: receipt_expired_or_unknown não significa ausência de commit.
-Migração v1→v2 atômica concede janela a partir da migração; colisão recusa sem
-apagar histórico. Clock regressivo fecha admissão/congela purge; fonte conhecida
-pode vincular para ACK read-only. Sessão15min e purge são fenômenos separados.
-Não resetar banco/fontes para contornar markers. Manutenção só quando executada,
-nenhum daemon. Snapshot de retenção usa SQL na thread dona, não chamar na UI.
+| Entrega | Código / CI (5 jobs aprovados) | Núcleo por Python 3.11/3.12 | Chromium dedicado |
+| --- | --- | --- | --- |
+| P1 | 6d521cf / [41759340778](https://github.com/almirfsneto/observador-escritorio/actions/runs/41759340778) | 139 descobertos; Linux127 executados/12 skips; Windows137/2 skips | 2 reais, sem skips |
+| P2 integrada | bc23073 / [41759416977](https://github.com/almirfsneto/observador-escritorio/actions/runs/41759416977) | 149 descobertos; Linux136 executados/13 skips; Windows147/2 skips | 2 reais, sem skips |
 
-## Próxima prioridade
+Skips não são aprovação: Linux não executa APIs/desktop Windows; browser está
+nos dois testes reais do job dedicado, não no núcleo. Windows CI Server2025 não
+é aceite humano Windows10/11. Probe novo de filho próprio passou nos dois Pythons
+Windows; não autentica peer de canal. WPF30/30 não implica WinForms (0/30) ou apps
+reais. Baseline cf90de6 tinha121 testes, Linux109/12 skips.
 
-P2 precisa análise de ameaças, peer autenticado e adapter Windows só fictício
-opt-in. Sem prova de origem forte, entregar especificação/simulador/negativos e
-NÃO ligar IPC inseguro, conforme Issue14/P2.6. Preferir canal herdado de filho
-próprio; named pipes exigem ACL/peer kernel bidirecional, chave privada efêmera,
-EOF/cancelamento/timeout e testes de outra sessão/colisão. Nenhum host instalado.
-ACK de inbox/admissão não é confirmação de pausa dos produtores nem resultado de
-negócio. Sem ordenação/causalidade global entre fontes.
+Commits posteriores de documentação/manifesto registram essas provas; conferir
+CI do HEAD final no PR antes de declarar nova alteração aprovada. Não atribuir
+CI antiga a código novo. Nenhum observador permanece executando após os testes.
 
-## Limites que não podem ser promovidos a sucesso
+## Retenção e recuperação: invariantes
 
-SQLite ativo/inbox em claro, DPAPI só arquivo. Budget lógico observado com reserva,
-não quota física do OS/admin/SSD/backups. Contadores RAM se perdem no kill;
-commit incerto precisa receipt, não inferência de perda. Fonte/ACK em arquivo não
-são autenticados. WPF30/30 não implica WinForms (0/30) ou aplicações reais.
-Windows CI Server2025 e Chromium descartável não são aceite humano Win10/11 ou
-Chrome/Edge. Modelo/fixture/fault injection não substitui desktop/usuário real.
+Payload1h/receipt24h desde admissão local, não desde UTC do produtor. IDs globais
+batch/event + high-water por fonte sem TTL; capacidade esgotada bloqueia sem
+eviction/reset. Retry vivo recupera mesmo ACK por leitura, até com quota sem
+espaço para escrita. Após janela, receipt_expired_or_unknown NÃO nega commit.
+ACK histórico não garante payload ainda retido, negócio concluído ou pausa atual.
 
-Job web usa Playwright1.62.0 apenas teste. Não contornar política unpacked local.
-Restart real observa Inspector.targetCrashed/WorkerStopped + nova timeOrigin;
-host DevTools/wrapper pode persistir. Não substituir por mutação de variável.
+Migração v1→v2 é atômica, concede janela a partir da migração e recusa colisão
+sem apagar histórico. Clock regressivo fecha admissão/congela purge; fonte
+conhecida pode vincular para recuperação read-only. Sessão15min e purge são
+separados. Manutenção só quando executada; nenhum daemon. Não resetar banco/
+fontes para contornar markers. Snapshot tem SQL na thread dona, nunca chamar na UI.
 
-Humano: usar exclusivamente PR6 e docs/VALIDACAO_MANUAL_WINDOWS.md em Windows10/11
-dedicados, marcar só etapas feitas e salvar JSON fora de Git. Nenhum piloto,
-coleta de pessoas/dado jurídico, instalação na equipe, captura oculta, autostart,
-deploy, transmissão externa ou merge autorizado. Nenhum processo observa após
-estes testes; não existe desenvolvimento contínuo depois da execução.
+Rollback falho/exceção no retorno de commit FECHA a conexão. Snapshot sinaliza
+reopen_required=true, counts.*=null e uncertain_transactions. Não recuperar ACK
+possivelmente não commitado daquela conexão: reabrir e consultar SQLite. Erro
+APÓS retorno bem-sucedido do commit é caso conhecido diferente/recuperável por
+leitura. Tests distinguem ambos, kill pré/pós-commit e EOF de JSON truncado.
 
-## P2 implementada sob gate seguro
+## P2 sob alternativa segura e próxima tarefa técnica
 
-PR16 contém docs/SOURCE_AUTHENTICATION.md, SyntheticAuthModel fechado em memória,
-negativos/fuzz100 mutações/benchmark64 frames e inspect_owned_child desconectado,
-com consulta nativa Windows em teste. Modelo assume identidade/entrega de chave:
-NÃO autentica peer, NÃO chamar OfflineBridge.authorize com seu resultado. Sem
-IPC novo/controller adapter/NativeMessaging instalado. Aplicado P2.6.
+Aplicada Issue14/P2.6: threat model/protocolo, simulador HMAC/challenge e negativos,
+mais probe separado de identidade do filho Windows. **Nenhum IPC novo/adapter
+controlador→inbox habilitado**, nenhum host NativeMessaging instalado.
+SyntheticAuthModel assume identidade e entrega de chave; NÃO autentica processo.
+Não usar seu resultado para OfflineBridge.authorize. inspect_owned_child consulta
+PID/criação/caminho/sessão no handle Popen próprio, mas não associa peer ao canal.
 
-146 descobertos, Linux133 executados/13 skips; Windows144 executados/2 skips
-browser separado no código ef8ca60 / CI41758466029 (5/5 jobs). Chromium2 reais.
-Probe nativo passou nos dois Pythons Windows. Confirmar CI do HEAD final.
-Probe kernel Windows testa somente filho próprio da fixture; não confundir com
-peer do canal. Antes de opt-in: handle/peer bidirecional, entrega de chave privada,
-herança mínima, DACLs adversariais/EOF/truncamento/timeout/cancelamento/colisão.
-Confirmar resultados/head no PR e atualizar evidências após qualquer mudança.
+Implementar em nova filha de PR16 primeiro canal herdado do NativeSession:
+1. Vínculo do peer do canal a handles/PID/criação/caminho/sessão verificados.
+2. Herança mínima e chave efêmera por handle privado, nunca arquivo/CLI/env/log.
+3. Testes nativos adversariais de outra sessão/conta, colisão, EOF/truncamento,
+   timeout/cancelamento/restart/duplo escritor e recursos limitados.
+4. Só após prova integrada, adapter opt-in inicialmente desligado, recebendo
+   exclusivamente projeção já permitida da fixture/controlador fictícios.
 
-Revisão adicional P1: rollback falho/exceção no retorno de commit fecham a conexão,
-reopen_required=true e counts=null. Nunca recuperar ACK de leitura local que pode
-conter receipt não commitado. Reabrir e consultar SQLite. Erro posterior a commit
-retornado com sucesso é caso diferente/recuperável por leitura. 18 testes de
-retenção/139 totais (Linux127/12 skips) após essa revisão; conferir CI atual.
+Named pipes exigem verificação kernel bidirecional/DACL logon SID/recusa remota;
+não basta PID recebido em JSON nem HMAC sem pareamento privado. Não alegar defesa
+contra mesmo usuário/admin sem prova. ACK transporte/inbox/admissão não confirma
+pausa do produtor: exigir ACK nativo da geração solicitada. Sem ordem global ou
+causalidade entre fontes. Nenhuma escolha técnica rotineira precisa ser escalada.
 
-Integração da correção de conexão incerta de P1: agora149 descobertos, Linux136
-executados/13 skips; Windows esperado147/2 browsers separados, somente declarar
-após CI do head. Modelo/probe continuam isolados. Não promover CI antiga às novas
-regressões; consultar PR15/PR16 e commits finais.
+## Limites e aceite humano
+
+SQLite ativo/inbox em claro; DPAPI só arquivo. Budget lógico/amostrado com reserva,
+não quota física OS/SSD/backups/admin. Counters RAM se perdem no kill. Fontes/ACK
+em arquivos continuam não autenticados. Model benchmark64 frames é só Python em
+memória, não IPC/overhead de UI/SLA. Sem prova de apagamento forense.
+
+Job browser usa Playwright1.62.0 somente teste, Chromium descartável autorizado.
+Política unpacked local permanece intacta. Restart real exige WorkerStopped/
+Inspector.targetCrashed e nova timeOrigin; host/wrapper DevTools pode persistir.
+Não substituir por mutação de variável. Idle/sono e Chrome/Edge humanos pendentes.
+
+Operador humano deve usar PR6 e docs/VALIDACAO_MANUAL_WINDOWS.md em Windows10/11
+dedicados, marcar só etapas feitas, aguardar15min e salvar JSON fora de Git.
+Não usar CI/simulador como aceite. Sem dados reais, equipe, captura oculta,
+autostart, deploy, merge, transmissão externa ou piloto autorizado. Gates humanos
+e LGPD continuam pendentes. Nenhum trabalho contínuo é prometido após esta execução.
