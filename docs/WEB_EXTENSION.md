@@ -37,7 +37,10 @@ Exclui input/textarea/contenteditable e senha integralmente, sem ler valores.
 Abas são tabs HTML da fixture, não vigilância de abas globais do navegador.
 
 Worker valida sender/origem/tipos, serializa processamento e persiste somente em
-chrome.storage.session (memória do navegador) para suspensão do MV3. Pausa muda
+chrome.storage.session (memória do navegador). Buffers sobrevivem à suspensão,
+mas mudança da timeOrigin do worker **encerra** coleta conservadoramente: novo
+início explícito é necessário. Prazo combina UTC e performance.now no mesmo
+worker; não estende prazo por ajuste do relógio. Pausa muda
 geração: mensagens antigas são rejeitadas e não reaparecem ao retomar. Timestamp
 UTC/ordem são da recepção no worker, não do servidor nem garantia causal. Mudança
 de relógio para trás encerra sessão; prazo rechecado em cada mensagem e pelo

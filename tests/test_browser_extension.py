@@ -88,6 +88,11 @@ class BrowserExtensionTest(unittest.TestCase):
                     final=report()
                     page.locator('#review').click()
                     self.assertEqual(len(report()['events']),len(final['events']))
+                    popup.evaluate("document.getElementById('start').click()")
+                    page.wait_for_function("document.getElementById('observador-lab-status').textContent.includes('ATIVO')")
+                    # A new worker time origin fails closed; injected state is not a real worker restart trial.
+                    worker.evaluate('async(id)=>{const d=await chrome.storage.session.get("sessions");d.sessions[id].workerOrigin=-1;await chrome.storage.session.set(d);}',tab_id)
+                    page.wait_for_function("document.getElementById('observador-lab-status').textContent.includes('ENCERRADO')")
                     # A different port and a different path cannot start or export a session.
                     self.assertFalse(worker.evaluate('()=>allowed("http://127.0.0.1:8766/synthetic-lab/index.html")'))
                     self.assertFalse(worker.evaluate('()=>allowed("https://example.com/synthetic-lab/index.html")'))

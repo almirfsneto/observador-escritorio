@@ -17,12 +17,15 @@ async function handle(message, sender) {
   const sessions = saved.sessions || {};
   let s = sessions[tabId];
   const now = Date.now();
-  if (s && !s.ended && (now >= s.expires || now < s.lastClock)) { s.enabled=false; s.ended=true; s.generation++; }
+  if (s && !s.ended && (now >= s.expires || now < s.lastClock || s.workerOrigin !== performance.timeOrigin || performance.now() >= s.deadline)) {
+    s.enabled=false; s.ended=true; s.generation++;
+  }
   if (s) s.lastClock = now;
   if (popup && message.kind === 'start') {
     if (s && !s.ended) return {ok:false};
     if (Object.keys(sessions).length >= 2 && !s) return {ok:false};
     s = {id:crypto.randomUUID(),enabled:true,ended:false,generation:1,sequence:0,expires:now+15*60*1000,lastClock:now,
+         workerOrigin:performance.timeOrigin,deadline:performance.now()+15*60*1000,
          events:[],dropped:0,rejected:0,rateAt:now,rateCount:0};
     sessions[tabId]=s;
   } else if (popup && s && ['pause','resume','stop'].includes(message.kind)) {
@@ -46,7 +49,8 @@ async function handle(message, sender) {
   if (popup && message.kind === 'export') return {ok:true,report:{schema_version:1,kind:'synthetic_web_extension',capture_real:false,pilot_authorized:false,
     events:s?.events || [],dropped:s?.dropped || 0,rejected:s?.rejected || 0}};
   return {ok:true,enabled:!!s?.enabled,ended:!!s?.ended,generation:s?.generation || 0,
-          remainingMs:s ? Math.max(0,s.expires-now) : 0,count:s?.events.length || 0,dropped:s?.dropped || 0};
+          remainingMs:s && s.workerOrigin===performance.timeOrigin ? Math.max(0,Math.min(s.expires-now,s.deadline-performance.now())) : 0,
+          count:s?.events.length || 0,dropped:s?.dropped || 0};
 }
 chrome.runtime.onMessage.addListener((message,sender,respond)=>{
   chain=chain.then(()=>handle(message,sender)).catch(()=>({ok:false}));

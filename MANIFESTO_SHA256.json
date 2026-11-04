@@ -80,8 +80,8 @@
     },
     {
       "path": "browser-extension/worker.js",
-      "size_bytes": 3784,
-      "sha256": "18c1975ca13b8ff254485ae97dd544737c72a34ad159a9a15893849fc42126ac"
+      "size_bytes": 4047,
+      "sha256": "96bf154a1f20a9839686399f783cc0e016d0b870a1e0d4c62cc8457519a1c85c"
     },
     {
       "path": "docs/ACEITE_REPORT_SCHEMA.json",
@@ -165,8 +165,8 @@
     },
     {
       "path": "docs/WEB_EXTENSION.md",
-      "size_bytes": 3628,
-      "sha256": "e64709c1134ecd6fa35c36502be3a657b831fb0a52ea55dc2fd2feaff556612a"
+      "size_bytes": 3850,
+      "sha256": "26fb0afcd621d18f1973c45c9fb4277b09aecdfac3e30ecff263bd546a600dfa"
     },
     {
       "path": "docs/WINDOWS_COVERAGE.md",
@@ -335,8 +335,8 @@
     },
     {
       "path": "tests/test_browser_extension.py",
-      "size_bytes": 7057,
-      "sha256": "9745709b54519849d69eda6a9001ccee92dbb4106850e2ea9d880cce99c1a4e1"
+      "size_bytes": 7682,
+      "sha256": "0a78a855056bf9a51bb65c5c79142995205be8defcc6d1d67f6a18b956553c6d"
     },
     {
       "path": "tests/test_cli.py",
