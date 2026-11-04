@@ -201,3 +201,9 @@ Não fechar wrapper IO bloqueado por thread viva; registrar incerteza. Confirma�
 no v1 só após todos os recursos, sem alterar seu schema.
 Auditoria IA da Issue22 é evidência técnica distinta, não assinatura humana nem
 aprovação end-to-end. AI03 requer design/ensaio isolado separado; adapter OFF.
+
+D-033 / evidência: oito casos novos portáveis passaram localmente; CI de a332be4
+falhou antes dos testes nos cinco jobs, inclusive após um retry controlado. Sem
+prova Windows desta revisão, não inferir resultados a partir do PR21 ou dos skips.
+Causa do bloqueio não foi exposta; não alterar cobrança, permissões ou política
+de extensão para contornar. Restauração do Actions e revisão dos SHAs são gates.

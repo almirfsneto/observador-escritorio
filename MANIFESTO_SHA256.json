@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 26298,
-      "sha256": "2585ad0d981bb787b73fcac387fe0a2d95943dcd0df46e45c5f3940f6fdc3fb4"
+      "size_bytes": 26719,
+      "sha256": "d0d2fd67f9109d02bdd82bd6f62ad2b82432ff2944f0f8b4f24b14a55baa1d16"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 62412,
-      "sha256": "8de140afc630ed91bdf9038519698aa3082fbf0f86314404e5e035b3cf3ef6e9"
+      "size_bytes": 63803,
+      "sha256": "32705e234fc5ae86cb2d7de6124f83198ba22fd9920907f2d2d0beef0de32b3c"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -175,8 +175,8 @@
     },
     {
       "path": "docs/LEGACY_BINDING_CLEANUP.md",
-      "size_bytes": 3283,
-      "sha256": "11e662586bf5a6de091f6935e30330e0aca674694bc9ee7aced0fb9f7dd7c89f"
+      "size_bytes": 3720,
+      "sha256": "61a8f93af5cdf0a9d055423d77d4ed0d3a12e92866a0fbf32150d4f0a3f3b7e7"
     },
     {
       "path": "docs/OFFLINE_BRIDGE.md",
@@ -205,8 +205,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 12141,
-      "sha256": "179007035dcd32bdff9d450bf19870a937cef74bb01ada716790b089febccf4d"
+      "size_bytes": 12524,
+      "sha256": "b8f351e6d3a9b4ac9b6430cce87bb64b388fecba616835fc11b5ef1ccf876e8e"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",

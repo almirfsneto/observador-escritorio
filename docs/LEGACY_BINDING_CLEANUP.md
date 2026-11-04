@@ -51,3 +51,11 @@ AI-03 continua separado: nenhum lançamento existente foi convertido a suspenso
 ou declarado contido antes do assign. AI-04 e assinatura humana seguem abertos.
 Para nova revisão técnica IA nesta conversa: fixar SHA, comparar contra PR21,
 verificar os testes de callers e conferir as duas versões Windows e Chromium.
+
+## Estado efetivo desta execução
+
+Código a332be4: oito casos novos portáveis passaram em Linux. Os três testes
+Windows novos estão SOMENTE PREPARADOS; nenhum executou nesta tarefa. CI
+41900708978 e41900750727 falharam antes de iniciar etapas; attempt2 repetiu
+a falha. Não usar nomes REAL dos testes como evidência de execução. Revisor deve
+aguardar CI Windows restaurada. Não existe aprovação de segurança por esta nota.

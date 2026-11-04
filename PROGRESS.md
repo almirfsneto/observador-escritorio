@@ -908,3 +908,25 @@ Baseline195: Linux164/31 skips. Revisão206:172 executados/34 skips locais; oito
 negativos/controle novos passaram, três Windows novos aguardam CI. São injeções,
 não reuso real de PID ou falhas do operador. AI-03 terá análise e experimento
 isolado em filha separada, sem alterar launcher em uso, adapter ou demais gates.
+
+### Issue22 AI01/02 — PR23 e bloqueio de CI
+
+PR23: https://github.com/almirfsneto/observador-escritorio/pull/23, código
+a332be4beb61fa219d136582e3b005c72e43be9f, base PR21/8abbb5b.
+CI push41900708978 e PR41900750727 falharam nos CINCO jobs antes de qualquer
+etapa: steps null/vazios, conclusão em poucos segundos, logs BlobNotFound.
+Uma reexecução controlada do PR (attempt2) repetiu cinco falhas sem etapas.
+Não há teste CI aprovado ou Windows novo comprovado nesta entrega. Causa
+administrativa não exposta; consulta de anotações não suportada pelo conector
+e CLI normal recebeu Forbidden. Não atribuir a cobrança/quota sem evidência.
+
+Local Linux:206 descobertos,172 executados/34 skips (32 Windows/2 browser).
+Oito regressões portáveis novas executadas; três Windows novas apenas preparadas
+e compiladas, NÃO executadas. Snapshot de sintaxe/wheel/diff conferido. Chromium
+local tem ExtensionInstallBlocklist=*; não contornado nem contado como aprovado.
+A CI completa deve ser reexecutada após restaurar o serviço/permissão do Actions.
+Revisor técnico deve considerar patch ainda SEM comprovação Windows desta revisão.
+
+Próximo passo independente viável: finalizar estudo AI03 em filha separada, sem
+alterar Popen→assign dos launchers existentes ou habilitar adapter. Nova revisão
+IA por SHA não é assinatura humana; AI04 continua integralmente aberto.
