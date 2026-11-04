@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 13777,
-      "sha256": "4ba7576caf6950dba2f2dc58befed639f97b02cb96ccc1990f52e6e85862214a"
+      "size_bytes": 14553,
+      "sha256": "d53ec3e384f149c0adafbcb6cb8c1bc52b2e0bc6bae5d8670f37d7ccb4a31057"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 27858,
-      "sha256": "14f8c33a059a652e94ac2dd39051755496bb4b6e2146cd2fbf7115626e2fa978"
+      "size_bytes": 29608,
+      "sha256": "0cbf71aff188c0d501c62068d8ffdea1db0968658c5b7c56dfb5a7a37998bb9e"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -107,6 +107,16 @@
       "path": "docs/DATA_RETENTION.md",
       "size_bytes": 649,
       "sha256": "af8ef1f4d2a77e32c8422e546651f530905eb6ab0f3b416c206ec631a1d5b2fa"
+    },
+    {
+      "path": "docs/DIAGNOSTICS.md",
+      "size_bytes": 4587,
+      "sha256": "ec4e00ba57de1dc684ce4ec45a0fd659bfd36006a2f69f00146f0ae9f17e0e18"
+    },
+    {
+      "path": "docs/DIAGNOSTICS_SCHEMA.json",
+      "size_bytes": 15377,
+      "sha256": "acf89ae523b3e925576268a259cb9d975cddb95ef8ae5416be49bfeae7980ac8"
     },
     {
       "path": "docs/EVENT_SCHEMA.md",
@@ -234,6 +244,11 @@
       "sha256": "6a701cc79ba9a0ccc784eb2793e4c07fb6d00b2e5aecb3b1b141a8332d92e9c9"
     },
     {
+      "path": "src/observador/diagnostics.py",
+      "size_bytes": 11943,
+      "sha256": "162754e89aee67142919dc1cbcca9c12db213fa3bdc5aabfe767cbf5fa87530d"
+    },
+    {
       "path": "src/observador/discovery.py",
       "size_bytes": 2336,
       "sha256": "8db33b47fb6af90796fdaf28ab5299173669dce712cec843f64184c794302de1"
@@ -250,13 +265,18 @@
     },
     {
       "path": "src/observador/lab_controller.py",
-      "size_bytes": 9134,
-      "sha256": "c2583e746901104ece80a4bd9c4673aa54d30639278aacf5a78eac423988c4a9"
+      "size_bytes": 9389,
+      "sha256": "2091c4abb5ab1fa2511bbb3d6e4d75f9733da4aa7bd0269c01627d5897771995"
+    },
+    {
+      "path": "src/observador/lab_faults.py",
+      "size_bytes": 1068,
+      "sha256": "99f8d03cd9200518ae169bb2aaf91c328a8562b4ccd448bf0c0eadea9ac5091f"
     },
     {
       "path": "src/observador/lab_queue.py",
-      "size_bytes": 9609,
-      "sha256": "0015f240503ebed93402faaef855b3e94005f53e1e3819a2460fe49c11c9384a"
+      "size_bytes": 16930,
+      "sha256": "c2e1b7b2737eef880cc3796b9fbcc64c9de49a54110959572f445c891fd2ef3d"
     },
     {
       "path": "src/observador/lab_session.py",
@@ -280,8 +300,8 @@
     },
     {
       "path": "src/observador/storage_budget.py",
-      "size_bytes": 1842,
-      "sha256": "d516a52766e717993ccd480d6a2650b4ca5d2a415ef6d4eeb87cc26f61bc9484"
+      "size_bytes": 2345,
+      "sha256": "eea95505abf4d854732ca3ce5c148b549cfd0c12d7c24fb39a5ae575e23e3c91"
     },
     {
       "path": "src/observador/store.py",
@@ -290,8 +310,8 @@
     },
     {
       "path": "src/observador/stream.py",
-      "size_bytes": 8325,
-      "sha256": "8dfb186981c25b4824c735b23ac3f7c7f44e1b78592caf628780f43cec17235c"
+      "size_bytes": 10615,
+      "sha256": "960346e948dd56aba82bde859fd642310dd536a5b8cd338002e50bd6d0f7df57"
     },
     {
       "path": "src/observador/task_discovery.py",
@@ -364,6 +384,11 @@
       "sha256": "cc0d4efbd33fa2bb6d21943fb6bc068241c1411f7ba5b9e1dea0b485b057776c"
     },
     {
+      "path": "tests/test_diagnostics.py",
+      "size_bytes": 7022,
+      "sha256": "492d906f155b0c4942982ffbe87ffb8055fc32e54dfa191082319bd7aa01c07d"
+    },
+    {
       "path": "tests/test_discovery.py",
       "size_bytes": 1297,
       "sha256": "4401718bfcc854de52b5ff776bf52ba8552ad1e1d5e722db82f62db26a53d9f8"
@@ -387,6 +412,11 @@
       "path": "tests/test_native_windows.py",
       "size_bytes": 4992,
       "sha256": "15f809986cd99ea61dd3e2f6c40e200a03cf52798c146d8c6f9d162744efab36"
+    },
+    {
+      "path": "tests/test_queue_faults.py",
+      "size_bytes": 9948,
+      "sha256": "6cc6b99efe8ff806ae6c07292dab1cd9d1a7e19ca744caaa2b2f431ce4308f42"
     },
     {
       "path": "tests/test_storage_hardening.py",
@@ -415,8 +445,8 @@
     },
     {
       "path": "tests/test_windows_controller.py",
-      "size_bytes": 6855,
-      "sha256": "3cdcbdd022e43b51eed7fc90f806907700a33d0ac631685fdb9935c93f0e7804"
+      "size_bytes": 7616,
+      "sha256": "9a451e0c5ea57c1d9df110ee0301197f6101c19139b9e41823fd6af9dfa395db"
     },
     {
       "path": "tests/test_windows_coverage.py",
@@ -455,8 +485,8 @@
     },
     {
       "path": "tools/WindowsObserver/Program.cs",
-      "size_bytes": 14013,
-      "sha256": "a11fa3282efbc7cf9b1b3e71eddc078001660be79b861113469b3b14a026a887"
+      "size_bytes": 14136,
+      "sha256": "3930508833a6b6b527992f2d341ff8eb0619c12174fea19604db9c220cb426d4"
     },
     {
       "path": "tools/WindowsObserver/WinEventCoverage.cs",

@@ -20,6 +20,8 @@ class StorageBudget:
             raise ValueError('invalid_storage_budget')
         self.min_free = min_free_bytes
         self.peak_observed = 0
+        self.last_observed = None
+        self.observations = 0
 
     def usage(self):
         size = 0
@@ -31,7 +33,15 @@ class StorageBudget:
                 raise OSError('storage_directory_unexpected')
             size += entry.stat().st_size
         self.peak_observed = max(size, self.peak_observed)
+        self.last_observed = size
+        self.observations += 1
         return size
+
+    def snapshot(self):
+        # Cached gauges only: safe to copy from the writer, never scan from UI.
+        return dict(limit_bytes=self.limit,reserve_bytes=self.reserve,
+                    observed_bytes=self.last_observed,peak_observed_bytes=self.peak_observed if self.observations else None,
+                    observations=self.observations,physical_quota=False)
 
     def check(self, reserve=True):
         size = self.usage()
