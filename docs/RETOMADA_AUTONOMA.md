@@ -51,8 +51,7 @@ paths, IDs/UUIDs, hostname, usuário, títulos ou texto livre. Não alterar cont
 de aceite humano v1. DiagnosticHistory é por vida de processo; não é assinatura.
 
 `python -m observador.task_discovery --out /pasta/fora-do-git/candidatos.json`
-usa só corpus artificial e arquivo exclusivo. `observador.mining_evaluation.
-evaluate_synthetic_mining()` retorna TP17 FP0 FN0 TN28 em 45 pares/10 traces/42
+usa só corpus artificial e arquivo exclusivo. `observador.mining_evaluation.evaluate_synthetic_mining()` retorna TP17 FP0 FN0 TN28 em 45 pares/10 traces/42
 eventos construídos; precisão/recall1 não são acurácia de mundo real.
 
 Bridge: API OfflineBridge(path fora de Git) começa disabled; authorize fontes

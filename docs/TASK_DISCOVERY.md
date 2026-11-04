@@ -18,7 +18,7 @@ são alternativas: seus totais não devem ser somados como execuções independe
 O ranking usa frequência e extensão de sequência, depois duração observada. O
 span entre primeiro/último evento não é tempo de trabalho efetivo e inclui espera.
 Confiança high/moderate/low é **heurística**, baseada em suporte/sessões e semântica
-conhecida, não probabilidade calibrada. UIA genérico Invoke/click/toggle recebe
+conhecida, não probabilidade calibrada. UIA genérico Invoke/Toggle recebe
 baixa confiança; click genérico é excluído. Normalizar papel não descobre significado de botões iguais.
 Retornos A-B-A e operações adjacentes repetidas são sinais para revisão, nunca
 prova de retrabalho, qualidade ou produtividade individual.

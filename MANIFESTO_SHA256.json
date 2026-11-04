@@ -35,8 +35,8 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 4589,
-      "sha256": "0bccd7a12f992b8e8e3638492436072a614d31c6ca82a0364a7a67529c80ff89"
+      "size_bytes": 4590,
+      "sha256": "c92115fccb6cb91211a024e02490f77e4d3b122915f805bd34ca78de991876d9"
     },
     {
       "path": "ROADMAP.md",
@@ -170,8 +170,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 5428,
-      "sha256": "fb6dddfbb8bae34dbd8143886a998d7b2654c5af72e89eb98a2dcab684dc9edc"
+      "size_bytes": 5427,
+      "sha256": "ad6702b3783e49054ed7ebd51947e8f0c883df0cbc5d759abc4e9875648bbb05"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -185,8 +185,8 @@
     },
     {
       "path": "docs/TASK_DISCOVERY.md",
-      "size_bytes": 6075,
-      "sha256": "7fda3ae461442857b7bbd73a0bd8cc1aea618ff775701eb3d5e24c6fb6324a01"
+      "size_bytes": 6069,
+      "sha256": "45c5ec214a9295dde759964e76b6df5b9a66d688d5c866b0eb16c2c814a7cc25"
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
