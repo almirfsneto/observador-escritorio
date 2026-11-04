@@ -5,8 +5,9 @@ OWNED_CHANNEL.md. Este documento descreve o MODELO de PR16; não promover suas
 premissas a evidência de canal. Provider C#/adapter e bridge de arquivos continuam
 sem autenticação integrada. Plano de revisão: STACK_REVIEW_PLAN.md.
 
-**Estado: especificação, simulador e prova parcial de identidade Windows. Nenhum
-IPC novo habilitado, nenhum adaptador controlador→inbox ligado.** Modelar HMAC
+**Estado deste modelo PR16: especificação, simulador e preflight de identidade.
+O canal real ISOLADO de PR18 está em OWNED_CHANNEL.md; nenhum adaptador
+controlador→inbox foi ligado.** Modelar HMAC
 não autentica arquivos/processos. A alternativa segura da Issue14/P2.6 é aplicada:
 sem prova integrada de origem do peer, não habilitar transporte. P1/PR15 permanece
 independente e funcional, com testes de durabilidade/anti-replay próprios.

@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 21318,
-      "sha256": "ab5494b0689dd9ce39cb76bcd33fbb38a7e743af094ecd0dfeec48dd6f8d9ec6"
+      "size_bytes": 21785,
+      "sha256": "52bbf7554f8c8c8b9a65de712e834906a6232df1d75fc31ab48f67c29f199075"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 46941,
-      "sha256": "539f776507e2da1674ceb3d6f036520be34ca156569abe4f0a3856f4c4d0ee19"
+      "size_bytes": 48480,
+      "sha256": "e5636a74d1127d68bd668c84e90ca04b84dd3aacf8d66ea6163728afa06e7dba"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -160,8 +160,8 @@
     },
     {
       "path": "docs/OWNED_CHANNEL.md",
-      "size_bytes": 9452,
-      "sha256": "547d8b13c7235e714eb0c71f5123c0e3d4855d0df7fad326910c900cd03144c4"
+      "size_bytes": 10690,
+      "sha256": "8d9eadc495edd625768432513ffdab9fe29ae2e62aa1f889bf04fc1de4adbc25"
     },
     {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
@@ -180,8 +180,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 6132,
-      "sha256": "8f886f694490b61b9a345694d7965d234040646d24dd22bf829d06de468ceb2f"
+      "size_bytes": 6928,
+      "sha256": "64a241b394a842e0b1ce41871a02888735b8455d143b288f6cde132dff3f9805"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -190,8 +190,8 @@
     },
     {
       "path": "docs/SOURCE_AUTHENTICATION.md",
-      "size_bytes": 10760,
-      "sha256": "e6188dda6fd95fcbd6f64ae934f4076d6b0a0fdd5c96e60f07852cd8e7573029"
+      "size_bytes": 10798,
+      "sha256": "47a23ba1c266e8e6f39fe6f97506bab8b7f14a4249e1ea6a57f70f158e8fa1ec"
     },
     {
       "path": "docs/STACK_REVIEW_PLAN.md",
@@ -330,8 +330,8 @@
     },
     {
       "path": "src/observador/owned_channel.py",
-      "size_bytes": 13800,
-      "sha256": "03fadf5f555a82a7c8a88d6c2b5a02ccb69bdd6eabffdad64d637e28b68708da"
+      "size_bytes": 14065,
+      "sha256": "0359b404ef324fe53f5885a88d290b3a0c243254a3cdb7738683f51b53dac5aa"
     },
     {
       "path": "src/observador/owned_channel_child.py",
@@ -345,8 +345,8 @@
     },
     {
       "path": "src/observador/owned_channel_win32.py",
-      "size_bytes": 7216,
-      "sha256": "492020563677bd70952f29ffdfef22de0673ac198d367ffb6ee3b48a195fbb1c"
+      "size_bytes": 7473,
+      "sha256": "2a3c568e5f971a115e3b843479541889b5c64336f1a8c1c9a8e5d24ff5fc52e5"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -510,8 +510,8 @@
     },
     {
       "path": "tests/test_owned_channel.py",
-      "size_bytes": 21401,
-      "sha256": "7dd5487c70fbd4224968acec5ea0ce81b19e6ffdfde21cc8835e8e1c75fdd0c0"
+      "size_bytes": 21620,
+      "sha256": "f8319e4de7400c307625d7ed94ef020fcf02f600828087312d63064cd9647151"
     },
     {
       "path": "tests/test_queue_faults.py",

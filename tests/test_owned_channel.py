@@ -91,7 +91,7 @@ class WindowsChannelTest(unittest.TestCase):
         self.assertNotEqual(channel._nonce,old_nonce);self.assertEqual(channel.sample()['ordinal'],2)
         channel.stop();channel.close()
         snapshot=channel.snapshot();self.assertFalse(snapshot['process_running']);self.assertFalse(snapshot['worker_alive'])
-        self.assertTrue(snapshot['shutdown_confirmed'])
+        self.assertTrue(snapshot['shutdown_confirmed']);self.assertIsNone(channel._cancel_handle)
         print('OWNED_WINDOWS_CHANNEL_VERIFIED',json.dumps(dict(real_child=True,key_delivered_by_private_pipe=True,
               explicit_handle_list=4,descendant_denied=True,pause_reproved=True,adapter_enabled=False,human_acceptance=False)))
 
@@ -292,7 +292,10 @@ class WindowsChannelTest(unittest.TestCase):
         while not stalled._operation.locked() and time.monotonic()<until:time.sleep(.005)
         self.assertTrue(stalled._operation.locked())
         with self.assertRaisesRegex(wire.ChannelError,'^owned_channel_busy$'):stalled.sample()
+        self.assertIsNotNone(stalled._cancel_handle)
+        self.assertEqual(stalled._kernel.flags(stalled._cancel_handle),0)
         started=time.monotonic();stalled.close();requester.join(3)
+        self.assertIsNone(stalled._cancel_handle)
         self.assertLess(time.monotonic()-started,4)
         self.assertFalse(requester.is_alive());self.assertEqual(errors,['closed'])
         self.assertFalse(stalled.snapshot()['worker_alive']);self.assertFalse(stalled.snapshot()['process_running'])

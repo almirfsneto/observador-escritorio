@@ -673,3 +673,26 @@ herança alargada e exige rejeição ANTES de geração da chave. Bootstrap fech
 checado antes de alocar outros handles. Nenhuma alegação de causa específica do
 harness é feita sem nova evidência. Saturação1024 usa oito sessões normais128,
 reduzindo flush/ACL/reopens redundantes sem mudar limites ou dispensar restart.
+
+### Issue17 — revisão de objetos aprovada e corrida de ID eliminada
+
+260900d / [CI41812922153](https://github.com/almirfsneto/observador-escritorio/actions/runs/41812922153):
+5/5 jobs aprovados. Núcleo170: Linux143 executados/27 skips; Windows3.11/3.12
+168 executados/2 browsers separados skipped. Chromium2 reais sem skips.14 testes
+novos Windows do canal executaram, incluindo parent-kill, WPF/decoy/descendente,
+foreignchild, lista alargada antes de chave, replay/contexto,2 instâncias/pausa,
+restart/timeout/cap64/cancelamento e harness inbox. Saturação1024/10000/32 real
+passou nos quatro Pythons/OS, clock de TTL injetado e integrity_check. A falha
+anterior de prontidão vazia não é ocultada nem atribuída a causa não comprovada;
+essa nova rodada passou sem reduzir checks/transformar falha em skip.
+
+Revisão de concorrência encontrou risco potencial ao cancelar por native_id:
+thread ID poderia ser reciclado antes de OpenThread. Worker agora duplica seu
+próprio pseudohandle em handle real não herdável e o mantém sob lock curto para
+CancelSynchronousIo/close, sem lookup por ID. Nenhum cancelamento de thread alheia
+é permitido. Regressão existente exige handle não herdável e liberado após cancelar
+IO pendente. Nova CI do HEAD requerida. Sem mudança no adapter (OFF).
+
+Wheel sem dependências novas, compileall e manifesto conferidos. Plano completo
+em STACK_REVIEW_PLAN.md; RETOMADA aponta PR18 e diferencia comprovado/modelo/
+clock injetado/pendente. Nenhum PR anterior recebeu merge/rebase/retarget.

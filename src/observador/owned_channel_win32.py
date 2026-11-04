@@ -23,13 +23,13 @@ class Kernel:
             'WriteFile':([W.HANDLE,ctypes.c_void_p,W.DWORD,ctypes.POINTER(W.DWORD),ctypes.c_void_p],W.BOOL),
             'PeekNamedPipe':([W.HANDLE,ctypes.c_void_p,W.DWORD,ctypes.c_void_p,ctypes.POINTER(W.DWORD),ctypes.c_void_p],W.BOOL),
             'GetCurrentProcess':([],W.HANDLE),
+            'GetCurrentThread':([],W.HANDLE),
             'DuplicateHandle':([W.HANDLE,W.HANDLE,W.HANDLE,ctypes.POINTER(W.HANDLE),W.DWORD,W.BOOL,W.DWORD],W.BOOL),
             'GetProcessId':([W.HANDLE],W.DWORD),
             'GetProcessTimes':([W.HANDLE]+[ctypes.POINTER(W.FILETIME)]*4,W.BOOL),
             'QueryFullProcessImageNameW':([W.HANDLE,W.DWORD,W.LPWSTR,ctypes.POINTER(W.DWORD)],W.BOOL),
             'ProcessIdToSessionId':([W.DWORD,ctypes.POINTER(W.DWORD)],W.BOOL),
             'WaitForSingleObject':([W.HANDLE,W.DWORD],W.DWORD),
-            'OpenThread':([W.DWORD,W.BOOL,W.DWORD],W.HANDLE),
             'CancelSynchronousIo':([W.HANDLE],W.BOOL),
             'CreateEventW':([ctypes.c_void_p,W.BOOL,W.BOOL,W.LPCWSTR],W.HANDLE),
         }
@@ -78,12 +78,16 @@ class Kernel:
         return dict(pid=pid,start_ticks=(created.dwHighDateTime<<32|created.dwLowDateTime)+504911232000000000,
                     session_slot=slot.value,image_sha256=digest)
 
-    def cancel_thread(self,native_id):
-        if native_id is None:return
-        handle=self.api.OpenThread(1,False,native_id) # THREAD_TERMINATE for CancelSynchronousIo
-        if handle:
-            try:self.api.CancelSynchronousIo(handle)
-            finally:self.close(handle)
+    def own_thread_handle(self):
+        result=W.HANDLE();current=self.current()
+        # Retain the actual worker object; never reopen a recyclable native thread ID.
+        if not self.api.DuplicateHandle(current,self.api.GetCurrentThread(),current,ctypes.byref(result),
+                                        0x100000|1,False,0):
+            raise OSError('owned_thread_handle_failed')
+        return int(result.value)
+
+    def cancel_thread(self,retained_handle):
+        if retained_handle is not None:self.api.CancelSynchronousIo(retained_handle)
 
     def no_inherited_objects(self,owned_process_handle,local_handles):
         """Probe a retained OWNED child; handle-number reuse is not inheritance.

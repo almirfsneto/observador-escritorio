@@ -38,7 +38,7 @@ class OwnedSyntheticChannel:
         for handle in decoy_handles:wire.integer(handle,1)
         self.ttl_ms=ttl_ms;self.io_timeout=float(io_timeout);self.fault=fault;self.decoys=decoy_handles
         self.state='disabled';self._key=None;self._process=None;self._job=None;self._kernel=None
-        self._thread=None;self._stop=threading.Event();self._queue=queue.Queue(maxsize=1)
+        self._thread=None;self._cancel_handle=None;self._stop=threading.Event();self._queue=queue.Queue(maxsize=1)
         self._operation=threading.Lock();self._lock=threading.RLock();self._handles=set()
         self._epoch=str(uuid4());self.session=str(uuid4());self._generation=0;self._sequence=0;self._ordinal=0
         self._nonce=None;self._binding=None;self._deadline=None;self._last_clock=None;self._messages=0
@@ -81,6 +81,7 @@ class OwnedSyntheticChannel:
     def _launch(self):
         if sys.platform!='win32':raise OSError('owned_channel_windows_required')
         self._phase='launch';self._kernel=Kernel();self._deadline=time.monotonic()+self.ttl_ms/1000
+        with self._lock:self._cancel_handle=self._kernel.own_thread_handle()
         script=Path(__file__).with_name('owned_channel_child.py').absolute()
         reject_links(script);reject_links(Path(sys.executable).absolute())
         digest=wire.fixture_digest()
@@ -212,6 +213,9 @@ class OwnedSyntheticChannel:
             except (OSError,subprocess.TimeoutExpired):self._shutdown_confirmed=False
         if self._kernel:
             for handle in tuple(self._handles):self._close_handle(handle)
+        with self._lock:
+            if self._cancel_handle is not None:
+                self._kernel.close(self._cancel_handle);self._cancel_handle=None
         while True:
             try:_,_,future=self._queue.get_nowait()
             except queue.Empty:break
@@ -242,7 +246,8 @@ class OwnedSyntheticChannel:
         if self._process and self._process.poll() is None:
             try:self._process.kill()
             except OSError:pass
-        if self._kernel and self._thread:self._kernel.cancel_thread(self._thread.native_id)
+        with self._lock:
+            if self._kernel:self._kernel.cancel_thread(self._cancel_handle)
         if self._thread and self._thread is not threading.current_thread():self._thread.join(timeout=3)
         self._shutdown_confirmed=self._shutdown_confirmed and not bool(self._thread and self._thread.is_alive())
         if self.state!='failed':self.state='closed'

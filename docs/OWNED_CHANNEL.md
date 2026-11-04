@@ -72,8 +72,8 @@ alegação de canal autenticado. Marcar skips Linux explicitamente. Casos inicia
 handshake/contador/pausa/nonce novo/cleanup, chave/identidade falsos, MAC truncado,
 JSON duplicado/NaN, oversize/truncamento/flood/EOF, timeout e expiração natural curta.
 O próprio filho cria descendente com close_fds=False APÓS limpar flags e exige
-que os três handles restantes sejam inválidos ali; bootstrap já está fechado.
-Decoy herdável fora da lista também precisa ser negado. Não é enumeração completa
+que os três objetos restantes não estejam herdados ali; bootstrap já está fechado.
+Decoy herdável fora da lista é comparado pelo parent antes de gerar chave. Não é enumeração completa
 nem prova contra outro processo do mesmo token/admin. Outra conta e Windows10/11
 humanos ainda são lacunas, não skips promovidos a aprovação.
 
@@ -138,3 +138,21 @@ antes de gerar chave e não constam nos argumentos do peer. Lista de herança é
 conferida também após CreateProcess; teste injeta handle extra e exige recusa
 ANTES de geração de chave. Bootstrap é fechado e consultado antes de criar probe.
 Substitui a antiga exigência meramente numérica de GetHandleInformation inválido.
+
+## Evidência da revisão e cancelamento por objeto retido
+
+260900d / CI41812922153: cinco jobs aprovados. Núcleo170 descobertos,
+Windows3.11/3.12 168 executados/2 browsers separados skipped; Linux143/27 skips.
+Chromium2 reais sem skips. Todos os14 testes Windows do canal executaram, inclusive
+kill do owner, WPF/unrelated/descendente/decoy e lista alargada, replay/restart,
+cap64/cancelamento, chave pós-spawn e harness de inbox com clock24h injetado.
+Isso resolve a rodada falha para essa revisão; não afirma causa interna específica
+do stdout vazio anterior. WPF30/30 e WinForms0/30 de regressão continuam separados.
+
+Revisão posterior de segurança: CancelSynchronousIo não deve abrir native_id,
+pois um ID de thread pode ser reciclado antes da chamada. O worker duplica seu
+PRÓPRIO pseudohandle em handle real não herdável (TERMINATE|SYNCHRONIZE), retido
+sob lock curto para cancelamento e fechamento. Nenhum OpenThread por ID. O handle
+não entra nos quatro herdados, e é liberado em cleanup. Teste de IO pendente exige
+flag não herdável, cancelamento e referência liberada. Nova CI do HEAD é requerida
+para atribuir prova a essa alteração; não extrapolar a partir da revisão anterior.
