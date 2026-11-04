@@ -612,3 +612,124 @@ docs/RETOMADA_AUTONOMA.md e SOURCE_AUTHENTICATION.md; implementar/verificar cana
 herdado de filho próprio e gates nativos adversariais antes do opt-in. SQLite em
 claro, limite lógico, autenticação e aceite Windows10/11/Chrome/Edge/LGPD continuam
 pendentes; não apto a piloto. Nenhuma rotina de observação segue ativa após os testes.
+
+## Issue17 — canal privado Windows, Etapa A isolada — 2026-11-04
+
+Base obrigatória PR16/294cb39 conferida, nova codex/verified-owned-channel.
+Documentos obrigatórios/Issue/retomada lidos. Baseline149: Linux136 executados,
+13 skips. Revisão NativeSession/C#: ready.pid identifica alvo, não emissor;
+stdio antigo sem MAC e comandos JSON sem framing autenticado não serão promovidos
+a canal comprovado. Permanecem intocados junto ao PR6/aceite v1.
+
+Nova fixture IPC isolada Python -I -S -B, Win32 CreatePipe/lista4 handles/parent
+query limitado/Popen retido/Job, chave32 pelo pipe privado+EOF e challenge HMAC
+bidirecional vinculado a identidades/código/epoch/sessão. Framing estrito16KiB,
+64 mensagens, pausa/reproof, worker/timeout/cancelamento/cleanup. Sem adapter,
+UIA nova, rede ou coleta. Testes iniciais: três wire portáveis aprovados; três
+Windows reais aguardam CI, skips Linux não representam prova. Contrato/riscos em
+docs/OWNED_CHANNEL.md. Próximas etapas independentes: adversariais/capacidade e
+plano de revisão/consolidação sem merge/rebase de branches anteriores.
+
+### Issue17 — primeira comprovação Windows e avanço independente de P2
+
+PR18 /22f99e5 / [CI41809413254](https://github.com/almirfsneto/observador-escritorio/actions/runs/41809413254):
+5/5 jobs aprovados; Windows3.11/3.12 153 executados/2 browsers skipped; Linux139
+executados/16 skips;155 descobertos, Chromium2 reais sem skips. Os três testes
+Windows NOVOS executaram processos/handles reais, inclusive dez modos adversariais,
+chave privada/handshake, pausa/reproof/cleanup e TTL natural curto de3s. Não é
+simulador de PR16, nem prova de autenticação do provider C# antigo ou aceite humano.
+
+P2 ampliada: saturação REAL das constantes1024/10000/32 via API normal, purge e
+reaberturas sem reset, passou localmente em~3,5s; clocks de retenção INJETADOS.
+Testes Windows adicionais de decoy/filho externo/replay/contexto/duas instâncias/
+restart/kill do parent/retorno de IO/cap64 e harness inbox24h ainda precisam CI.
+Diagnóstico novo usa fase/exitcode fixos do processo próprio, nunca chave/frame.
+Adapter WPF/agente segue OFF. Plano de consolidação/revisão independente será
+registrado sem alterar/rebasear/integrar qualquer PR anterior.
+
+Plano de consolidação/revisão independente em docs/STACK_REVIEW_PLAN.md contém
+cadeia/SHAs capturados, unidades de revisão e gates futuros, sem executar merge,
+rebase, squash ou retarget. Acrescentado teste WPF real de não herança de endpoints
+com comparação de objetos (evita confundir número reciclado com handle herdado),
+sem modificar fixture/agent/aceite. Publicação do segundo commit encontrou erro
+interno GitHub commit_refs/HTTP500; não há recusa de autorização. Código está
+commitado localmente e será publicado por caminho suportado, preservando históricos.
+
+### Issue17 — CI ampliada: falha explícita de harness e correção do probe
+
+Publicação por API928b301 (árvore e17973fa idêntica ao snapshot local) preservou
+parent22f99e5 em fast-forward. Push Git encontrou500; commits locais não publicados
+foram preservados, sem rebase/force/merge. CI41811218903: Linux/Chromium/Windows3.11
+aprovados, Windows3.12 FALHOU em owner_harness_no_ready antes do kill. Não foi skip
+nem aceito como prova. Demais adversariais reais/capacidade/WPF passaram naquele
+job, mas isso não torna o job aprovado. Causa interna do harness não foi exposta
+pelo stdout vazio; agora publica somente fase/exitcode fechados, sem trace/segredo.
+
+Revisão encontrou fragilidade independente: número de handle válido pode ser
+reutilizado para outro objeto, não prova herança. Probe de descendente/unrelated
+agora duplica slots APENAS de filho possuído e usa CompareObjectHandles com objetos
+locais; decoy é verificado pelo parent antes de gerar chave. Teste injeta lista de
+herança alargada e exige rejeição ANTES de geração da chave. Bootstrap fechado é
+checado antes de alocar outros handles. Nenhuma alegação de causa específica do
+harness é feita sem nova evidência. Saturação1024 usa oito sessões normais128,
+reduzindo flush/ACL/reopens redundantes sem mudar limites ou dispensar restart.
+
+### Issue17 — revisão de objetos aprovada e corrida de ID eliminada
+
+260900d / [CI41812922153](https://github.com/almirfsneto/observador-escritorio/actions/runs/41812922153):
+5/5 jobs aprovados. Núcleo170: Linux143 executados/27 skips; Windows3.11/3.12
+168 executados/2 browsers separados skipped. Chromium2 reais sem skips.14 testes
+novos Windows do canal executaram, incluindo parent-kill, WPF/decoy/descendente,
+foreignchild, lista alargada antes de chave, replay/contexto,2 instâncias/pausa,
+restart/timeout/cap64/cancelamento e harness inbox. Saturação1024/10000/32 real
+passou nos quatro Pythons/OS, clock de TTL injetado e integrity_check. A falha
+anterior de prontidão vazia não é ocultada nem atribuída a causa não comprovada;
+essa nova rodada passou sem reduzir checks/transformar falha em skip.
+
+Revisão de concorrência encontrou risco potencial ao cancelar por native_id:
+thread ID poderia ser reciclado antes de OpenThread. Worker agora duplica seu
+próprio pseudohandle em handle real não herdável e o mantém sob lock curto para
+CancelSynchronousIo/close, sem lookup por ID. Nenhum cancelamento de thread alheia
+é permitido. Regressão existente exige handle não herdável e liberado após cancelar
+IO pendente. Nova CI do HEAD requerida. Sem mudança no adapter (OFF).
+
+Wheel sem dependências novas, compileall e manifesto conferidos. Plano completo
+em STACK_REVIEW_PLAN.md; RETOMADA aponta PR18 e diferencia comprovado/modelo/
+clock injetado/pendente. Nenhum PR anterior recebeu merge/rebase/retarget.
+
+### Issue17 — evidência final do runtime e estado para revisão independente
+
+PR18 / código0588d8a / [CI41814049436](https://github.com/almirfsneto/observador-escritorio/actions/runs/41814049436):
+CINCO jobs aprovados.170 descobertos: Linux3.11/3.12 143 executados/27 skips,
+Windows3.11/3.12 168 executados/2 browsers separados skipped. Chromium2 reais
+aprovados sem skips (MV3/restart/receipt/ACK), nenhum caso foi aprovado via skip.
+14 novos testes Windows do canal +4 portáveis de wire/default-off +3 de capacidade
+somados ao baseline149. Endpoints/decoy/descendentes/WPF inspecionados como objetos
+reais; lista alargada recusada antes da chave, argv/env sem chave inicial, segredo
+por bootstrap32+EOF, handshake/identidades/HMAC verificados em processos reais.
+Parent-kill encerrou descendente; IO pendente cancelou por HANDLE retido e liberado,
+não thread ID reaberto. Worker/filhos encerrados, cap64 falha fechada e duas
+instâncias/pausa/restart/replay/inbox exercitados.24h/TTL de retenção são clocks
+injetados, não espera física; PID reuse forçado não foi alegado.
+
+A revisão260900d/CI41812922153 já havia passado5/5;0588 comprova também a correção
+de retenção do handle de worker. Falha de prontidão do harness3.12 em928b301 foi
+registrada: causa interna do stdout vazio não isolada, sem falsificar aprovação;
+as duas rodadas posteriores completas passaram. Investigar recidiva por fases,
+nunca afrouxar schema/identidade ou repetir cegamente até passar.
+
+Limites preservados: fixture IPC Python autenticada não é o WindowsObserver C#;
+NativeSession/C#/lançador/schema de aceite v1 intocados. Adapter WPF continua OFF,
+sem nova captura. Outra conta/sessão e humanosWin10/11/Chrome/Edge não executados;
+mesmo token/admin/injeção/checkout adulterado não são fronteiras comprovadas.
+SQLite/inbox em claro, quota lógica/amostrada, não OS/SSD/backups. Gates humanos e
+LGPD/revisão independente permanecem, não apto a piloto. Nenhum dado real, equipe,
+serviço/host/autostart, deploy, merge/rebase/retarget ou transmissão de capturas.
+
+PROGRESS/DECISIONS/ROADMAP/RETOMADA, OWNED_CHANNEL e STACK_REVIEW_PLAN atualizados.
+Manifesto124 arquivos, compileall, wheel sem dependências runtime novas e diff
+conferidos. Última atualização é documental; CI do HEAD será conferida no PR.
+Próxima tarefa: revisão independente do argumento de capacidade/ACL/herança e
+matriz por outra conta/sessão autorizada, antes de novo entrypoint C# e adapter.
+Plano de consolidação é só proposta por unidades de revisão; não executa merges
+ou rebases. PR6 continua3d4a770 e PR16 continua294cb39. Nenhum observador segue ativo.

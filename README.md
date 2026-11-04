@@ -83,3 +83,7 @@ Issue 11: [diagnóstico fechado e faults sintéticos](docs/DIAGNOSTICS.md),
 [retomada atualizada](docs/RETOMADA_AUTONOMA.md). A ponte não possui socket nem
 autenticação de peers; retenção temporal e markers do inbox estão em
 `docs/INBOX_RETENTION.md`. Continua restrita a laboratório.
+
+Issue17: [canal Windows isolado e limites](docs/OWNED_CHANNEL.md) e
+[plano de revisão da cadeia de PRs](docs/STACK_REVIEW_PLAN.md).
+O novo canal não habilita o adaptador de captura nem altera o aceite humano.
