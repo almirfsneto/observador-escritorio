@@ -112,7 +112,7 @@ class AuthModelTest(unittest.TestCase):
         start=time.perf_counter();m=self.paired();batch=self.batch()
         for _ in range(64):m.verify(m.sign_for_test(batch))
         print('SYNTHETIC_AUTH_MODEL_BENCHMARK',json.dumps(dict(frames=64,elapsed_ms=round((time.perf_counter()-start)*1000,3),
-              serialized_frame_bytes=len(json.dumps(batch).encode()),scope='in_memory_model_only',kernel_peer_verified=False,
+              serialized_frame_bytes=len(json.dumps(m.sign_for_test(batch)).encode()),scope='in_memory_model_only',kernel_peer_verified=False,
               inbox_committed=False,human_acceptance=False)))
 
     @unittest.skipUnless(__import__('sys').platform=='win32','Windows kernel owned-child probe required')

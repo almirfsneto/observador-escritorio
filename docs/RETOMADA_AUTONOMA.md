@@ -73,7 +73,9 @@ com consulta nativa Windows em teste. Modelo assume identidade/entrega de chave:
 NÃO autentica peer, NÃO chamar OfflineBridge.authorize com seu resultado. Sem
 IPC novo/controller adapter/NativeMessaging instalado. Aplicado P2.6.
 
-146 descobertos, Linux133 executados/13 skips; Windows depende da CI do head.
+146 descobertos, Linux133 executados/13 skips; Windows144 executados/2 skips
+browser separado no código ef8ca60 / CI41758466029 (5/5 jobs). Chromium2 reais.
+Probe nativo passou nos dois Pythons Windows. Confirmar CI do HEAD final.
 Probe kernel Windows testa somente filho próprio da fixture; não confundir com
 peer do canal. Antes de opt-in: handle/peer bidirecional, entrega de chave privada,
 herança mínima, DACLs adversariais/EOF/truncamento/timeout/cancelamento/colisão.

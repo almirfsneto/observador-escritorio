@@ -92,7 +92,7 @@
 ## Issue 14 — retenção e autenticação sintéticas
 - [x] Implementar TTL separado de payload/receipt, markers permanentes limitados e ACK recuperável.
 - [x] Testes de crash, replay após purge, conflitos, clocks, quota e migração v1.
-- [ ] Confirmar matriz Linux/Windows e Chromium nos novos heads.
+- [x] Matriz Linux/Windows e Chromium aprovadas em P1/448c3aa e P2/ef8ca60; confirmar também HEAD documental final.
 - [ ] Análise de ameaças, pareamento autenticado e integração exclusivamente sintética revisada.
 - [x] P2: threat model, protocolo/simulador fechado, negativos/fuzz e probe separado de identidade de filho Windows.
 - [ ] P2: peer do canal verificado, chave entregue por handle privado, testes adversariais/IPC e adapter opt-in; NÃO habilitados pelo simulador.

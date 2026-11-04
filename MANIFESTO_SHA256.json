@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 18641,
-      "sha256": "bfec7f4fc1f04ec5f4adc5189c1743678e72d590eaf43515195ede4eef01f3a7"
+      "size_bytes": 18906,
+      "sha256": "a4c04269b0efaba7f97889c38a7a6ec84a48965f6447850d1db986cb23188353"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 37713,
-      "sha256": "bcd4a979c6b2bbd03aa9a0c1478222c32062a316b2251d825d6692503d544010"
+      "size_bytes": 39342,
+      "sha256": "dae338a5f976e2c4b1af1060b6385e76e897ef00e54ac922bdbc1b73c2545173"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 6910,
-      "sha256": "c29f839b0e9f3ebd1e92cd8e4c324830a8ee245f4cb668d63a431913da527ccc"
+      "size_bytes": 6962,
+      "sha256": "0768eefb2e9e8f80c2364dad2d975b0ff89275b3846c7b42b7834bde3c071a43"
     },
     {
       "path": "SECURITY.md",
@@ -175,8 +175,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 4695,
-      "sha256": "670242a4f9d689fe035b3472dd3bba97bc45ec4a6dfbe24babff09d1978122fe"
+      "size_bytes": 4849,
+      "sha256": "15b5618e6dc089c0e3fc80e51096acec9e2f137c4c3d7cf99c6935b1acfbabab"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -475,8 +475,8 @@
     },
     {
       "path": "tests/test_source_auth_model.py",
-      "size_bytes": 8470,
-      "sha256": "042c60630909149fe17a5740d8a08cc55611e091bff30b8e113f0432b78f08bc"
+      "size_bytes": 8487,
+      "sha256": "8b759f4c855313885b53253c1ae3ddd890e011b7d6089cd18ce8d97c19f03f40"
     },
     {
       "path": "tests/test_storage_hardening.py",

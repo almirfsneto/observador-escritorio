@@ -539,3 +539,27 @@ aguarda CI, não equivale a autenticar peer de canal. Novos testes: nove modelos
 Linux aprovados, um probe Windows skipped; matriz/Chromium pendentes no novo PR.
 Próxima etapa técnica: implementar/verificar canal nativo e gates adversariais
 antes de qualquer adapter opt-in; nenhuma decisão humana rotineira é necessária.
+
+### P2 — evidência verificada e limite de segurança
+
+PR16 / código ef8ca60 / [CI 41758466029](https://github.com/almirfsneto/observador-escritorio/actions/runs/41758466029):
+5/5 jobs aprovados. Núcleo146 descobertos: Linux133 executados/13 skips,
+Windows3.11/3.12 144 executados/2 browsers separados skipped. Chromium2 testes
+reais aprovados/sem skips. Probe de identidade do filho WPF executou nativamente
+nos dois Windows: caminho/criação/sessão conferidos, falsificações rejeitadas;
+transport_peer_verified=false/inbox_integrated=false, honestamente distintos.
+Benchmark modelo64 frames: ~13,6/16,9ms Windows, ~10,2/17,0ms Linux; amostras de
+um ensaio, não SLA. Revisão corrige rótulo da medida de bytes para medir envelope
+completo (antes media batch); próximo CI registra medida correta.
+
+P1 revisão5c914f2 integrada à filha em0c45883, sem merge de PR/main. Nova CI de
+HEAD em acompanhamento. Wheel sem dependências runtime novas, compileall e
+git diff --check aprovados. JSON de aceite v1 e branch PR6 permanecem intocados.
+
+**Pendente técnico explícito:** não existe backend novo que vincule peer do
+canal aos handles verificados nem entrega privada de chave comprovada. Portanto
+P2 usa a alternativa segura P2.6 (spec/simulador/negativos), não integração ligada
+ou autenticação real alegada. Próxima execução: canal Windows herdado do filho
+próprio com herança mínima, peer/kernel, EOF/cancelamento/ACL/colisão/timeout,
+antes do adapter opt-in. Não é necessário pedir escolha técnica rotineira.
+SQLite claro, orçamento não físico e aceite humano/LGPD continuam bloqueando piloto.
