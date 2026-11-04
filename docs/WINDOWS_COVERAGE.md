@@ -3,6 +3,9 @@
 O caminho padrão UIA permanece inalterado. `--coverage-probe` no provider é um
 modo explícito e separado: mesmos argumentos PID/caminho/criação/prazo e somente
 SyntheticTaskApp/SyntheticWpfTaskApp. Não integra eventos ao stream nem à fila.
+O preparador guiado compila também a fixture WinForms para os novos testes
+comparativos, sem iniciá-la na preparação. Laboratório manual continua WPF,
+inicialmente desativado; schema v1 mantém hashes dos dois exes principais.
 
 Usa SetWinEventHook **restrito ao PID fictício**, dois intervalos unitários:
 EVENT_OBJECT_INVOKED e EVENT_OBJECT_STATECHANGE, WINEVENT_OUTOFCONTEXT. Não existe

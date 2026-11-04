@@ -140,8 +140,8 @@
     },
     {
       "path": "docs/WINDOWS_COVERAGE.md",
-      "size_bytes": 2957,
-      "sha256": "f06f3484a2f3d5814ccd47b1b38b1dc798c204b4949f87aded0d3f3bd0d5565a"
+      "size_bytes": 3189,
+      "sha256": "fc5e0cc185c9ac949a395a21fc72e72cb2e43ced0b59ecf416e5d96f5d0e054f"
     },
     {
       "path": "docs/WINDOWS_LAB.md",
@@ -170,8 +170,8 @@
     },
     {
       "path": "src/observador/acceptance_prepare.py",
-      "size_bytes": 12278,
-      "sha256": "6b1e649e05b8b67db5191bf1d29020db777a139d4b11591f4080b8026ac3b7c4"
+      "size_bytes": 12495,
+      "sha256": "b7b14433c0866b320733e7b65c9841096537e31ee3a7e97af04e58c84c0b9a5f"
     },
     {
       "path": "src/observador/acceptance_report.py",
@@ -275,8 +275,8 @@
     },
     {
       "path": "tests/test_acceptance_prepare.py",
-      "size_bytes": 5412,
-      "sha256": "aa76182dd3f17547106de700154b9a91503c9d237472084d80f6106f55e86ae8"
+      "size_bytes": 5617,
+      "sha256": "4be6238d8cf7905215692bec5d6bc9aed0acd6dc6e537c87741097659403c32b"
     },
     {
       "path": "tests/test_acceptance_report.py",
