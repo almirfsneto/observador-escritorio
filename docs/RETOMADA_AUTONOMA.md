@@ -3,11 +3,13 @@
 ## Ponto atual obrigatório
 
 Continuar da branch **codex/acceptance-stabilization**, filha de
-PR18/233b3011cba6a9647bcf5e98d0a18e551b29fe3c. PR19: código51b0691, CI41843386924 cinco jobs aprovados
-(Linux154/27 skips; Windows179/2 skips; Chromium2/0). Consultar HEAD final em
+PR18/233b3011cba6a9647bcf5e98d0a18e551b29fe3c. PR19: códigoed6099c, CI41844547231 cinco jobs aprovados
+(Linux155/27 skips; Windows180/2 skips; Chromium2/0;182 descobertos). Consultar HEAD final em
 PROGRESS.md; não usar main isoladamente. PR6 permanece congelado no SHA abaixo.
 Leia também ACCEPTANCE_STABILIZATION.md, ACCEPTANCE_MATRIX.md e
 SECURITY_REVIEW_PR18.md. Prioridade: estabilização/revisão, não adapter novo.
+Auditar retornos CloseHandle dos wrappers compartilhados OwnedJob/ProcessProbe;
+correção filha já trata CancelSynchronousIo,1168 normal e demais erros explícitos.
 
 Relato humano sintético Win11 usando versão declarada PR6: 3 ensaios, 2 expirações,
 3 cleanups, persistência opcional e avaliações positivas. Commit ZIP desconhecido,

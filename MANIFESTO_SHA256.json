@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 55486,
-      "sha256": "03be68d4400c785b73d8a9db96f6da0d6aae31f04f3030f1c367cbf20e09c940"
+      "size_bytes": 56652,
+      "sha256": "77ba61c48b8649ee1eafd9ccebddddcc6ba8ae02742520bb0aeaef4ebc9efcec"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -90,8 +90,8 @@
     },
     {
       "path": "docs/ACCEPTANCE_MATRIX.md",
-      "size_bytes": 3976,
-      "sha256": "87fdc0479ef9c94ced2df6362ad57ad3fc950ff552bf077cc0f6904b3525a21e"
+      "size_bytes": 4375,
+      "sha256": "d2fa718c170f75f64e8ab765df4f228b98262d73c16d2ac8b4ed68217f43dfef"
     },
     {
       "path": "docs/ACCEPTANCE_REVIEW_SCHEMA.json",
@@ -195,8 +195,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 9564,
-      "sha256": "0d2160a42acf87729130dedd0d4e54ae756487556748f6fc3fc4c65d9e80f7f6"
+      "size_bytes": 9747,
+      "sha256": "f91890dbbc37d45802d6d7c0be0e794af9f0a817dcc474b429c3e4756957e556"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",

@@ -40,3 +40,9 @@ descobertos,154 executados,27 skips (25 Windows/2 browser). Windows Server2025
 3.11/3.12:181 descobertos,179 executados,2 skips browser. Chromium dedicado:2
 executados/0 skips. Nenhum skip de foreground nesta rodada; não explica o skip
 do relato humano anterior. Ver PROGRESS para HEAD documental/CI final.
+
+Após correção de retorno CancelSynchronousIo, códigoed6099c/run41844547231
+aprovou cinco jobs:182 descobertos; Linux155 executados/27 skips, Windows180
+executados/2 skips e Chromium2/0. Substitui as contagens181 acima para esse código.
+Os12 novos testes incluem três de falha injetada de cleanup; não são falhas de
+kernel produzidas em desktop humano. Resultado do HEAD documental no PR19.

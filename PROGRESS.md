@@ -800,3 +800,21 @@ com retornos success/1168/invalid-handle/None. Suite passa a182 descobertos; CI
 do novo código será conferida. Wrappers compartilhados OwnedJob/ProcessProbe
 ainda não verificam CloseHandle: risco explicitado no checklist independente,
 sem alterar o contrato comum de cleanup de todas as entregas nesta correção.
+
+### Evidência final do código de cancelamento — ed6099c
+
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/41844547231
+confirmada5/5 jobs.182 descobertos: Linux3.11/3.12,155 executados/27 skips
+(25 Windows e2 browser); Windows Server2025 3.11/3.12,180 executados/2 skips
+browser; Chromium dedicado2 executados/0 skips. Logs de cada job consultados,
+12 regressões novas executadas em Linux/Windows. Job Windows3.11 demorou mais,
+mas concluiu aprovado; nenhuma causa de demora foi inferida.
+Rodadas documentais abfd1a2/41844243856 e41844251334 foram CANCELADAS pela
+concorrência ao publicar a correção seguinte; não contadas como aprovadas.
+Suite local182:155 executados/27 skips; compileall e manifesto verificados.
+
+Critérios de encerramento técnico: CI do candidato, regressões e matriz documentada.
+Critérios de aceite continuam abertos: revisão independente por SHA, auditoria dos
+wrappers compartilhados, origem/skip/descarte históricos e ensaios humanos por
+OS/versão. PR19 permanece draft, PR6 e anteriores intactos. Último commit apenas
+registra esta evidência; resultado dos checks do HEAD final também consta no PR19.
