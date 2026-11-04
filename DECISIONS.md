@@ -146,3 +146,18 @@
 - **Prova ampliada D-029:**260900d/CI41812922153, cinco jobs,14 testes Windows reais e capacidade1024/10000/32 nos quatro ambientes. Outra conta/sessão, humanos10/11 e adapter C# continuam fora da prova.
 - **Cancelamento D-029:** reter handle do worker obtido de GetCurrentThread/DuplicateHandle, sem OpenThread por ID reciclável; lock breve protege cancel/close. Não sacrificar identidade de objetos por conveniência de cleanup. Nova revisão exige CI própria.
 - **Evidência final D-029:**0588d8a/CI41814049436 teve5/5 jobs; todos os14 novos casos Windows reais, incluindo cancelamento por handle retido. Quatro wire/default-off e três capacidades executaram em Linux/Windows; browser separado2 reais. Adapter continua OFF: fixture IPC não autentica C# antigo, outra conta e aceite humano/revisão independente pendentes. Consolidação futura somente proposta em STACK_REVIEW_PLAN.md, sem operações de merge/rebase executadas.
+
+## D-030 — Estabilizar interpretação do aceite sem reescrever a evidência humana
+- **Decisão:** execução humana Win11 relatada é evidência da versão declarada PR6 com ressalvas, sem atribuir SHA ausente/skip/causa. Corrigir gap do OS já ensaiado no ramo novo; human_gate/pilot continuam fechados e Win10 separado.
+- **Compatibilidade:** schema JSON v1/CMD/branch PR6 preservados; diagnóstico fechado separado acompanha futuras exportações locais. Cache de saúde explica limites/amostras, nunca causa/taxa de perda ou health final confirmada.
+- **Proveniência/cobertura:** ZIP não recebe commit inventado nem ancestral. Skips são cobertura incompleta; todos skipped/resumo ausente não são sucesso. Não solicitar JSON do operador para Git nem usar fixtures construídas como aceite real.
+
+### D-031 — Cleanup resiliente a falhas e revisão independente por SHA
+
+A autorrevisão de PR18 encontrou OSError de fechamento/cancelamento capaz de
+interromper cleanup. A filha tenta os recursos restantes e drena futures; expõe
+cleanup_errors/cleanup_unconfirmed e não confirma shutdown após erro. Não repetir
+cegamente número de handle com ownership incerto. Regressões usam falha injetada,
+separadas das provas Win32 normais. Não atribuir esse achado ao descarte do PR6.
+Pacote SECURITY_REVIEW_PR18.md organiza revisão externa, sem inventar signoff ou
+enviar mensagens. Consolidação permanece plano por SHA, sem merge/rebase/retarget.

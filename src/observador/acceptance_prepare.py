@@ -41,7 +41,13 @@ def artifact_hashes(root):
 
 def source_state(root):
     # Git is optional; absent metadata is a gap, never invented provenance.
+    root=Path(root).resolve()
+    if not (root/'.git').exists() or (root/'.git').is_symlink():
+        return {'commit': None, 'modified': None}
     try:
+        top=subprocess.run(['git','rev-parse','--show-toplevel'],cwd=root,text=True,capture_output=True,timeout=5)
+        if top.returncode or Path(top.stdout.strip()).resolve()!=root:
+            return {'commit': None, 'modified': None}
         commit = subprocess.run(['git', 'rev-parse', '--verify', 'HEAD'], cwd=root,
                                 text=True, capture_output=True, timeout=5)
         dirty = subprocess.run(['git', 'status', '--porcelain'], cwd=root,
@@ -158,17 +164,32 @@ class CommandRunner:
 
 
 def parse_tests(code, output):
-    matches = re.findall(r'Ran (\d+) tests? in ', output)
-    failed = re.findall(r'failures=(\d+)', output)
-    errors = re.findall(r'errors=(\d+)', output)
-    skipped = re.findall(r'skipped=(\d+)', output)
-    proven = (code == 0 and matches and int(matches[-1]) > 0
-              and not any(int(count) for count in failed + errors))
-    return {'status': 'PASSOU' if proven else 'FALHOU',
-            'discovered': int(matches[-1]) if matches else None,
-            'skipped': int(skipped[-1]) if skipped else 0,
-            'failures': int(failed[-1]) if failed else 0,
-            'errors': int(errors[-1]) if errors else 0}
+    """Unittest process success describes EXECUTED tests; skips remain coverage gaps."""
+    matches=list(re.finditer(r'^Ran (\d+) tests? in [^\r\n]+\r?$',output,re.MULTILINE))
+    if not matches:
+        return dict(status='FALHOU',discovered=None,skipped=None,failures=None,errors=None)
+    digits=matches[-1].group(1)
+    if len(digits)>19 or int(digits)>2**63-1:
+        return dict(status='FALHOU',discovered=None,skipped=None,failures=None,errors=None)
+    discovered=int(digits)
+    tail=output[matches[-1].end():]
+    summaries=list(re.finditer(r'^(OK(?: \([^\r\n]+\))?|FAILED \([^\r\n]+\))\s*$',tail,re.MULTILINE))
+    if not summaries:
+        return dict(status='FALHOU',discovered=discovered,skipped=None,failures=None,errors=None)
+    summary=summaries[-1].group(1)
+    fields={}
+    if '(' in summary:
+        for item in summary[summary.index('(')+1:summary.rindex(')')].split(', '):
+            pair=re.fullmatch(r'(skipped|failures|errors)=(\d{1,19})',item)
+            if not pair or pair.group(1) in fields:
+                return dict(status='FALHOU',discovered=discovered,skipped=None,failures=None,errors=None)
+            fields[pair.group(1)]=int(pair.group(2))
+    skipped,failed,errors=(fields.get(k,0) for k in ('skipped','failures','errors'))
+    if skipped>discovered or any(n>2**63-1 for n in (skipped,failed,errors)):
+        return dict(status='FALHOU',discovered=discovered,skipped=None,failures=None,errors=None)
+    proven=(code==0 and summary.startswith('OK') and 0<=skipped<discovered and not failed and not errors)
+    return dict(status='PASSOU' if proven else 'FALHOU',discovered=discovered,
+                skipped=skipped,failures=failed,errors=errors)
 
 
 class Preparation:
@@ -177,10 +198,12 @@ class Preparation:
         self.runner = runner or CommandRunner()
         self.ready = False
         self.tk_version = tk_version
+        self.test_diagnostics=None
 
     def prepare(self, notify=lambda _: None):
         report = self.report
         self.ready = False
+        self.test_diagnostics=None
         report['checks'] = dict.fromkeys(report['checks'], 'NAO_EXECUTADO')
         report['artifacts'] = {role: dict.fromkeys(SUFFIXES) for role in PROJECTS}
         report['automated_tests'] = {'status': 'NAO_EXECUTADO', 'discovered': None, 'skipped': None, 'failures': None, 'errors': None}
@@ -245,14 +268,16 @@ class Preparation:
             raise PreparationError('preparation_required')
         self.report['automated_tests'] = {'status': 'FALHOU', 'discovered': None,
                                         'skipped': None, 'failures': None, 'errors': None}
+        self.test_diagnostics=None
         notify('Testes automáticos: podem abrir apenas as fixtures e o observador fictício. Não são aceite humano.')
         environment_source = str(self.root / 'src')
         # -c sets only the source import directory, without pip or dependency installation.
-        script = ("import sys,unittest;sys.path.insert(0,sys.argv[1]);"
-                  "suite=unittest.defaultTestLoader.discover('tests');"
-                  "result=unittest.TextTestRunner(verbosity=2).run(suite);sys.exit(not result.wasSuccessful())")
+        script = ("import sys;sys.path.insert(0,sys.argv[1]);"
+                  "from observador.acceptance_test_runner import main;sys.exit(main())")
         code, output = self.runner.run([sys.executable, '-c', script, environment_source], cwd=self.root, timeout=300)
         self.report['automated_tests'] = parse_tests(code, output)
+        from .acceptance_test_runner import read_summary
+        self.test_diagnostics=read_summary(output,self.report['automated_tests'])
         return self.report['automated_tests']
 
     def verify_artifacts(self):

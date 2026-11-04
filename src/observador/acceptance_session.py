@@ -5,6 +5,7 @@ import time
 
 from .acceptance_metrics import OwnedSampler
 from .acceptance_report import empty_session
+from .acceptance_review import NativeHealthObservation
 from .lab_controller import LaboratoryWindow
 
 
@@ -23,6 +24,7 @@ def termination_for_stop(fixture, session):
 class SessionRecorder:
     def __init__(self, *, clock=time.monotonic):
         self.data = empty_session()
+        self.native_health=NativeHealthObservation()
         self.clock = clock
         self.start_at = self.pause_at = self.pause_generation = None
 
@@ -51,6 +53,7 @@ class SessionRecorder:
         counts = self.data['counters']
         counts.update(native_dropped=stream.native_dropped, python_dropped=stream.dropped,
                       sequence_gaps=stream.sequence_gaps, invalid_messages=stream.invalid)
+        self.native_health.observe(stream)
 
     def events(self, events):
         if events:

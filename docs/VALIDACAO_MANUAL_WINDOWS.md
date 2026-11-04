@@ -93,3 +93,19 @@ prometer auditar tráfego do Windows/SDK inteiro. Frameworks variam: WinForms
 aplicativos profissionais. Cifragem/ACL/cota total de filesystem e expurgo com
 programa desligado continuam tarefas separadas. Não instalar, fazer deploy,
 integrar PRs ou observar pessoas com base neste relatório.
+
+## Interpretação após a estabilização filha do PR18
+
+O PR6 permanece congelado: não atualizar sua branch nem editar seu JSON histórico.
+Na versão nova, PASSOU de testes significa somente os executados; a tela informa
+quantos foram ignorados. Todos ignorados ou resumo desconhecido falham. Guarde o
+relatório v1 e o diagnóstico complementar fora de Git. Um erro do complemento
+não apaga o v1 já salvo; a tela informa a falha parcial. Não enviar JSON para o
+repositório. Consulte ACCEPTANCE_MATRIX.md para separar versão/OS e CI de humano.
+
+Sem Git na raiz, commit é desconhecido (ZIP não comprova SHA). Uma sessão iniciada
+e avaliada manualmente registra execução declarada no OS atual e remove só o gap
+de execução desse OS; isso não aprova o ensaio nem o piloto. Descarte nativo acima
+de zero e skips precisam revisão. O diagnóstico não atribui causa ou taxa ao
+descarte e não confirma amostra final de saúde. Se precisar repetir, usar apenas
+o app fictício em máquina de laboratório autorizada, com indicador visível.

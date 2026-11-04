@@ -733,3 +733,30 @@ Próxima tarefa: revisão independente do argumento de capacidade/ACL/herança e
 matriz por outra conta/sessão autorizada, antes de novo entrypoint C# e adapter.
 Plano de consolidação é só proposta por unidades de revisão; não executa merges
 ou rebases. PR6 continua3d4a770 e PR16 continua294cb39. Nenhum observador segue ativo.
+
+## Estabilização após primeiro aceite humano Win11 — 2026-11-04
+
+Base PR18/233b301, branch nova codex/acceptance-stabilization, anteriores intactas.
+Baseline170: Linux143 executados/27 skips. Recebido SOMENTE relato do responsável:
+PR6/Win11,3 ensaios,2 expirações,3 limpezas, persistência opcional funcional e
+avaliações positivas; ressalvas native_drop1,skip1,ZIP sem commit,flagWin11 indevida.
+JSON local não solicitado/lido/versionado; SHA exato/build/skip/cause não inferidos.
+Não transfere aceite humano para PR18 ou esta branch, nem libera piloto.
+
+Correções de cálculo de gaps por OS com execução declarada, falha em todos skipped/
+resumo desconhecido, root Git exato para impedir ZIP herdar commit ancestral,
+runner com categorias fechadas e UI distinguindo execução de cobertura. Diagnóstico
+complementar separado do schema v1 preservado, agregados/saúde cacheada em novas
+sessões e sem taxa/causa/final-health inventados. Salvar v1 e falhar sidecar informa
+resultado parcial corretamente. Fixtures são CONSTRUÍDAS, não JSON do operador.
+11 regressões portáveis novas passaram localmente; Windows/CI ainda a conferir.
+Documento docs/ACCEPTANCE_STABILIZATION.md registra semântica, limites e encerramento.
+
+Autorrevisão SR-01: cleanup de PR18 podia interromper recursos/futures após
+OSError de fechamento. Correção isolada continua os fechamentos/join e marca
+shutdown não confirmado; duas regressões de falha INJETADA, não kernel real.
+Pacote SECURITY_REVIEW_PR18.md organiza revisão independente ainda PENDENTE;
+ACCEPTANCE_MATRIX.md separa OS/versão e gates, STACK_REVIEW_PLAN atualizado sem
+convergência executada. Suite local181:154 executados/27 skips Windows/browser;
+11 regressões novas executadas sem skips. Compileall, wheel e diff conferidos.
+CI Windows e Chromium do novo HEAD ainda pendentes de publicação/execução.
