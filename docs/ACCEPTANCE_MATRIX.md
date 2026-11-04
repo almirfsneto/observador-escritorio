@@ -43,6 +43,9 @@ do relato humano anterior. Ver PROGRESS para HEAD documental/CI final.
 
 Após correção de retorno CancelSynchronousIo, códigoed6099c/run41844547231
 aprovou cinco jobs:182 descobertos; Linux155 executados/27 skips, Windows180
-executados/2 skips e Chromium2/0. Substitui as contagens181 acima para esse código.
+executados/2 skips em3.12; em3.11 foram179 executados/3 skips (2 browser e1
+foreground indisponível no teste guiado). Chromium2/0. Substitui as contagens181
+acima para esse código. O skip guiado3.11 é lacuna, não aprovação nem explicação
+do skip histórico do operador; o mesmo teste executou no3.12.
 Os12 novos testes incluem três de falha injetada de cleanup; não são falhas de
 kernel produzidas em desktop humano. Resultado do HEAD documental no PR19.

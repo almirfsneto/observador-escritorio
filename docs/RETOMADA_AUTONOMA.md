@@ -4,7 +4,9 @@
 
 Continuar da branch **codex/acceptance-stabilization**, filha de
 PR18/233b3011cba6a9647bcf5e98d0a18e551b29fe3c. PR19: códigoed6099c, CI41844547231 cinco jobs aprovados
-(Linux155/27 skips; Windows180/2 skips; Chromium2/0;182 descobertos). Consultar HEAD final em
+(Linux155/27 skips; Windows3.12 180/2 skips; Windows3.11 179/3 skips;
+Chromium2/0;182 descobertos). O terceiro skip3.11 é foreground no ensaio guiado,
+não aprovado nessa rodada; teste executado no3.12. Não inferir causa do skip humano. Consultar HEAD final em
 PROGRESS.md; não usar main isoladamente. PR6 permanece congelado no SHA abaixo.
 Leia também ACCEPTANCE_STABILIZATION.md, ACCEPTANCE_MATRIX.md e
 SECURITY_REVIEW_PR18.md. Prioridade: estabilização/revisão, não adapter novo.

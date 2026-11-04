@@ -805,10 +805,14 @@ sem alterar o contrato comum de cleanup de todas as entregas nesta correção.
 
 CI https://github.com/almirfsneto/observador-escritorio/actions/runs/41844547231
 confirmada5/5 jobs.182 descobertos: Linux3.11/3.12,155 executados/27 skips
-(25 Windows e2 browser); Windows Server2025 3.11/3.12,180 executados/2 skips
-browser; Chromium dedicado2 executados/0 skips. Logs de cada job consultados,
+(25 Windows e2 browser); Windows Server2025 3.12,180 executados/2 skips
+browser; Windows3.11,179 executados/3 skips (2 browser +1 foreground indisponível
+no ensaio guiado). Chromium dedicado2 executados/0 skips. Logs consultados,
 12 regressões novas executadas em Linux/Windows. Job Windows3.11 demorou mais,
-mas concluiu aprovado; nenhuma causa de demora foi inferida.
+mas concluiu aprovado nos executados; nenhuma causa da demora foi inferida.
+O teste guiado3.11 NÃO executou nessa rodada;3.12 executou. Não confundir esse
+skip conhecido de CI com o skip histórico desconhecido do operador. A anotação
+inicial de dois skips em ambos os Windows foi corrigida ao conferir o log3.11.
 Rodadas documentais abfd1a2/41844243856 e41844251334 foram CANCELADAS pela
 concorrência ao publicar a correção seguinte; não contadas como aprovadas.
 Suite local182:155 executados/27 skips; compileall e manifesto verificados.
