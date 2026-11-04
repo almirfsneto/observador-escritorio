@@ -91,6 +91,8 @@ class OwnedSyntheticChannel:
         (command_read,self._command_write),(self._response_read,response_write),(key_read,key_write)=pairs
         parent_handle=self._take_handle(self._kernel.parent_query_handle())
         inherited=[command_read,response_write,key_read,parent_handle]
+        allowed_handles=tuple(inherited)
+        if any(self._kernel.flags(handle) is None for handle in self.decoys):wire.reject()
         parent_identity=self._kernel.identity(self._kernel.current())
         startup=subprocess.STARTUPINFO();startup.lpAttributeList={'handle_list':inherited}
         # No stdio redirection: CPython would add three handles to handle_list.
@@ -98,7 +100,7 @@ class OwnedSyntheticChannel:
         startup.dwFlags|=subprocess.STARTF_USESTDHANDLES
         startup.hStdInput=startup.hStdOutput=startup.hStdError=0
         args=[sys.executable,'-I','-S','-B',str(script),'--owned-ipc-fixture',
-              *(str(h) for h in inherited),self.fault,','.join(map(str,self.decoys)) or 'none']
+              *(str(h) for h in inherited),self.fault]
         self._job=OwnedJob()
         with _LAUNCH_LOCK:
             try:
@@ -106,8 +108,12 @@ class OwnedSyntheticChannel:
                 self._process=subprocess.Popen(args,close_fds=True,startupinfo=startup,
                                                creationflags=subprocess.CREATE_NO_WINDOW)
             finally:
-                for handle in inherited:self._kernel.inherit(handle,False)
+                for handle in allowed_handles:self._kernel.inherit(handle,False)
         self._phase='identity';self._job.assign(self._process)
+        delivered=startup.lpAttributeList['handle_list']
+        if len(delivered)!=4 or set(delivered)!=set(allowed_handles):wire.reject()
+        self._decoys_absent=self._kernel.no_inherited_objects(int(self._process._handle),self.decoys)
+        if not self._decoys_absent:wire.reject()
         child_identity=self._kernel.identity(int(self._process._handle))
         if child_identity['pid']!=self._process.pid or child_identity['session_slot']!=parent_identity['session_slot']:wire.reject()
         if wire.fixture_digest()!=digest:wire.reject()
@@ -145,6 +151,7 @@ class OwnedSyntheticChannel:
         self._generation+=1;self._nonce=secrets.token_hex(32);self._sequence=0
         proof=self._exchange(self._packet('hello',{'action':'pair'},0),'proof',0,5)
         self._proof_flags={k:v for k,v in proof.items() if k!='action'}
+        self._proof_flags['decoys_absent']=self._decoys_absent
         self._peer_verified=True
 
     def _command(self,action,ordinal):

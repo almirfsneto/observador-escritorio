@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 20991,
-      "sha256": "651fe38aac19f217b54691303446561dec53c725a83ba6e3e138cb5b3aede4eb"
+      "size_bytes": 21318,
+      "sha256": "ab5494b0689dd9ce39cb76bcd33fbb38a7e743af094ecd0dfeec48dd6f8d9ec6"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 45605,
-      "sha256": "ca9611be028f22cf959406b3256dd98b7a450f0416f3c098fed1875ffa9ff47c"
+      "size_bytes": 46941,
+      "sha256": "539f776507e2da1674ceb3d6f036520be34ca156569abe4f0a3856f4c4d0ee19"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -160,8 +160,8 @@
     },
     {
       "path": "docs/OWNED_CHANNEL.md",
-      "size_bytes": 8417,
-      "sha256": "742e42c659855074e130c77eabd557bdd7230a53c20bbd185f63d63da7f52bd3"
+      "size_bytes": 9452,
+      "sha256": "547d8b13c7235e714eb0c71f5123c0e3d4855d0df7fad326910c900cd03144c4"
     },
     {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
@@ -330,23 +330,23 @@
     },
     {
       "path": "src/observador/owned_channel.py",
-      "size_bytes": 13349,
-      "sha256": "6e3f7498487b6c8e790abeca3a493fb2464ea37524ad433c8fae38d31b27296f"
+      "size_bytes": 13800,
+      "sha256": "03fadf5f555a82a7c8a88d6c2b5a02ccb69bdd6eabffdad64d637e28b68708da"
     },
     {
       "path": "src/observador/owned_channel_child.py",
-      "size_bytes": 7382,
-      "sha256": "d1d3064e6a62208e6547c249833d3a9c2b1872b923ed88272c9121422f4e66cf"
+      "size_bytes": 7255,
+      "sha256": "874654ed11b3a27f13a65da0a8c7fd79ef25ec17c0b8bf7108748b7e0167d495"
     },
     {
       "path": "src/observador/owned_channel_protocol.py",
-      "size_bytes": 5611,
-      "sha256": "5af35489a37fd6feaa02794f00168750c654d92eae2a44b6d1fbfc2e875be1d3"
+      "size_bytes": 5595,
+      "sha256": "f0d74c0ca01426a58cfa568b47c06050e4756d27fd0fe63cba0708768d5a2dba"
     },
     {
       "path": "src/observador/owned_channel_win32.py",
-      "size_bytes": 6142,
-      "sha256": "5a9518594b70367d5a90c3b3e12f95977d1b516ce37ac214767ffae1c6dac2f4"
+      "size_bytes": 7216,
+      "sha256": "492020563677bd70952f29ffdfef22de0673ac198d367ffb6ee3b48a195fbb1c"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -405,8 +405,8 @@
     },
     {
       "path": "tests/fixtures/owned_channel_owner.py",
-      "size_bytes": 504,
-      "sha256": "8bbe1f1bed6b48a02cffdc668f9dd65273dc5098066d52b71633ade8ee507529"
+      "size_bytes": 871,
+      "sha256": "730d5f7989948b3100801696661e92763a3ed0f01be7353aecd1cc166f41f6d0"
     },
     {
       "path": "tests/fixtures/web/synthetic-lab/index.html",
@@ -475,8 +475,8 @@
     },
     {
       "path": "tests/test_inbox_capacity.py",
-      "size_bytes": 3993,
-      "sha256": "ad1b7a7a2389a298108b7a50a5ce0334dcb4b06c62869e5a8bf11a5af8ce49f5"
+      "size_bytes": 4334,
+      "sha256": "b81bb8be4f128f9a17811e4da675762f7f05dfe9057e7fef4f956f4e3997063a"
     },
     {
       "path": "tests/test_inbox_retention.py",
@@ -510,8 +510,8 @@
     },
     {
       "path": "tests/test_owned_channel.py",
-      "size_bytes": 19806,
-      "sha256": "86d55a744b045f12b6a92445e67b097ea82e5b5a2e8d5c33802b3861163ac66f"
+      "size_bytes": 21401,
+      "sha256": "7dd5487c70fbd4224968acec5ea0ce81b19e6ffdfde21cc8835e8e1c75fdd0c0"
     },
     {
       "path": "tests/test_queue_faults.py",

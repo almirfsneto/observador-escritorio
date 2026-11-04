@@ -57,7 +57,7 @@ def payload(kind,value):
     if kind=='hello':
         if value!={'action':'pair'}:reject()
     elif kind=='proof':
-        if set(value)!={'action','bootstrap_closed','handles_private','decoys_absent','descendant_denied'}:reject()
+        if set(value)!={'action','bootstrap_closed','handles_private','descendant_denied'}:reject()
         if value['action']!='paired' or any(value[k] is not True for k in value if k!='action'):reject()
     elif kind=='command':
         if set(value)!={'action','ordinal'} or value['action'] not in ACTIONS:reject()

@@ -125,10 +125,12 @@ class WindowsChannelTest(unittest.TestCase):
             startup.hStdInput=startup.hStdOutput=startup.hStdError=0
             # Explicitly broad inheritance outside the launcher after its narrow window:
             # parent endpoints must all already be non-inheritable.
-            probe=subprocess.run([sys.executable,'-I','-S','-B',str(Path(__import__('observador.owned_channel',fromlist=['x']).__file__).with_name('owned_channel_child.py')),
-                                  '--probe',*(str(h) for h in channel._handles)],
-                                 close_fds=False,startupinfo=startup,creationflags=subprocess.CREATE_NO_WINDOW,timeout=5)
-            self.assertEqual(probe.returncode,0)
+            probe=subprocess.Popen([sys.executable,'-I','-S','-B',str(Path(__import__('observador.owned_channel',fromlist=['x']).__file__).with_name('owned_channel_child.py')),
+                                    '--idle-probe'],close_fds=False,startupinfo=startup,creationflags=subprocess.CREATE_NO_WINDOW)
+            try:self.assertTrue(kernel.no_inherited_objects(int(probe._handle),tuple(channel._handles)))
+            finally:
+                if probe.poll() is None:probe.kill()
+                probe.wait(timeout=5)
             self.assertEqual(channel.sample()['ordinal'],1)
         finally:kernel.close(decoy)
 
@@ -204,6 +206,10 @@ class WindowsChannelTest(unittest.TestCase):
             if not output or len(output[0])>4096:raise AssertionError('owner_harness_no_ready')
             try:info=json.loads(output[0])
             except ValueError:raise AssertionError('owner_harness_no_ready') from None
+            if set(info)!={'pid','start_ticks'}:
+                phase=info.get('phase') if info.get('phase') in {'import','launch','identity','bootstrap','handshake','commands','disabled'} else 'unknown'
+                code=info.get('fixture_exit_code') if type(info.get('fixture_exit_code')) is int else None
+                raise AssertionError('owner_harness_failed phase='+phase+' code='+str(code))
             kernel.api.OpenProcess.argtypes=[wintypes.DWORD,wintypes.BOOL,wintypes.DWORD]
             kernel.api.OpenProcess.restype=wintypes.HANDLE
             child_handle=kernel.api.OpenProcess(0x1000|0x100000,False,info['pid'])
@@ -310,9 +316,28 @@ class WindowsChannelTest(unittest.TestCase):
                 if kernel.api.DuplicateHandle(int(fixture._handle),handle,kernel.current(),ctypes.byref(copied),0,False,2):
                     try:self.assertFalse(compare(handle,copied))
                     finally:kernel.close(copied.value)
+                else:self.assertEqual(ctypes.get_last_error(),6)
             self.assertEqual(channel.sample()['ordinal'],1)
             print('OWNED_WPF_ISOLATION_VERIFIED',json.dumps(dict(real_wpf_child=True,channel_endpoints_not_inherited=True,
                   bootstrap_already_closed=True,adapter_enabled=False,human_acceptance=False)))
         finally:
             if fixture.poll() is None:fixture.terminate()
             fixture.wait(timeout=5)
+
+    def test_real_inheritance_list_injection_rejected_before_key_is_generated(self):
+        import subprocess
+        from unittest.mock import patch
+        from observador.owned_channel_win32 import Kernel
+        kernel=Kernel();decoy=kernel.api.CreateEventW(None,True,False,None)
+        self.assertTrue(bool(decoy));kernel.inherit(decoy,True)
+        actual=subprocess.Popen
+        def widened(args,**kwargs):
+            kwargs['startupinfo'].lpAttributeList['handle_list'].append(int(decoy))
+            return actual(args,**kwargs)
+        channel=self.channel(decoy_handles=(int(decoy),))
+        try:
+            with patch('observador.owned_channel.subprocess.Popen',new=widened),patch('observador.owned_channel.secrets.token_bytes',wraps=secrets.token_bytes) as generated:
+                with self.assertRaises(wire.ChannelError):channel.start()
+                generated.assert_not_called()
+            channel.close();self.assertFalse(channel.snapshot()['process_running'])
+        finally:kernel.close(decoy)

@@ -13,15 +13,21 @@ class LifetimeCapacityTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'inbox/db.sqlite3';now=[datetime(2026,11,4,tzinfo=timezone.utc)];p=source('windows')
             first=None
-            for index in range(count):
-                b=OfflineBridge(path,clock=lambda:now[0])
-                try:
-                    b.authorize(p);b.control('start')
+            b=None
+            try:
+                for index in range(count):
+                    if b is None:
+                        b=OfflineBridge(path,clock=lambda:now[0]);b.authorize(p);b.control('start')
                     records=events_for(p,range(index*events_per_batch+1,(index+1)*events_per_batch+1))
                     batch=make_batch(b.ticket(p['instance']),records);b.ingest(batch)
                     if first is None:first=batch
-                finally:b.close()
-                now[0]+=timedelta(seconds=86401) # Injected admission clock, not physical observation.
+                    # Normal configured receipt cap allows128 batches per session.
+                    # Reopen at that boundary; event-size stress purges each100-event batch.
+                    session_batches=128 if events_per_batch==1 else 1
+                    if (index+1)%session_batches==0:
+                        b.close();b=None;now[0]+=timedelta(seconds=86401)
+            finally:
+                if b is not None:b.close()
             b=OfflineBridge(path,clock=lambda:now[0])
             try:
                 b.authorize(p);b.control('start');snapshot=b.retention_snapshot()

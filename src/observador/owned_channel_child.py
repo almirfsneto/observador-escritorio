@@ -19,19 +19,17 @@ def main():
     try:
         if sys.platform!='win32':return 79
         wire=load('owned_channel_protocol');win=load('owned_channel_win32');kernel=win.Kernel()
-        if len(sys.argv)>=2 and sys.argv[1]=='--probe':
-            return 0 if all(kernel.flags(int(value)) is None for value in sys.argv[2:]) else 91
-        if len(sys.argv)!=8 or sys.argv[1]!='--owned-ipc-fixture':return 79
+        if len(sys.argv)==2 and sys.argv[1]=='--idle-probe':
+            time.sleep(5);return 0
+        if len(sys.argv)!=7 or sys.argv[1]!='--owned-ipc-fixture':return 79
         stage=72
         read,write,bootstrap,parent=(int(v) for v in sys.argv[2:6]);handles=[read,write,bootstrap,parent]
         if len(set(handles))!=4:return 79
-        fault=sys.argv[6];decoys=[] if sys.argv[7]=='none' else [int(v) for v in sys.argv[7].split(',')]
-        if len(decoys)>8:return 79
+        fault=sys.argv[6]
         private=True
         for handle in handles:
             if kernel.flags(handle) is None:return 79
             kernel.inherit(handle,False);private=private and kernel.flags(handle)==0
-        absent=all(kernel.flags(handle) is None for handle in decoys)
         started=time.monotonic();deadline=[started+5]
         def guard():
             if not kernel.alive(parent) or time.monotonic()>=deadline[0]:raise OSError('owned_fixture_expired')
@@ -39,15 +37,18 @@ def main():
         stage=73
         key=kernel.read(bootstrap,32,until,guard);kernel.expect_eof(bootstrap,until,guard)
         kernel.close(bootstrap);handles.remove(bootstrap)
-        # At this point even a child using unrestricted handle inheritance gets none
-        # of the channel handles. The key pipe is already closed before this probe.
+        bootstrap_closed=kernel.flags(bootstrap) is None
+        # Inspect the actual objects in a retained descendant, not just numeric slots.
+        # The bootstrap pipe is already closed before this probe.
         stage=74
         startup=subprocess.STARTUPINFO();startup.dwFlags|=subprocess.STARTF_USESTDHANDLES
         startup.hStdInput=startup.hStdOutput=startup.hStdError=0
-        probe=subprocess.run([sys.executable,'-I','-S','-B',str(Path(__file__).absolute()),'--probe',
-                              *(str(h) for h in (read,write,parent))],close_fds=False,startupinfo=startup,
-                             creationflags=subprocess.CREATE_NO_WINDOW,timeout=3)
-        descendant_denied=probe.returncode==0
+        probe=subprocess.Popen([sys.executable,'-I','-S','-B',str(Path(__file__).absolute()),'--idle-probe'],
+                               close_fds=False,startupinfo=startup,creationflags=subprocess.CREATE_NO_WINDOW)
+        try:descendant_denied=kernel.no_inherited_objects(int(probe._handle),(read,write,parent))
+        finally:
+            if probe.poll() is None:probe.kill()
+            probe.wait(timeout=3)
         def watchdog():
             while kernel.alive(parent) and time.monotonic()<deadline[0]:time.sleep(.02)
             os._exit(80)
@@ -72,8 +73,8 @@ def main():
         wire.verify(raw,key,'parent',kind='hello',epoch=epoch,session=session,generation=generation,
                     sequence=0,nonce=nonce,binding=context)
         deadline[0]=started+context['ttl_ms']/1000
-        evidence=dict(action='paired',bootstrap_closed=True,handles_private=private,
-                      decoys_absent=absent,descendant_denied=descendant_denied)
+        evidence=dict(action='paired',bootstrap_closed=bootstrap_closed,handles_private=private,
+                      descendant_denied=descendant_denied)
         def proof():
             return wire.seal(key,'child',kind='proof',epoch=epoch,session=session,generation=generation,
                              sequence=0,nonce=nonce,binding=context,payload=evidence)

@@ -102,7 +102,7 @@ Harness end-to-end de testes, sem adapter runtime: contador da fixture autentica
 Confere ACK/retry/pausa e marker após24h por CLOCK INJETADO. Não são24h observadas,
 nem captura WPF integrada, nem autorização de fonte automaticamente concedida.
 
-Capacidade: testes normais de admissão atingem1024 batch IDs (1024 reaberturas),
+Capacidade: testes normais de admissão atingem1024 batch IDs (oito sessões de128 lotes e reaberturas),
 10000 event IDs em100 lotes e32 fontes em32 aberturas, sem monkeypatch de caps.
 Expiração/purge/restart não liberam markers. SQLite integrity_check e nova admissão
 fechada verificam limite persistente. Prazos avançam por relógio injetado; orçamento
@@ -122,3 +122,19 @@ reutilizado para outro objeto). Não modifica o executável WPF ou lê seus cont
 A chave é gerada APÓS Popen; argv e lista de herança são conferidos em teste sem
 imprimir segredo. Ausência de env override + geração pós-spawn exclui passar essa
 chave no environment inicial do peer. Não há alegação de isolamento de memória.
+
+## Revisão do probe e falha registrada
+
+CI41811218903 teve uma falha de prontidão do harness parent-kill em Windows3.12;
+Windows3.11 passou. Não declarar a rodada integralmente aprovada. O harness agora
+retorna só fase/exitcode em falha para investigação; causa interna anterior não
+é afirmada. Não há traceback de chave/frame em stdout.
+
+Validade de número de handle NÃO prova que foi herdado: outro objeto pode usar o
+mesmo número. Probes de descendente e unrelated child agora são inspecionados por
+seus handles Popen retidos via DuplicateHandle/CompareObjectHandles. Nenhum objeto
+de referência é entregue ao processo sondado. Decoys são comparados no parent
+antes de gerar chave e não constam nos argumentos do peer. Lista de herança é
+conferida também após CreateProcess; teste injeta handle extra e exige recusa
+ANTES de geração de chave. Bootstrap é fechado e consultado antes de criar probe.
+Substitui a antiga exigência meramente numérica de GetHandleInformation inválido.

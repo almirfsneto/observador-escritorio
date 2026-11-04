@@ -654,3 +654,22 @@ com comparação de objetos (evita confundir número reciclado com handle herdad
 sem modificar fixture/agent/aceite. Publicação do segundo commit encontrou erro
 interno GitHub commit_refs/HTTP500; não há recusa de autorização. Código está
 commitado localmente e será publicado por caminho suportado, preservando históricos.
+
+### Issue17 — CI ampliada: falha explícita de harness e correção do probe
+
+Publicação por API928b301 (árvore e17973fa idêntica ao snapshot local) preservou
+parent22f99e5 em fast-forward. Push Git encontrou500; commits locais não publicados
+foram preservados, sem rebase/force/merge. CI41811218903: Linux/Chromium/Windows3.11
+aprovados, Windows3.12 FALHOU em owner_harness_no_ready antes do kill. Não foi skip
+nem aceito como prova. Demais adversariais reais/capacidade/WPF passaram naquele
+job, mas isso não torna o job aprovado. Causa interna do harness não foi exposta
+pelo stdout vazio; agora publica somente fase/exitcode fechados, sem trace/segredo.
+
+Revisão encontrou fragilidade independente: número de handle válido pode ser
+reutilizado para outro objeto, não prova herança. Probe de descendente/unrelated
+agora duplica slots APENAS de filho possuído e usa CompareObjectHandles com objetos
+locais; decoy é verificado pelo parent antes de gerar chave. Teste injeta lista de
+herança alargada e exige rejeição ANTES de geração da chave. Bootstrap fechado é
+checado antes de alocar outros handles. Nenhuma alegação de causa específica do
+harness é feita sem nova evidência. Saturação1024 usa oito sessões normais128,
+reduzindo flush/ACL/reopens redundantes sem mudar limites ou dispensar restart.

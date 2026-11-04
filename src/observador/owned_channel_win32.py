@@ -12,6 +12,8 @@ class Kernel:
         if sys.platform!='win32':raise OSError('owned_channel_windows_required')
         self.api=ctypes.WinDLL('kernel32',use_last_error=True)
         api=self.api
+        self.compare=ctypes.WinDLL('kernelbase',use_last_error=True).CompareObjectHandles
+        self.compare.argtypes=[W.HANDLE,W.HANDLE];self.compare.restype=W.BOOL
         declarations={
             'CreatePipe':([ctypes.POINTER(W.HANDLE),ctypes.POINTER(W.HANDLE),ctypes.c_void_p,W.DWORD],W.BOOL),
             'SetHandleInformation':([W.HANDLE,W.DWORD,W.DWORD],W.BOOL),
@@ -40,7 +42,7 @@ class Kernel:
         return int(read.value),int(write.value)
 
     def close(self,handle):
-        if handle is not None:self.api.CloseHandle(handle)
+        if handle is not None and not self.api.CloseHandle(handle):raise OSError('owned_handle_close_failed')
 
     def inherit(self,handle,allowed):
         if not self.api.SetHandleInformation(handle,1,int(allowed)):raise OSError('owned_handle_flags_failed')
@@ -82,6 +84,23 @@ class Kernel:
         if handle:
             try:self.api.CancelSynchronousIo(handle)
             finally:self.close(handle)
+
+    def no_inherited_objects(self,owned_process_handle,local_handles):
+        """Probe a retained OWNED child; handle-number reuse is not inheritance.
+
+        Duplicate only known numeric slots into this process and compare kernel
+        object identity. Never scan/attach a PID or deliver a reference to the child.
+        """
+        if not self.alive(owned_process_handle):raise OSError('owned_probe_exited')
+        for handle in local_handles:
+            copied=W.HANDLE()
+            if self.api.DuplicateHandle(owned_process_handle,handle,self.current(),ctypes.byref(copied),0,False,2):
+                try:
+                    if self.compare(handle,copied):return False
+                finally:self.close(copied.value)
+            elif ctypes.get_last_error()!=6:
+                raise OSError('owned_probe_unavailable')
+        return True
 
     def read(self,handle,size,until,guard):
         result=bytearray()
