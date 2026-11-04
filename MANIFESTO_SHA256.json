@@ -525,8 +525,8 @@
     },
     {
       "path": "tests/test_handle_lifetime.py",
-      "size_bytes": 15025,
-      "sha256": "7d12ebd331ed2baeb476a3e0d12d152ff1371929c381825db6d9dedef9cc79a5"
+      "size_bytes": 15810,
+      "sha256": "f086df423842820b12da92039a23d05718b7aae2ee2379619e4b8ae6652a98ad"
     },
     {
       "path": "tests/test_inbox_capacity.py",

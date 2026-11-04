@@ -93,6 +93,16 @@ class LifetimeInjectionTest(unittest.TestCase):
         with self.assertRaisesRegex(PreparationError,'^cleanup_unconfirmed$'):
             runner.run([sys.executable,'-c','pass'],cwd=Path.cwd())
         runner.cancel();self.assertEqual(api.closes,[77])
+        # Assignment itself can fail after spawn; even a clean job cannot prove
+        # containment of that command's descendants. Never claim clean shutdown.
+        good_api=FakeKernel();unassigned=injected_job(good_api)
+        def denied(_):raise OSError('SYNTHETIC_ASSIGN_FAULT')
+        unassigned.assign=denied;other=CommandRunner()
+        with patch('observador.acceptance_prepare.OwnedJob',return_value=unassigned):
+            with self.assertRaisesRegex(PreparationError,'^cleanup_unconfirmed$'):
+                other.run([sys.executable,'-c','pass'],cwd=Path.cwd(),timeout=10)
+        self.assertFalse(other.cleanup_confirmed);self.assertTrue(other.current.stdout.closed)
+        self.assertIsNotNone(other.current.poll());self.assertTrue(unassigned.cleanup_confirmed)
 
     def test_failed_job_constructor_retains_owner_without_launching_command(self):
         api=FakeKernel(close=False)
