@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 28969,
-      "sha256": "9d72c48a3422abd9b6ee75ad6099eb0e2a211f0ed72745e7a4b0eb30a42c1e79"
+      "size_bytes": 29511,
+      "sha256": "e7d52ec4d343646d6c74b63b15170c722964cb4884791fb4745ba705d9a470cf"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 69031,
-      "sha256": "7940c647003e830624cd44953fa8a61dc853bb17e51b12bd7cb8bc87f8bdce15"
+      "size_bytes": 70589,
+      "sha256": "a3cbfe228243886dfd2a2e8d61cbc4ae7340c9fe31ba03a6b6fbe626cd2d187a"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -159,6 +159,11 @@
       "sha256": "08c77babb31a2d468ceb63119c5ee585eaea29d90b75d158bad6c9de3df7a900"
     },
     {
+      "path": "docs/ISSUE27_CLEANUP.md",
+      "size_bytes": 4456,
+      "sha256": "6215bf1053b67600e65cbe161082655c41380195011961123aafe3a836ef6485"
+    },
+    {
       "path": "docs/LAB_ENTREGA_2.md",
       "size_bytes": 2780,
       "sha256": "6aae7191602bc899f61aa6bd3accab2c0550a8ace09b2234b9393f352135dca3"
@@ -205,8 +210,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 15775,
-      "sha256": "fd67fdfb84952d88e47368ac997f7ef2543617127730c176a6b59d7d99a83dcf"
+      "size_bytes": 16113,
+      "sha256": "ad6f67b3b7df183fa3375c84940f3810885e7e60440f0d1a81561a0831574080"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -300,13 +305,13 @@
     },
     {
       "path": "src/observador/acceptance_session.py",
-      "size_bytes": 7606,
-      "sha256": "6398abc6dbc1c4608046c0084f7b9032d6441d2700d612bcc34a83837f2cf43c"
+      "size_bytes": 7759,
+      "sha256": "a30e068eef280edf659640faa08d8ab905e1aa6ba5b47130d83f316863b32126"
     },
     {
       "path": "src/observador/acceptance_test_runner.py",
-      "size_bytes": 4456,
-      "sha256": "44dbeff497263c553bb0351fe11b74e41bded3b0fc05df354ae688104c78b23a"
+      "size_bytes": 4479,
+      "sha256": "31a6f5c891d07aa0a3fd6370ccc9fd59692a2c12e96cab760b2386b04e08fdad"
     },
     {
       "path": "src/observador/acceptance_wizard.py",
@@ -315,8 +320,8 @@
     },
     {
       "path": "src/observador/cleanup.py",
-      "size_bytes": 2167,
-      "sha256": "c394d9ce139c56d6b3c0fddc8cba8221aa04e4ced68991b084e6be8b4745abca"
+      "size_bytes": 2195,
+      "sha256": "5d98e56cd6703539ce5ea885a6a96484ff3628bf5698b77ac56768ae854c7315"
     },
     {
       "path": "src/observador/collector.py",
@@ -345,8 +350,8 @@
     },
     {
       "path": "src/observador/lab_controller.py",
-      "size_bytes": 10367,
-      "sha256": "7f85e81d66557baaf11bdf7392fb6db42975e027995d3b74462876b19855a76c"
+      "size_bytes": 11486,
+      "sha256": "e5465d8b2dac4fcbfe818e9b88c7d27331eb871ab7a3038f8cc48a08baa93e1a"
     },
     {
       "path": "src/observador/lab_faults.py",
@@ -617,6 +622,11 @@
       "path": "tests/test_source_auth_model.py",
       "size_bytes": 8483,
       "sha256": "963a871c5311d191963968a2a5f68c41421637d9b52aec00ea749c1933caa358"
+    },
+    {
+      "path": "tests/test_stop_preworker.py",
+      "size_bytes": 8645,
+      "sha256": "d738081caff295420acd5e5974cd444856b8e0fbd6dab77e66035850fa641b63"
     },
     {
       "path": "tests/test_storage_hardening.py",

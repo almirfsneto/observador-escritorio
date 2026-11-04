@@ -137,14 +137,15 @@ class AcceptanceLaboratory(LaboratoryWindow):
         super().tick()
 
     def stop(self):
-        if self.finished:
-            return
-        if self.session:
-            self.recorder.observe(self.session.stream)
-        if self.recorder.data['termination'] == 'not_started':
-            self.recorder.data['termination'] = termination_for_stop(self.fixture, self.session)
-        if hasattr(self, 'secondary_btn'):
-            self.secondary_btn.config(state=self.tk.DISABLED)
+        if self.finished:return
+        status=self.cleanup_status
+        if self.session:status.attempt('observation',lambda:self.recorder.observe(self.session.stream))
+        def classify():
+            if self.recorder.data['termination']=='not_started':
+                self.recorder.data['termination']=termination_for_stop(self.fixture,self.session)
+        status.attempt('observation',classify)
+        if hasattr(self,'secondary_btn'):
+            status.attempt('controls',lambda:self.secondary_btn.config(state=self.tk.DISABLED))
         super().stop()
 
     def close(self):

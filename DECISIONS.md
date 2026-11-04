@@ -242,3 +242,12 @@ sinalizou processo, handles fecharam. Esperar saída pós-Job e reutilizar o mes
 orçamento2s. Recuperação limitada a AccessDenied + espera sinalizada + Job
 confirmado, com erro preservado no diagnóstico; jamais tolerar close falho ou
 API inválida por essa regra. Origens win32/injected/híbrida são explícitas.
+
+## D-037 — Nenhuma exceção pré-worker pode pular teardown
+
+Issue27 P2: isolar stream/Tk/observação; construir/startar worker dentro de try
+com fallback síncrono. Barreira de startup impede publicar sucesso antes de
+conhecer erro de start; lock serializa worker/fallback. Categorias fixas controls
+e cleanup_worker mantêm incerteza mesmo com recursos encerrados. Não depender
+de repetir stop após finished=True. Não usar retry de close nem transformar
+TclError em skip. Mantém limite conhecido de API travada/worker não daemon.

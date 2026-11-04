@@ -3,7 +3,7 @@ import subprocess
 import threading
 
 RESOURCES=('session','sink','fixture','secondary','sampler','observation','provider',
-           'stream','stop_command','reader','writer','stdin','stdout')
+           'stream','stop_command','reader','writer','stdin','stdout','controls','cleanup_worker')
 
 
 class CleanupStatus:

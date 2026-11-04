@@ -1011,3 +1011,27 @@ permanecem cleanup_unconfirmed e os demais handles continuam tentados.
 Cinco regressões injetadas passaram localmente; dois novos Windows preparados:
 close protegido continua recusado, e API real de término em processo já saído
 com primeira espera INJETADA. Novos resultados nativos ainda a conferir.
+
+### Issue27 P2 — stop pré-worker tolerante a erros
+
+Stream, controles Tk e pré-observações do aceite agora são tentativas isoladas.
+Falha em Thread constructor/start usa fallback síncrono; barreira de startup e
+lock garantem erro registrado antes do resultado e uma única limpeza mesmo se
+start lançar após launch. Join não iniciado não escapa do finally. Erros ficam
+em enums/contagens e children_stopped=false; não se atribui sucesso ao fallback
+só porque filhos acabaram. Seis testes portáveis novos passaram, incluindo cada
+controle, observação, startup e caso positivo; um Windows preparado usa TclError
+real de controles destruídos com filhos/IO/queue/sampler reais.
+
+Suite local225:184 executados/41 skips. Não são provas Windows; aguardar CI da
+revisão P2. Contrato/evidência em docs/ISSUE27_CLEANUP.md. Política de worker não
+daemon/join20s inalterada: API bloqueada ainda pode reter processo, sem promessa
+de deadline global. Sem integração do launcher suspenso ou mudança de adapter.
+
+P1 corrigida640bb36/CI41930859247: CINCO jobs aprovados, logs conferidos.
+Windows3.11/3.12: foco11 executados/0 skips, suíte218 descobertos/216 executados/
+2 browsers ignorados; Linux178 executados/40 skips; Chromium2/0. Os dois erros
+originais desapareceram com confirmação de saída/Job/handles. Close protegido
+continua explicitamente reprovado dentro do teste negativo; corrida híbrida
+registra erro real de TerminateProcess em processo saído + primeira espera
+INJETADA. P2 e seu teste Tk real ainda aguardam a próxima CI.
