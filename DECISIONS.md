@@ -207,3 +207,14 @@ falhou antes dos testes nos cinco jobs, inclusive após um retry controlado. Sem
 prova Windows desta revisão, não inferir resultados a partir do PR21 ou dos skips.
 Causa do bloqueio não foi exposta; não alterar cobrança, permissões ou política
 de extensão para contornar. Restauração do Actions e revisão dos SHAs são gates.
+
+## D-034 — Suspensão é estudo isolado, não solução de lifetime pré-Job
+
+AI03: criar suspenso impede thread primária da fixture de executar antes do
+resume verificado, mas pai morto antes do assign pode deixar processo suspenso
+fora do Job próprio. Não integrar essa alternativa como correção completa.
+Preparar experimento Win32 só em tests/, com zero herança de endpoints, callbacks
+negativos injetados e prova de crash por capacidade retida da raiz. Avaliar Job
+na criação (STARTUPINFOEX/JOB_LIST) futuramente; suporte/garantias não comprovados.
+Os testes Windows desta entrega não rodaram devido à falha de CI anterior a
+etapas. Não transformar expectativa arquitetural em prova de kernel executada.
