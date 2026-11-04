@@ -218,3 +218,12 @@ negativos injetados e prova de crash por capacidade retida da raiz. Avaliar Job
 na criação (STARTUPINFOEX/JOB_LIST) futuramente; suporte/garantias não comprovados.
 Os testes Windows desta entrega não rodaram devido à falha de CI anterior a
 etapas. Não transformar expectativa arquitetural em prova de kernel executada.
+
+## D-035 — Cleanup não pode depender de thread daemon após main retornar
+
+Complemento AI02 em filha do estudo: recursos posteriores podiam perder a tentativa
+se o processo terminasse após o join limitado. Reproduzido em subprocesso real
+com atraso artificial, sem UI/Win32; corrigido com worker não daemon e graça20s
+no standalone. Contrapartida: API travada pode manter o processo aguardando, sem
+promessa de deadline global. Não sacrificar tentativas de cleanup por saída
+silenciosa. Nenhum launcher suspenso foi integrado, nenhum adapter habilitado.

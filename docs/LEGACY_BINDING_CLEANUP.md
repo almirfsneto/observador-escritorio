@@ -59,3 +59,12 @@ Windows novos estão SOMENTE PREPARADOS; nenhum executou nesta tarefa. CI
 41900708978 e41900750727 falharam antes de iniciar etapas; attempt2 repetiu
 a falha. Não usar nomes REAL dos testes como evidência de execução. Revisor deve
 aguardar CI Windows restaurada. Não existe aprovação de segurança por esta nota.
+
+## Complemento de ciclo de vida na filha de PR24
+
+O retorno do main após join limitado podia abandonar o worker daemon. Reproduzido
+em subprocesso real Linux com atraso artificial; worker não daemon permite
+concluir o mesmo cleanup, e graça standalone passa a20s. Isso não é watchdog
+global: API travada pode manter processo aguardando o worker. Revisar essa
+contrapartida; não declarar término físico de todos os recursos só por fechar UI.
+Provas Windows e novo exame dos SHAs continuam pendentes de CI restaurada.

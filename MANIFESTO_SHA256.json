@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 27444,
-      "sha256": "eb0941080f0d9929b555a9c0e4c9d70cee9803c357071a3283710473c4534d00"
+      "size_bytes": 28007,
+      "sha256": "df08194714fd0be1873a58bc9d31044eeb94a54d590b33ea3a4072d56f3e3ed0"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 65129,
-      "sha256": "c2a8a422a8f22f22f84ee6a5e7553ab01b052db8a3373fac279807dc54f470be"
+      "size_bytes": 66594,
+      "sha256": "149714f9abf317e5277b6733495ccec6c6e7d726df711f9cc6719f2a3469f47c"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -175,8 +175,8 @@
     },
     {
       "path": "docs/LEGACY_BINDING_CLEANUP.md",
-      "size_bytes": 3720,
-      "sha256": "61a8f93af5cdf0a9d055423d77d4ed0d3a12e92866a0fbf32150d4f0a3f3b7e7"
+      "size_bytes": 4246,
+      "sha256": "2c932043eadbe08df8da71b1b5687566dac14f7acedae0ca42d30244244955a7"
     },
     {
       "path": "docs/OFFLINE_BRIDGE.md",
@@ -205,8 +205,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 13628,
-      "sha256": "3e688875026fbc25c489d1c4388da79d4ed39df3c199117abb18b21df2608f75"
+      "size_bytes": 14882,
+      "sha256": "d940cd915ee1e77db054bb3c1d811f77739fa8bd6624ea177eec2ace0dc11742"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -345,8 +345,8 @@
     },
     {
       "path": "src/observador/lab_controller.py",
-      "size_bytes": 10208,
-      "sha256": "c0483b181177059b52934fbe5009f8ed9d66a5a20fa9a38a9f8855659010aa56"
+      "size_bytes": 10367,
+      "sha256": "7f85e81d66557baaf11bdf7392fb6db42975e027995d3b74462876b19855a76c"
     },
     {
       "path": "src/observador/lab_faults.py",
@@ -517,6 +517,11 @@
       "path": "tests/test_browser_extension.py",
       "size_bytes": 15276,
       "sha256": "4be54a301b46dc42de3a2a1760b87bb03465ce672f7efbcfad4f377fd0aa4bf8"
+    },
+    {
+      "path": "tests/test_cleanup_lifetime.py",
+      "size_bytes": 1623,
+      "sha256": "2a73d07314be1906feee8136f8571fb302d0acb9464d6a44274933a3eb49b846"
     },
     {
       "path": "tests/test_cleanup_stabilization.py",

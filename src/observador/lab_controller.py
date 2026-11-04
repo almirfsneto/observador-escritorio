@@ -122,7 +122,9 @@ class LaboratoryWindow:
             button.config(state=self.tk.DISABLED)
         self.persist_box.config(state=self.tk.DISABLED)
         self.status_var.set('Estado: ENCERRADO | reinicie para outro ensaio')
-        self.cleanup = threading.Thread(target=self._cleanup, daemon=True)
+        # Teardown must outlive a bounded UI/main join; otherwise interpreter
+        # shutdown can abandon later resources after a slow earlier operation.
+        self.cleanup = threading.Thread(target=self._cleanup, daemon=False)
         self.cleanup.start()
 
     def _cleanup_resources(self,status):
@@ -199,7 +201,7 @@ class LaboratoryWindow:
         finally:
             self.stop()
             if self.cleanup:
-                self.cleanup.join(timeout=6)
+                self.cleanup.join(timeout=20)
 
 
 def main():

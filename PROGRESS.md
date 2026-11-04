@@ -951,3 +951,26 @@ Verificação local da filha AI03:210 descobertos,172 executados/38 skips
 (36 Windows/2 browser), nenhum skip contado como aprovado. Os quatro novos
 casos Windows não executaram; sintaxe/importação compilaram no Linux. As únicas
 mudanças em src/ na filha são a categoria de skip do runner, não launchers.
+
+## Issue22 AI02 — ciclo de vida do worker, complemento sobre PR24
+
+Nova codex/cleanup-worker-lifetime, filha de PR24/b974356. Revisão final revelou
+que o worker daemon podia ser abandonado ao terminar o intérprete após join
+limitado. Regressão em subprocesso REAL Linux reproduziu marker ausente com
+atraso CONTROLADO de200ms e join10ms; não é falha espontânea de Windows/operador.
+Worker agora é não daemon e espera standalone aumenta de6s para20s. O mesmo
+teste passou após correção. Teardown pode sobreviver ao retorno do main e
+concluir os recursos; não há promessa de deadline global se uma API travar.
+
+Suíte local211:173 executados/38 skips (36 Windows/2 browser). Oito cenários
+negativos portáveis de AI01/02 mais a nova regressão de lifetime executaram;
+os três novos Windows de binding/cleanup e quatro de AI03 NÃO executaram.
+CIs finais do PR23/5c37576 (41901835390/41901844826) e PR24/b974356
+(41902372110; conferir também rodada PR) falharam antes de qualquer etapa nos
+cinco jobs; nenhum teste foi executado nesses jobs. CI desta terceira entrega
+será solicitada ao publicar, sem presumir sucesso.
+
+PR23/PR24 e os16 PRs anteriores preservados. O candidato final é esta filha;
+revisor deve conferir cada diff contra sua base e os três SHAs finais. Restaurar
+execução do Actions, reexecutar matrizes completas, corrigir resultados Windows
+e Chromium e só então avaliar aceitação técnica; AI04/piloto seguem bloqueados.
