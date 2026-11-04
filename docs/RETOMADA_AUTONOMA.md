@@ -1,102 +1,65 @@
-# RETOMADA AUTÔNOMA — após Issue 11
+# Retomada autônoma — Issue 14 / retenção
 
-## Base correta e preservação do aceite
+## Base e branches preservadas
 
-Repositório almirfsneto/observador-escritorio. Não usar main isoladamente.
-PRs #1→#2→#3→#4→#6→#7→#8→#9→#10→#12→#13 permanecem drafts, sem merge.
-PR12: codex/closed-lab-diagnostics sobre codex/task-discovery (PR10).
-PR13: codex/offline-source-bridge sobre codex/closed-lab-diagnostics.
+P1 PR15: codex/inbox-retention sobre codex/offline-source-bridge (PR13/cf90de6).
+Não usar main/PR13 isolados para continuar retenção. Todos os anteriores são drafts,
+sem merge. Não modificar codex/guided-windows-acceptance (PR6), congelada em
+3d4a77052b3dc9cf77805dd73f0bfd6d5dae674c para o aceite humano.
 
-**Não modificar codex/guided-windows-acceptance (PR6), head 3d4a77052b3dc9cf77805dd73f0bfd6d5dae674c.**
-O responsável usará aquela versão para aceite humano Windows. Não confundir CI
-de versões posteriores com aceite dessa versão. Demais PRs anteriores preservados.
+Ler AGENTS/SPEC/SECURITY/ROADMAP/DECISIONS/PROGRESS e INBOX_RETENTION.md,
+OFFLINE_BRIDGE.md, DIAGNOSTICS.md, STORAGE_HARDENING.md, WEB_EXTENSION.md,
+TASK_DISCOVERY.md, QUESTOES_ARQUITETURA_PRO.md. Consultar Issue14 e PR15/CI atuais.
 
-Retomada integrada:
 ```
-git fetch origin codex/offline-source-bridge
-git switch -c codex/inbox-retention FETCH_HEAD
+git fetch origin codex/inbox-retention
+git switch -c codex/next-inbox-work FETCH_HEAD
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
-Ler integralmente AGENTS/SPEC/SECURITY/ROADMAP/PROGRESS/DECISIONS, DIAGNOSTICS.md,
-OFFLINE_BRIDGE.md, STORAGE_HARDENING.md, WEB_EXTENSION.md, TASK_DISCOVERY.md e
-QUESTOES_ARQUITETURA_PRO.md. Conferir CI atual do HEAD antes de declarar sucesso.
 
-## Estado e evidências
+## Evidência e semântica atual
 
-P1 código b9cb6ec / CI 41752385456: diagnóstico fechado v1 separado do aceite v1,
-contadores reconciliados, gauges/cache sem SQL na UI, faults/rollback e timeout
-explícito de shutdown. 109 descobertos; Windows108/1 skip browser separado,
-Linux98/11 skips; job Chromium anterior um teste real.
-P2 código integrado 633d3ec / CI 41752388247: 121 descobertos, Windows119/2 skips
-de browser separado, Linux109/12 skips; job Chromium dois testes reais aprovados.
-Mudanças documentais posteriores registram evidência; consultar PR/CI atuais.
+Baseline cf90de6:121 descobertos/Linux109 executados/12 skips. P1 código448c3aa,
+CI41757902728:5/5 jobs;136 descobertos/Linux124 executados/12 skips,
+Windows134/2 skips browser separado; Chromium2 reais sem skips. Revisão final
+acrescenta observação do DB recuperado antes da retenção do construtor. Conferir
+CI do HEAD, não inferir que código posterior já foi testado remotamente.
 
-Native .NET8/SQLite/ACL/DPAPI e controlador fictício executados em Windows CI,
-que é Server2025, não teste humano Windows10/11. WPF30/30 não implica WinForms:
-continua 0/30 no caminho comparado até evidência contrária. Skips não são êxito.
+Payload1h/receipt24h desde admissão local, NÃO desde relógio da fonte. IDs globais
+batch/event + high-water por fonte sem TTL; caps bloqueiam admissão sem eviction.
+Retry vivo recupera mesmo ACK por leitura, até com quota sem espaço de escrita.
+Após janela: receipt_expired_or_unknown não significa ausência de commit.
+Migração v1→v2 atômica concede janela a partir da migração; colisão recusa sem
+apagar histórico. Clock regressivo fecha admissão/congela purge; fonte conhecida
+pode vincular para ACK read-only. Sessão15min e purge são fenômenos separados.
+Não resetar banco/fontes para contornar markers. Manutenção só quando executada,
+nenhum daemon. Snapshot de retenção usa SQL na thread dona, não chamar na UI.
 
-Browser usa Playwright1.62.0 apenas em teste + Chromium descartável no job
-web-synthetic. OBS_BROWSER_TEST=1 habilita testes reais; núcleo não depende dele.
-Política unpacked do executor local bloqueia extensão: não alterar/contornar.
-No CI, teste força StopWorker via Target.closeTarget, observa Inspector.targetCrashed
-(WorkerStopped) e nova timeOrigin. Host DevTools pode persistir; wrapper.close/
-targetDestroyed não são prova correta. Retry do mesmo batch e ACK arquivo após
-restart foram comprovados. Idle/sono/energia naturais ainda precisam de testes.
+## Próxima prioridade
 
-## Reproduzir sem coleta
+P2 precisa análise de ameaças, peer autenticado e adapter Windows só fictício
+opt-in. Sem prova de origem forte, entregar especificação/simulador/negativos e
+NÃO ligar IPC inseguro, conforme Issue14/P2.6. Preferir canal herdado de filho
+próprio; named pipes exigem ACL/peer kernel bidirecional, chave privada efêmera,
+EOF/cancelamento/timeout e testes de outra sessão/colisão. Nenhum host instalado.
+ACK de inbox/admissão não é confirmação de pausa dos produtores nem resultado de
+negócio. Sem ordenação/causalidade global entre fontes.
 
-`python -m observador.diagnostics --out /pasta/fora-do-git/saude.json` salva só
-estado desativado, sem abrir fixture/provider. Diagnóstico não contém eventos,
-paths, IDs/UUIDs, hostname, usuário, títulos ou texto livre. Não alterar contrato
-de aceite humano v1. DiagnosticHistory é por vida de processo; não é assinatura.
+## Limites que não podem ser promovidos a sucesso
 
-`python -m observador.task_discovery --out /pasta/fora-do-git/candidatos.json`
-usa só corpus artificial e arquivo exclusivo. `observador.mining_evaluation.evaluate_synthetic_mining()` retorna TP17 FP0 FN0 TN28 em 45 pares/10 traces/42
-eventos construídos; precisão/recall1 não são acurácia de mundo real.
+SQLite ativo/inbox em claro, DPAPI só arquivo. Budget lógico observado com reserva,
+não quota física do OS/admin/SSD/backups. Contadores RAM se perdem no kill;
+commit incerto precisa receipt, não inferência de perda. Fonte/ACK em arquivo não
+são autenticados. WPF30/30 não implica WinForms (0/30) ou aplicações reais.
+Windows CI Server2025 e Chromium descartável não são aceite humano Win10/11 ou
+Chrome/Edge. Modelo/fixture/fault injection não substitui desktop/usuário real.
 
-Bridge: API OfflineBridge(path fora de Git) começa disabled; authorize fontes
-fictícias, control(start), ticket; popup importa Ticket local, exporta batch,
-Python read_batch/ingest, write_bridge_document(ACK), popup importa ACK. Não há
-socket/upload/NativeMessaging nem permissões extras; instruções completas em
-OFFLINE_BRIDGE.md. ACK é inbox commitado histórico, não admissão atual, resultado
-de negócio ou pausa de todos os produtores. Ordens são por fonte, não globais.
+Job web usa Playwright1.62.0 apenas teste. Não contornar política unpacked local.
+Restart real observa Inspector.targetCrashed/WorkerStopped + nova timeOrigin;
+host DevTools/wrapper pode persistir. Não substituir por mutação de variável.
 
-## Limites a preservar
-
-SQLite ativo e inbox estão em claro; arquivo DPAPI não cifra origem/pagefile/backups.
-Budget mede arquivos lógicos com reserva de journal, não quota física/admin-proof.
-Erros depois de commit conhecido não são perda; rollback/outcome incerto fecha
-writer e aparece uncertain. Purge pode incluir DB anterior e inserts da mesma
-transação; não somar fases como exatamente-uma-vez. Contadores em RAM não sobrevivem
-à morte do processo. Pipeline não faz retry oculto de ações.
-
-Arquivos só DECLARAM proveniência: hash não autentica ACK contra outro processo
-local. Mesmo batch idêntico recupera receipt sem regravar; novo dono revoga tickets
-não commitados. Inbox tem limites de espaço/linhas/receipts, mas ainda não TTL por
-tempo; expiração encerra admissão, não apaga receipts. Não ligar export/import
-automático ou coleta real para resolver essas pendências.
-
-## Próxima entrega autônoma
-
-Implementar retenção e expurgo do inbox preservando high-water marks/receipts
-necessários para ACK recuperável e anti-replay; testar expiração, quota, crash,
-reabertura e janela de idempotência. Especificar quando um receipt antigo deixa
-de ser recuperável sem apresentá-lo como inexistência de commit. Depois avaliar
-IPC autenticado com permissões mínimas e adaptador opt-in do controlador fictício,
-com ACK de produtores distintos e diagnóstico fechado, sem presumir ordem global.
-Ampliar dataset rotulado independente e negativos; não transformar proximidade
-em causalidade nem span em ganho real.
-
-Nenhum monitoramento de pessoas, dado real, instalação na equipe, autostart,
-screenshot real, telemetria, recurso pago, deploy, merge ou piloto autorizado.
-Aceite humano Windows10/11, Chrome/Edge e gates LGPD permanecem pendentes.
-
-## Atualização Issue 14 / P1
-
-Entrega em codex/inbox-retention sobre PR13/cf90de6; ler INBOX_RETENTION.md.
-Não usar PR13 isolado para novas alterações de retenção. Payload 1h/receipt24h,
-markers sem TTL/caps bloqueantes, migração v1 conservadora. Após receipt vencer,
-receipt_expired_or_unknown não significa ausência de commit. Não resetar inbox
-para contornar limite. CI nova ainda precisa ser conferida no PR/head; baseline
-121 e 14 testes novos locais. Próximo estágio: P2 em branch filha distinta,
-ameaças/autenticação com testes negativos; nenhum IPC inseguro será habilitado.
+Humano: usar exclusivamente PR6 e docs/VALIDACAO_MANUAL_WINDOWS.md em Windows10/11
+dedicados, marcar só etapas feitas e salvar JSON fora de Git. Nenhum piloto,
+coleta de pessoas/dado jurídico, instalação na equipe, captura oculta, autostart,
+deploy, transmissão externa ou merge autorizado. Nenhum processo observa após
+estes testes; não existe desenvolvimento contínuo depois da execução.

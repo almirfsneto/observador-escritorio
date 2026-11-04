@@ -510,3 +510,16 @@ reabertura detecta clock regressivo, sem permitir start; tentativa de migração
 v1 com colisão global de IDs dá rollback integral e conserva versão/payloads.
 15 testes novos de retenção, 136 totais (Linux124 executados/12 skips). README e
 contrato offline apontam a retenção v2 para evitar descrição obsoleta sem TTL.
+
+### P1 — evidência CI e revisão final
+
+PR15 / código 448c3aa / [CI 41757902728](https://github.com/almirfsneto/observador-escritorio/actions/runs/41757902728):
+5/5 jobs aprovados. Núcleo136 descobertos: Linux124 executados/12 skips,
+Windows3.11/3.12 134 executados/2 browsers separados skipped. Chromium2 testes
+reais sem skips, incluindo worker restart/receipt/ACK. WPF30/30 Invoke, controlador
+60 eventos/60 escritos/0 descartados e filhos encerrados nos dois Pythons.
+15 testes novos de retenção passaram em Linux e Windows. Revisão final do teste
+kill passa a inspecionar SQLite ANTES do construtor fazer purge, distinguindo
+pré/pós-commit de purge por linhas efetivamente recuperadas; depois reabertura
+confirma receipt/markers/integridade. Código não muda nessa revisão de evidência.
+Windows CI é automação sintética Server2025, não aceite Windows10/11 humano.

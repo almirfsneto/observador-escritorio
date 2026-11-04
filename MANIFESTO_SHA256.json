@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 35674,
-      "sha256": "f49ac84ae36377c028d4aeb2847d2d17a5c8346a53234baf84937eeba20a25e8"
+      "size_bytes": 36562,
+      "sha256": "838e2966cb6fe97dbd40bf8b9c2a0b7adefd1de0587e8b3b7f950f9f5d29fa2a"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -135,8 +135,8 @@
     },
     {
       "path": "docs/INBOX_RETENTION.md",
-      "size_bytes": 5811,
-      "sha256": "bf337da1cae8e0518eb02c4ac18bb900231f5f07822db0c3efd717f04b04ff4f"
+      "size_bytes": 5918,
+      "sha256": "d79e4bdcaec08b682cad8cf74e42b5fe38bab13ac355118d770473d81d57d24e"
     },
     {
       "path": "docs/LAB_ENTREGA_2.md",
@@ -175,8 +175,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 6030,
-      "sha256": "797eb9d7978610498957409c98efd5eb99a1bec23782a53eb2d9efcfac2038d5"
+      "size_bytes": 3721,
+      "sha256": "afe497303d53d394ee02fa23306fa13bf24f2f0442e0b978e83dc76010ea8e33"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -425,8 +425,8 @@
     },
     {
       "path": "tests/test_inbox_retention.py",
-      "size_bytes": 14362,
-      "sha256": "cfa5790bb4ecd0091460975b388e3f89861f0324eed55606e7eae01188070343"
+      "size_bytes": 14972,
+      "sha256": "dbbd415e29c6b244155b0e972353aeb125339e73b027364a52e2586df8ada5d8"
     },
     {
       "path": "tests/test_lab_queue.py",
