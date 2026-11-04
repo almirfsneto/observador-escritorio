@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 29511,
-      "sha256": "e7d52ec4d343646d6c74b63b15170c722964cb4884791fb4745ba705d9a470cf"
+      "size_bytes": 30061,
+      "sha256": "db697f77cec4dd6c97573a47520fe44a2f9ab92d677a8b200c8ee0338295fc1d"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 70589,
-      "sha256": "a3cbfe228243886dfd2a2e8d61cbc4ae7340c9fe31ba03a6b6fbe626cd2d187a"
+      "size_bytes": 73353,
+      "sha256": "2057228dbdff8eed3d573a8feed2aa18709a01412a486a5b2f1a60a614011034"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -160,8 +160,8 @@
     },
     {
       "path": "docs/ISSUE27_CLEANUP.md",
-      "size_bytes": 4456,
-      "sha256": "6215bf1053b67600e65cbe161082655c41380195011961123aafe3a836ef6485"
+      "size_bytes": 4986,
+      "sha256": "c7a320ee0b6bbb899790e7f59ccb842f1f5a9c0d2d9f8c48824718de5ed5d757"
     },
     {
       "path": "docs/LAB_ENTREGA_2.md",
@@ -210,8 +210,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 16113,
-      "sha256": "ad6f67b3b7df183fa3375c84940f3810885e7e60440f0d1a81561a0831574080"
+      "size_bytes": 16357,
+      "sha256": "26b63bae6ec16046d9463abaf9a44013051af3c8765280992367caba538b55f8"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",

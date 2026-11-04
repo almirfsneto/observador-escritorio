@@ -71,3 +71,12 @@ Falha no worker fica registrada, sem retry infinito nem traceback livre. O estud
 suspenso não fecha morte pré-assign; Job na criação não foi integrado. AI04,
 revisão humana e Windows10/11 interativo continuam abertos. Resultados/SHAs e
 skips concretos em PROGRESS.md e checks do PR28, separados por revisão.
+
+## Resultado integrado verificado
+
+Código6e0cf86/CI41931710044 passou5/5. Em cada Windows: foco11/0 skips e suíte
+225 descobertos/223 executados/2 skips browser. Linux184/41 por Python; Chromium
+dedicado2/0. O teste de controles Tk destruídos foi executado nos dois Windows e
+confirmou fechamento real de filhos/IO/fila/amostradores sem aprovar o relatório
+com erro. As negativas de startup/UI/API são injetadas; o caso de TerminateProcess
+real com espera inicial injetada é híbrido. Conferir CI do HEAD documental no PR.

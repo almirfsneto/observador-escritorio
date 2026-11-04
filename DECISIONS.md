@@ -251,3 +251,11 @@ conhecer erro de start; lock serializa worker/fallback. Categorias fixas control
 e cleanup_worker mantêm incerteza mesmo com recursos encerrados. Não depender
 de repetir stop após finished=True. Não usar retry de close nem transformar
 TclError em skip. Mantém limite conhecido de API travada/worker não daemon.
+
+Evidência D-036/D-037:6e0cf86/CI41931710044 cinco jobs aprovados; Windows
+223 executados/2 skips por Python, Linux184/41 e Chromium2/0. Estudo focado11/0
+em cada Windows. TclError/close protegido foram falhas reais controladas;
+startup/retornos API portáveis são injetados; corrida com primeira espera
+simulada é híbrida. Diagnóstico inicial FALHOU intencionalmente para estabelecer
+causa antes da correção; não apagado nem promovido a passe. Revisão independente
+por SHA e gates humanos permanecem, sem integração do estudo ou adapter.

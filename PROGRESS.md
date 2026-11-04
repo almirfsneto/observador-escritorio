@@ -1035,3 +1035,49 @@ originais desapareceram com confirmação de saída/Job/handles. Close protegido
 continua explicitamente reprovado dentro do teste negativo; corrida híbrida
 registra erro real de TerminateProcess em processo saído + primeira espera
 INJETADA. P2 e seu teste Tk real ainda aguardam a próxima CI.
+
+### Issue27 — evidência integrada P1/P2 e revisão final
+
+PR28: https://github.com/almirfsneto/observador-escritorio/pull/28, draft sobre
+PR25/d820396 exato. Código integrado6e0cf86,
+https://github.com/almirfsneto/observador-escritorio/actions/runs/41931710044
+confirmada5/5 jobs, logs de todos consultados.
+
+| Job | Descobertos | Executados | Ignorados |
+| --- | --- | --- | --- |
+| Linux Python3.11 |225|184|41:39 Windows +2 browser|
+| Linux Python3.12 |225|184|41:39 Windows +2 browser|
+| Windows Python3.11 |225|223|2 browser dedicado|
+| Windows Python3.12 |225|223|2 browser dedicado|
+| Chromium dedicado |2|2|0|
+
+Foco suspenso adicional:11 executados/0 skips em cada Windows (não somar como
+casos inéditos à suíte completa). Nenhum skip de foreground nessa rodada.
+Os14 testes novos executaram nos Windows;11 portáveis também passaram no Linux.
+REPRODUZIDO/REAL: diagnóstico inicial dos dois erros apontou fallback prematuro
+access_denied após Job confirmado e espera posterior sinalizada; erro de close
+protegido segue recusado realmente; TclError de controles próprios destruídos
+foi real e filhos/IO/queue/sampler foram comprovados encerrados, mantendo
+children_stopped=false pela falha da UI. Crash pré/pós-assign continua exercitado
+como estudo isolado, com limpeza final da raiz, não contenção atômica integrada.
+
+INJETADO: retornos/esperas/Job/close nos cinco testes portáveis de diagnóstico;
+stream/UI/observação/constructor/start/after-start nos seis casos pré-worker.
+HÍBRIDO: TerminateProcess real em processo já saído, primeira espera simulada;
+recuperação exige prova e mantém evento failed/access_denied explícito. Nenhum
+caso foi convertido em skip nem timeout aumentado para obter aprovação.
+
+Compileall, wheel sem dependências novas, diff e manifesto147 arquivos
+verificados; v1/CMD e launchers CommandRunner/OwnedSyntheticChannel intocados.
+Rodada diagnóstica ed7c50d/41929775944 permanece FALHA como evidência causal,
+não mascarada. Rodada inicial d5218bd cancelada por concorrência ao corrigir
+import do helper sob -I; não contada como aprovação. P1/640bb36 passou depois;
+a implementação P2/6e0cf86 passou integrada. Próxima atualização é documental;
+checks do HEAD final serão conferidos e vinculados na descrição do PR28.
+
+Gates abertos: API que bloqueia sem exceção ainda pode reter worker não daemon;
+sem watchdog/deadline global, assinatura humana ou aceite Win10/11 desta versão.
+Morte da raiz pré-assign permanece gap, estudo não integrado, adapter OFF e AI04
+inalterado. Próxima tarefa é nova revisão técnica por SHA, sem merge/rebase,
+instalação, coleta real ou piloto. Todos os19 PRs anteriores serão conferidos
+novamente com seus HEADs/bases/draft preservados.
