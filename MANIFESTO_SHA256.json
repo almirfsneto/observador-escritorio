@@ -5,8 +5,8 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 2145,
-      "sha256": "0eaffea7f5803ce29d38148bb45d806020411130c57a107b86bf70ea7de9e9f2"
+      "size_bytes": 2310,
+      "sha256": "736080c15140a28fcdf9dd253a90665d23027434bc08e487a31b63547e342758"
     },
     {
       "path": ".gitignore",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 28007,
-      "sha256": "df08194714fd0be1873a58bc9d31044eeb94a54d590b33ea3a4072d56f3e3ed0"
+      "size_bytes": 28492,
+      "sha256": "6fa977e9c69428706e76bebdb8831a03d4208b888514e1c3b850ba3973b9fff4"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 66594,
-      "sha256": "149714f9abf317e5277b6733495ccec6c6e7d726df711f9cc6719f2a3469f47c"
+      "size_bytes": 67646,
+      "sha256": "ea6bbe57de27f3a82a94b08378fa4b1365ea589b948c972310bf2a3f8e6e505d"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -205,8 +205,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 14882,
-      "sha256": "d940cd915ee1e77db054bb3c1d811f77739fa8bd6624ea177eec2ace0dc11742"
+      "size_bytes": 15775,
+      "sha256": "fd67fdfb84952d88e47368ac997f7ef2543617127730c176a6b59d7d99a83dcf"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -479,9 +479,14 @@
       "sha256": "46431de20d8a2da28775e27bc8477bbdb162c698956803b030ad2b08fc02929a"
     },
     {
+      "path": "tests/isolated_cleanup_diagnostic.py",
+      "size_bytes": 2349,
+      "sha256": "a767daecde17bc33dbfa73b82966109b00260329aa53c057ac005bf08be71ea1"
+    },
+    {
       "path": "tests/isolated_suspended_spawn.py",
-      "size_bytes": 6408,
-      "sha256": "2379fe3f4ab0d9796505a6e7914174914801231e5a5cab56851ea57c1ffe2d67"
+      "size_bytes": 8234,
+      "sha256": "0f283df4b577f5fb30854e9e17da2a93548c941f590a789eae4cc50df2ef79be"
     },
     {
       "path": "tests/test_acceptance_launcher.py",

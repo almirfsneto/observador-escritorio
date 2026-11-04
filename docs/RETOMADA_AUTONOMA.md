@@ -1,3 +1,17 @@
+# Retomada atual — Issue27 / diagnóstico Windows e stop pré-worker
+
+Branch codex/suspended-cleanup-diagnostics, base exata PR25/d820396. Ler Issue27,
+atualizações22 e pareceres23–25. A CI voltou a executar após ação do responsável;
+base falha em dois testes SuspendedProbe em ambos os Windows. Não reutilizar a
+hipótese antiga de falha pré-step nem declarar causa antes do snapshot fechado.
+
+Prioridade1: obter diagnóstico de primeira falha por fase/recurso e corrigir
+a causa comprovada, mantendo as confirmações. Prioridade2: stream/Tk/start de
+thread não podem impedir cleanup dos filhos próprios; incluir testes negativos.
+Rodar Windows3.11/3.12, Linux3.11/3.12 e Chromium; skips não são casos aprovados.
+Nenhuma integração do launcher suspenso/adapter, merge/rebase ou dado real.
+Histórico anterior abaixo descreve evidência por SHA, não o estado atual da CI.
+
 # Retomada atual — complemento AI02 após estudo AI03
 
 Continuar de codex/cleanup-worker-lifetime, filha de PR24/b974356 e PR23/5c37576.

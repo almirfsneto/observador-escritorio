@@ -2,6 +2,7 @@
 import ctypes
 from ctypes import wintypes as W
 import os
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -12,6 +13,7 @@ if __name__=='__main__':sys.path.insert(0,str(Path(__file__).resolve().parents[1
 from observador.acceptance_metrics import OwnedJob
 from observador.cleanup import CleanupStatus
 from observador.win32_handles import close_handle_once,declare_close_handle
+from isolated_cleanup_diagnostic import CleanupDiagnostic
 
 SCRIPT='import subprocess,sys,time;subprocess.Popen([sys.executable,"-I","-S","-c","import time;time.sleep(40)"],close_fds=True);f=open(sys.argv[1],"xb");f.write(b"1");f.close();time.sleep(40)'
 
@@ -51,6 +53,19 @@ class SuspendedProbe:
         self.api=kernel_api();self.marker=Path(marker).absolute();self.assigned=False
         self.status=CleanupStatus();self.process=SimpleNamespace(handle=None,close_state='open')
         self.thread=SimpleNamespace(handle=None,close_state='open');self.job=OwnedJob()
+        self.diagnostic=CleanupDiagnostic()
+        # Observe the actual calls without changing BOOLs, waits or failure policy.
+        terminate=self.job.api.TerminateJobObject
+        self.job.api.TerminateJobObject=lambda *a:self.diagnostic.boolean_call('job_terminate',lambda:terminate(*a))
+        close=self.job.api.CloseHandle
+        self.job.api.CloseHandle=lambda *a:self.diagnostic.boolean_call('job_handle_close',lambda:close(*a))
+        confirm=self.job._confirm_empty
+        def confirm_empty():
+            try:confirm()
+            except Exception:
+                self.diagnostic.note('job_zero','failed');raise
+            self.diagnostic.note('job_zero','passed')
+        self.job._confirm_empty=confirm_empty
         startup=Startup();startup.cb=ctypes.sizeof(startup);startup.flags=0x100 # Null stdio.
         info=ProcessInfo()
         command=ctypes.create_unicode_buffer(subprocess.list2cmdline([sys.executable,'-I','-S','-c',SCRIPT,str(self.marker)]))
@@ -92,14 +107,30 @@ class SuspendedProbe:
         self.status.attempt('session',self.job.close)
         if self.process.handle is not None:
             try:
-                if self.api.WaitForSingleObject(self.process.handle,0)!=0:
-                    if not self.api.TerminateProcess(self.process.handle,1):raise OSError('isolated_stop_failed')
-                if self.api.WaitForSingleObject(self.process.handle,2000)!=0:raise OSError('isolated_stop_unconfirmed')
-            except Exception:self.status.fail('provider')
-        for owner in (self.thread,self.process):
-            self.status.attempt('provider',lambda o=owner:close_handle_once(o,self.api))
+                if self.diagnostic.wait(lambda:self.api.WaitForSingleObject(self.process.handle,0))!=0:
+                    if not self.diagnostic.boolean_call('process_fallback',lambda:self.api.TerminateProcess(self.process.handle,1)):
+                        raise OSError('isolated_stop_failed')
+                if self.diagnostic.wait(lambda:self.api.WaitForSingleObject(self.process.handle,2000))!=0:
+                    raise OSError('isolated_stop_unconfirmed')
+            except Exception:
+                self.status.fail('provider')
+                # Observation only: a signaled process here does NOT forgive the
+                # failure above in this diagnostic delivery.
+                try:
+                    result=self.api.WaitForSingleObject(self.process.handle,2000)
+                    self.diagnostic.after_failure_wait='passed' if result==0 else 'timeout' if result==258 else 'failed'
+                except Exception:self.diagnostic.after_failure_wait='failed'
+        for phase,owner in (('thread_handle_close',self.thread),('process_handle_close',self.process)):
+            def close_owner(o=owner,p=phase):
+                try:close_handle_once(o,self.api)
+                except Exception:
+                    self.diagnostic.note(p,'failed',native=True);raise
+                self.diagnostic.note(p,'passed')
+            self.status.attempt('provider',close_owner)
         self.status.finish()
-        if not self.status.confirmed:raise OSError('isolated_cleanup_unconfirmed')
+        if not self.status.confirmed:
+            print('ISOLATED_CLEANUP_DIAGNOSTIC '+json.dumps(self.diagnostic.snapshot(self),sort_keys=True),flush=True)
+            raise OSError('isolated_cleanup_unconfirmed')
 
 
 def duplicate_owned_launcher_child(api,launcher,slot):

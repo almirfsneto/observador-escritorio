@@ -974,3 +974,19 @@ PR23/PR24 e os16 PRs anteriores preservados. O candidato final é esta filha;
 revisor deve conferir cada diff contra sua base e os três SHAs finais. Restaurar
 execução do Actions, reexecutar matrizes completas, corrigir resultados Windows
 e Chromium e só então avaliar aceitação técnica; AI04/piloto seguem bloqueados.
+
+## Issue27 — diagnóstico primeiro, base PR25 exata — 2026-11-04
+
+Nova codex/suspended-cleanup-diagnostics sobre d820396176f64323c578f481132856aa484b58f0.
+Issue27/atualizações22 e pareceres23/24/25 lidos. Infraestrutura voltou a executar
+após mudança de visibilidade feita pelo responsável; não foi alteração desta
+tarefa. Base PR25/CI41903503682 attempt2 tem dois erros reais em cada Windows
+211 descobertos/2 skips; Linux e Chromium passaram. PR23 attempt2 passou5/5.
+
+Primeira entrega mantém a falha: diagnósticos só no estudo tests/, com fases/
+recursos fechados, primeiro erro, estado do Job/handles e observação posterior
+da espera após falha. Nenhum PID/handle numérico/path/segredo/exceção livre.
+Não há promoção de status.confirmed ou mudança de timeout/checagens. Step focado
+Windows antecede suíte completa para obter evidência causal antes de corrigir.
+Prioridade2: stop pré-worker será corrigido após esse diagnóstico, com injeções
+e fallback se thread não iniciar. Todos os PRs anteriores preservados.

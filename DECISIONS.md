@@ -227,3 +227,11 @@ com atraso artificial, sem UI/Win32; corrigido com worker não daemon e graça20
 no standalone. Contrapartida: API travada pode manter o processo aguardando, sem
 promessa de deadline global. Não sacrificar tentativas de cleanup por saída
 silenciosa. Nenhum launcher suspenso foi integrado, nenhum adapter habilitado.
+
+## D-036 — Observar a primeira falha Win32 antes de alterar cleanup
+
+Issue27: erro genérico de SuspendedProbe não identifica causa. Instrumentação
+exclusiva do harness registra fases/enums/contagens e confirmação pós-falha, mas
+a entrega diagnóstica conserva status de erro. Não assumir corrida de término,
+não aumentar timeout nem dispensar asserts. Step focado nos dois Windows antes
+da matriz completa; correção depende de evidência nativa, seguida de regressões.
