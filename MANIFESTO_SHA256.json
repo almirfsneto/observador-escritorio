@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 18372,
-      "sha256": "a0aa77a71fbab49c81e234686c747c7e1f949f43f4937362b7f139acec624795"
+      "size_bytes": 19810,
+      "sha256": "e00e04bf8cb9fa004981872c416307a723e69093a5fd2b996307ec8511ff9fa7"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 38208,
-      "sha256": "7e542f41c8e6407851f332617ad06206a2602569bb7705982a741cfb0fedb385"
+      "size_bytes": 42758,
+      "sha256": "f91448404289f183cbc07d44feb065f272c962bd62385df20aa5c34ba0eaaa1e"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 6666,
-      "sha256": "df4b697bfd4f0930a99fe65e611049824e824bacf75bb17053eca9801283a0c7"
+      "size_bytes": 6985,
+      "sha256": "54114fb779f4f360107d417f1a44e9db2dd08d5117754e706a3ba7a3aa8080ca"
     },
     {
       "path": "SECURITY.md",
@@ -184,6 +184,11 @@
       "sha256": "ff6b26a0efd7d842a20e660e703f4b784943e405413883e701230f8ceb1cc40a"
     },
     {
+      "path": "docs/SOURCE_AUTHENTICATION.md",
+      "size_bytes": 10446,
+      "sha256": "d57e8f842fee3b2fba15671c3a42aa7926e2f4c4d56458ad0c0d564fc5395313"
+    },
+    {
       "path": "docs/STORAGE_HARDENING.md",
       "size_bytes": 3783,
       "sha256": "3ed28eaa298c135d6ea5e13d44b0554e7820bd6ed79c605d0b7b4ef414ff3b1d"
@@ -324,6 +329,11 @@
       "sha256": "7e705a4bc195fc634b81abe930f629cbaaa27b367879c126bd78ea9c2e22359c"
     },
     {
+      "path": "src/observador/source_auth_simulator.py",
+      "size_bytes": 7244,
+      "sha256": "f8d17001147f8c42c56dcab8477dd2f7d6e945839376456ad4d384dbf245e967"
+    },
+    {
       "path": "src/observador/storage_budget.py",
       "size_bytes": 2345,
       "sha256": "eea95505abf4d854732ca3ce5c148b549cfd0c12d7c24fb39a5ae575e23e3c91"
@@ -352,6 +362,11 @@
       "path": "src/observador/windows.py",
       "size_bytes": 1562,
       "sha256": "e3cf6407f687941f3d298c4bac28a6c189438c5d01c0bd3046dac962fba0fb7b"
+    },
+    {
+      "path": "src/observador/windows_peer_probe.py",
+      "size_bytes": 3001,
+      "sha256": "d8caf9e5562337310a4f0e99389dfcae46ef98b1daf1d054eb64f167736aad67"
     },
     {
       "path": "src/observador/windows_probe.ps1",
@@ -457,6 +472,11 @@
       "path": "tests/test_queue_faults.py",
       "size_bytes": 9948,
       "sha256": "6cc6b99efe8ff806ae6c07292dab1cd9d1a7e19ca744caaa2b2f431ce4308f42"
+    },
+    {
+      "path": "tests/test_source_auth_model.py",
+      "size_bytes": 8487,
+      "sha256": "8b759f4c855313885b53253c1ae3ddd890e011b7d6089cd18ce8d97c19f03f40"
     },
     {
       "path": "tests/test_storage_hardening.py",

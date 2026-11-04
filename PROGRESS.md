@@ -547,3 +547,68 @@ skips. Rollback falho e retorno de commit incerto executados nos quatro jobs,
 com reabertura/integridade e nenhum ACK da conexão descartada. 18 novos testes
 de retenção; EOF/truncamento também negativo. Manifesto/wheel/compileall/diff
 verificados. Esta atualização final é documental; CI do HEAD também será conferida.
+
+## Issue 14 — P2 análise de autenticação e simulador — 2026-11-04
+
+Branch codex/synthetic-source-auth-model sobre P1/448c3aa. Threat model e protocolo
+em docs/SOURCE_AUTHENTICATION.md: arquivos/SHA não autenticam; pareamento precisa
+peer kernel bidirecional e canal privado de chave, não JSON declarado. Conforme
+P2.6, entrega especificação/simulador/testes negativos, **sem IPC inseguro ou
+integração controlador→inbox habilitada**. Não declarar autenticação realizada.
+Modelo HMAC/challenge com default off, expiração, gerações, replay/restart,
+limites e escopo explícito de ACK; 100 mutações seed1402, benchmark64 frames só
+em memória (~10–14ms local, amostra variável, não SLA). Probe Windows separado
+confere handle de filho próprio/caminho/criação/sessão, sem coletar; teste nativo
+aguarda CI, não equivale a autenticar peer de canal. Novos testes: nove modelos
+Linux aprovados, um probe Windows skipped; matriz/Chromium pendentes no novo PR.
+Próxima etapa técnica: implementar/verificar canal nativo e gates adversariais
+antes de qualquer adapter opt-in; nenhuma decisão humana rotineira é necessária.
+
+### P2 — evidência verificada e limite de segurança
+
+PR16 / código ef8ca60 / [CI 41758466029](https://github.com/almirfsneto/observador-escritorio/actions/runs/41758466029):
+5/5 jobs aprovados. Núcleo146 descobertos: Linux133 executados/13 skips,
+Windows3.11/3.12 144 executados/2 browsers separados skipped. Chromium2 testes
+reais aprovados/sem skips. Probe de identidade do filho WPF executou nativamente
+nos dois Windows: caminho/criação/sessão conferidos, falsificações rejeitadas;
+transport_peer_verified=false/inbox_integrated=false, honestamente distintos.
+Benchmark modelo64 frames: ~13,6/16,9ms Windows, ~10,2/17,0ms Linux; amostras de
+um ensaio, não SLA. Revisão corrige rótulo da medida de bytes para medir envelope
+completo (antes media batch); próximo CI registra medida correta.
+
+P1 revisão5c914f2 integrada à filha em0c45883, sem merge de PR/main. Nova CI de
+HEAD em acompanhamento. Wheel sem dependências runtime novas, compileall e
+git diff --check aprovados. JSON de aceite v1 e branch PR6 permanecem intocados.
+
+**Pendente técnico explícito:** não existe backend novo que vincule peer do
+canal aos handles verificados nem entrega privada de chave comprovada. Portanto
+P2 usa a alternativa segura P2.6 (spec/simulador/negativos), não integração ligada
+ou autenticação real alegada. Próxima execução: canal Windows herdado do filho
+próprio com herança mínima, peer/kernel, EOF/cancelamento/ACL/colisão/timeout,
+antes do adapter opt-in. Não é necessário pedir escolha técnica rotineira.
+SQLite claro, orçamento não físico e aceite humano/LGPD continuam bloqueando piloto.
+
+### Issue14 — evidência integrada final e retomada
+
+PR16 / código integrado bc23073 / [CI41759416977](https://github.com/almirfsneto/observador-escritorio/actions/runs/41759416977):
+5/5 jobs aprovados após correção de rollback/commit incerto.149 descobertos:
+Linux3.11/3.12 136 executados/13 skips; Windows3.11/3.12 147 executados/2 browsers
+separados skipped. Chromium2 ensaios reais sem skips, worker restart/receipt/ACK.
+18 regressões de retenção + nove modelos + um probe Windows somados ao baseline.
+Probe confirmou filho próprio/caminho/criação/sessão, rejeitando incompatíveis,
+com transport_peer_verified=false/inbox_integrated=false. Modelo64 frames mediu
+~10,6/16,0ms Linux e10,8/18,1ms Windows, envelope2015 bytes; só amostras Python em
+memória, não IPC/SLA. Counters/bytes não são quota física nem aceite humano.
+
+P1/PR15 permanece separada; última sincronização de documentos/evidências não
+altera runtime nem testes de bc23073. CI final dos dois HEADs será conferida nos
+PRs, sem atribuir skips a êxito. PROGRESS/DECISIONS/ROADMAP/RETOMADA e manifesto
+atualizados. PR6 preservado em3d4a770, PR13 emcf90de6; nenhum merge de PR, instalação,
+dado real, captura oculta, deploy, host ou transmissão externa de capturas.
+
+P2 encerra na alternativa segura P2.6, com spec/simulador/negativos e prova parcial;
+canal/adapter NÃO habilitados. Retomada: codex/synthetic-source-auth-model, ler
+docs/RETOMADA_AUTONOMA.md e SOURCE_AUTHENTICATION.md; implementar/verificar canal
+herdado de filho próprio e gates nativos adversariais antes do opt-in. SQLite em
+claro, limite lógico, autenticação e aceite Windows10/11/Chrome/Edge/LGPD continuam
+pendentes; não apto a piloto. Nenhuma rotina de observação segue ativa após os testes.

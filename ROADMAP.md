@@ -92,5 +92,7 @@
 ## Issue 14 — retenção e autenticação sintéticas
 - [x] Implementar TTL separado de payload/receipt, markers permanentes limitados e ACK recuperável.
 - [x] Testes de crash, replay após purge, conflitos, clocks, quota e migração v1.
-- [x] P1/6d521cf: cinco jobs CI41759340778 aprovados; 139 testes e Chromium2 reais.
+- [x] P1/6d521cf CI41759340778 e P2/bc23073 CI41759416977: cinco jobs aprovados em cada entrega; conferir também HEADs documentais finais.
 - [ ] Análise de ameaças, pareamento autenticado e integração exclusivamente sintética revisada.
+- [x] P2: threat model, protocolo/simulador fechado, negativos/fuzz e probe separado de identidade de filho Windows.
+- [ ] P2: peer do canal verificado, chave entregue por handle privado, testes adversariais/IPC e adapter opt-in; NÃO habilitados pelo simulador.
