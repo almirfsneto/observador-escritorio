@@ -103,7 +103,11 @@ class OwnedSyntheticChannel:
         startup.hStdInput=startup.hStdOutput=startup.hStdError=0
         args=[sys.executable,'-I','-S','-B',str(script),'--owned-ipc-fixture',
               *(str(h) for h in inherited),self.fault]
-        self._job=OwnedJob()
+        try:self._job=OwnedJob()
+        except OSError as error:
+            self._job=getattr(error,'resource',None)
+            if self._job is not None:self._cleanup_problem()
+            raise
         with _LAUNCH_LOCK:
             try:
                 for handle in inherited:self._kernel.inherit(handle,True)

@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 24043,
-      "sha256": "d557b6b56a1a1cbe0a57f5fcc8f9f4d1fb6b7ba28cbaf239ebadc1b0a83275a2"
+      "size_bytes": 25270,
+      "sha256": "d03cc80a15855f685ee543da3853b2710acb8583b4ab2c9dad039da14dce47a5"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 56985,
-      "sha256": "331cf325e133b3d1a9d5f0afdabd44b7e29b913aabf20db7f2dbc4a72edd2c35"
+      "size_bytes": 58178,
+      "sha256": "7450bfd495626b9dbe386ed2ac359d424e3ea3aa44cef8cceb17ae3ff087633a"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -149,6 +149,11 @@
       "sha256": "0b69608005cb899aaf56ffd65509bf12653277ed24be10b2075f9d3e7fc7db1a"
     },
     {
+      "path": "docs/HANDLE_LIFETIME_REVIEW.md",
+      "size_bytes": 5099,
+      "sha256": "91b4a430ff0f7a73e1c8fb5bb25d83a1243ecfabfcde40eb2e6ca1d42895abf8"
+    },
+    {
       "path": "docs/INBOX_RETENTION.md",
       "size_bytes": 6454,
       "sha256": "08c77babb31a2d468ceb63119c5ee585eaea29d90b75d158bad6c9de3df7a900"
@@ -195,8 +200,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 9916,
-      "sha256": "1365b0d0b9ff6f566cbf488cd446141386014b3a889cd5f76019c671dc0b1426"
+      "size_bytes": 11032,
+      "sha256": "84a32b9f706020397a1a63bb7f8b53feaaf10156b13d924aa3744d0ed10b8b5d"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -265,13 +270,13 @@
     },
     {
       "path": "src/observador/acceptance_metrics.py",
-      "size_bytes": 7568,
-      "sha256": "cfa26cfce76a22f57bccef0f8eca2dd7825121fdb4e12504bb6f84675a21ddbc"
+      "size_bytes": 11956,
+      "sha256": "e165a5956d150e945fa3a87021c04ebd2519d932a620118a05453f8daff07fe0"
     },
     {
       "path": "src/observador/acceptance_prepare.py",
-      "size_bytes": 14082,
-      "sha256": "e99b9ed3d87dac0133393f8208f6311f30286b60d7296b2784db881538b27d38"
+      "size_bytes": 15459,
+      "sha256": "48a0217b6484df8298636127c61ffbd8d838ed6fdd93f76574e41c896b309002"
     },
     {
       "path": "src/observador/acceptance_report.py",
@@ -285,18 +290,18 @@
     },
     {
       "path": "src/observador/acceptance_session.py",
-      "size_bytes": 7841,
-      "sha256": "9b6da434321752e2819c2753b64d7b343902e42e59439db2a8ebb2f93714c7f1"
+      "size_bytes": 7892,
+      "sha256": "ece848ced137875d83a8fa8dadb9462f4bcda2636930b915d4c059c42da60ef0"
     },
     {
       "path": "src/observador/acceptance_test_runner.py",
-      "size_bytes": 4385,
-      "sha256": "e6be7379370680e35c688e5dfc89c0dad918cdb527e2045dd93859ffb1764699"
+      "size_bytes": 4409,
+      "sha256": "e69924d6fa0a9425e1c10cf3922ceb6f18b2242dae62ec7f137126778eb3afd3"
     },
     {
       "path": "src/observador/acceptance_wizard.py",
-      "size_bytes": 19512,
-      "sha256": "de0a48ef9be2615869a5d9a2af2c570c6af3f2ab8453735fbfdfe65d859b59ce"
+      "size_bytes": 19646,
+      "sha256": "bf5404f0f771d129823caacc09ff3f39db96ca6a0fed575166038a01a7ae0ab2"
     },
     {
       "path": "src/observador/collector.py",
@@ -360,8 +365,8 @@
     },
     {
       "path": "src/observador/owned_channel.py",
-      "size_bytes": 14663,
-      "sha256": "5b1d67a73dbd8203bdd06df17ffe8cbd767d6fd24011292f901e3b4e62becd37"
+      "size_bytes": 14832,
+      "sha256": "0e8acaf5c05db30f10100e3cc8448589a710d93172b27995c878e2ad7cb3178e"
     },
     {
       "path": "src/observador/owned_channel_child.py",
@@ -380,8 +385,8 @@
     },
     {
       "path": "src/observador/private_directory.py",
-      "size_bytes": 6443,
-      "sha256": "e5509b8d22792a68dada9334934e555d0e130544c95c3cee0c517f3f77037867"
+      "size_bytes": 6838,
+      "sha256": "59b2c1cd4b4b1ec936ea400419d50fa08dc368f8b5b7467c7de5e9a8487c9c68"
     },
     {
       "path": "src/observador/sample.py",
@@ -417,6 +422,11 @@
       "path": "src/observador/web_events.py",
       "size_bytes": 2887,
       "sha256": "8c181b8f17727dbd62af4b9593368f8bd7839df8141bd73bbf670832ff6481f2"
+    },
+    {
+      "path": "src/observador/win32_handles.py",
+      "size_bytes": 783,
+      "sha256": "1ba298c8c2c5c15717c37419f7de4435e3afe0afb3a524e9e280b256be610f29"
     },
     {
       "path": "src/observador/windows.py",
@@ -455,8 +465,8 @@
     },
     {
       "path": "tests/test_acceptance_metrics.py",
-      "size_bytes": 4273,
-      "sha256": "7651e0ce59ddcca0507e9b102cb88dc6a064429aace1f80cf564c01b5b68a921"
+      "size_bytes": 4375,
+      "sha256": "c3dce4698090b2871609f8188a49fd3dd5adbc5f1e8b2580377469b1ecc98b72"
     },
     {
       "path": "tests/test_acceptance_prepare.py",
@@ -512,6 +522,11 @@
       "path": "tests/test_events.py",
       "size_bytes": 1649,
       "sha256": "c4d8659e4659701867995fea10e4d3194a0eb5d473898da916ef8904e09b5598"
+    },
+    {
+      "path": "tests/test_handle_lifetime.py",
+      "size_bytes": 15025,
+      "sha256": "7d12ebd331ed2baeb476a3e0d12d152ff1371929c381825db6d9dedef9cc79a5"
     },
     {
       "path": "tests/test_inbox_capacity.py",

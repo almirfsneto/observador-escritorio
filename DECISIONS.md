@@ -166,3 +166,22 @@ Complemento D-031: verificar retorno real de CancelSynchronousIo;1168 significa
 nenhum IO pendente e é tolerado, demais erros não são silenciados. Regressão
 portável injeta retornos no wrapper, sem alegar falha real de kernel provocada.
 Auditoria dos wrappers compartilhados de job/métricas continua gate explícito.
+
+## D-032 — CloseHandle confirmado, referência em quarentena e métrica por capacidade
+
+Issue20/A1–A4: uma tentativa de CloseHandle com BOOL declarado/verificado; em
+erro, referência retida, estado failed e erro estático cleanup_unconfirmed. Sem
+retry de slot numérico incerto. Job usa TerminateJobObject e consulta limitada a
+zero processos antes do fechamento; falhas de teardown continuam tentando os
+outros recursos, nunca dão confirmação limpa. Construtor falho preserva seu dono.
+
+Métrica duplica handle do Popen retido, não abre PID nem usa primeiro processo
+encontrado como baseline. Fonte/duplicata têm criação conferida antes da leitura;
+saída normal conserva só amostras históricas válidas. Token ACL também falha
+fechado no close. Alternativas rejeitadas: apagar referência em erro, retry cego,
+assumir que fechar job prova término, comparar apenas PID/nome.
+
+Falha protegida de handle real será distinguida de BOOL/identidade injetados;
+reuso real de PID e falha em campo não são alegados. A janela Popen→assignJob
+preexistente e fronteira mesmo token/admin não são resolvidas por esta correção.
+Revisão distinta exigida pela Issue continua gate humano, não substituída pela CI.

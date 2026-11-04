@@ -1,3 +1,24 @@
+# Retomada atual — Issue 20 / fechamento verificado
+
+Continuar de **codex/verified-handle-cleanup**, filha de PR19/bee7d1c. Consultar
+PR e CI do HEAD em PROGRESS e nos checks do PR. Não usar main isoladamente.
+Ler docs/HANDLE_LIFETIME_REVIEW.md e Issue20 além dos documentos obrigatórios.
+CloseHandle falho mantém referência em failed sem retry; Job exige processos
+zerados e fechamento efetivo; métricas duplicam handle Popen retido, sem PID.
+
+```
+git fetch origin codex/verified-handle-cleanup
+git switch -c codex/handle-cleanup-independent-review FETCH_HEAD
+PYTHONPATH=src python -m unittest discover -s tests -v
+```
+
+Prioridade seguinte: revisor distinto do implementador conferir diff/ownership/
+callers (critério6 da Issue), usando SHAs e evidências finais. Não há sign-off
+independente final nesta entrega. Separar falhas Win32 reais protegidas, falhas
+injetadas e aceite humano. PR6 continua congelado3d4a770; v1 inalterado, adapter
+OFF, sem merge/rebase/deploy/instalação na equipe/dados reais/piloto. As seções
+abaixo descrevem o histórico; o ponto de continuação atual é esta branch.
+
 # Retomada autônoma — estabilização após PR18
 
 ## Ponto atual obrigatório

@@ -822,3 +822,21 @@ Critérios de aceite continuam abertos: revisão independente por SHA, auditoria
 wrappers compartilhados, origem/skip/descarte históricos e ensaios humanos por
 OS/versão. PR19 permanece draft, PR6 e anteriores intactos. Último commit apenas
 registra esta evidência; resultado dos checks do HEAD final também consta no PR19.
+
+## Issue 20 — fechamento e identidade próprios — 2026-11-04
+
+Base exata PR19/bee7d1c, nova codex/verified-handle-cleanup. Leitura obrigatória e
+Issue20 conferidas; baseline182: Linux155 executados/27 skips. A1–A4 corrigidos:
+BOOL CloseHandle verificado, erro cleanup_unconfirmed, referência retida e sem
+retry automático; job termina membros explicitamente/consulta zero antes de
+fechar; runner continua limpeza de processo/reader/stdout e bloqueia reutilização
+incerta; sampler tenta todos os probes e integra falha à limpeza do aceite v1.
+Duplicação de handle Popen retido substitui OpenProcess(pid), com identidade
+conferida antes de memória. Token de ACL falha fechado sem retornar SID em erro.
+
+Nove regressões portáveis executadas; quatro Windows novas aguardam CI. São
+falhas injetadas, não exploração observada. Testes reais planejados usam apenas
+handles sintéticos protegidos contra fechamento e job com descendente próprio.
+Critério de revisão distinta do implementador permanece pendente; nenhuma
+aprovação independente simulada. Detalhes em docs/HANDLE_LIFETIME_REVIEW.md.
+PR6/schema v1 e branches anteriores preservados, adapter OFF e nenhum piloto.
