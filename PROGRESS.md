@@ -760,3 +760,35 @@ ACCEPTANCE_MATRIX.md separa OS/versão e gates, STACK_REVIEW_PLAN atualizado sem
 convergência executada. Suite local181:154 executados/27 skips Windows/browser;
 11 regressões novas executadas sem skips. Compileall, wheel e diff conferidos.
 CI Windows e Chromium do novo HEAD ainda pendentes de publicação/execução.
+
+### Evidência CI da estabilização — PR19 / código51b0691
+
+https://github.com/almirfsneto/observador-escritorio/pull/19 (draft sobre PR18).
+Commits117fbb6 (cleanup) e51b0691 (aceite/diagnóstico).
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/41843386924
+confirmada5/5 jobs, sem falhas. Logs de cada job consultados:
+
+| Job | Descobertos | Executados | Ignorados / lacuna |
+| --- | --- | --- | --- |
+| Ubuntu Python3.11 |181|154|27:25 Windows +2 browser|
+| Ubuntu Python3.12 |181|154|27:25 Windows +2 browser|
+| Windows Server2025 Python3.11 |181|179|2 browser dedicado|
+| Windows Server2025 Python3.12 |181|179|2 browser dedicado|
+| Chromium real dedicado |2|2|0|
+
+Os11 testes novos executaram em ambos os Windows/Linux; cleanup adversarial é
+falha injetada. Guiado/exportação complementar e demais testes Win32 executaram
+realmente no runner Windows, incluindo os casos de canal do PR18. Não houve skip
+de foreground nesta rodada, mas isso não identifica o skip histórico do operador.
+Skips browser no núcleo foram executados no job Chromium separado; não se tornam
+aprovação do validador offline do operador. Execução estruturada local classificou
+25 Windows/2 browser/0 unclassified. Manifesto132 arquivos, schema v1/lançador
+intactos e nenhum JSON local do operador.
+
+Inventário remoto conferido: todos os14 PRs anteriores continuam drafts com HEADs
+e bases preservados, PR6=3d4a770, PR18=233b301. Sem merge/rebase/retarget, adapter
+OFF, nenhuma instalação/coleta real/piloto. Próximos gates: revisão independente
+por SHA, esclarecer descarte/skip/origem desconhecidos, Win10 humano e repetição
+da candidata em Win10/11 autorizados. Matriz e critérios em ACCEPTANCE_MATRIX e
+ACCEPTANCE_STABILIZATION; revisão organizada, não concluída, em SECURITY_REVIEW_PR18.
+A próxima atualização é documental; conferir CI do HEAD final no PR19.

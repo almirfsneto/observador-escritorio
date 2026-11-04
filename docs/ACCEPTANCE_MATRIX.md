@@ -32,3 +32,11 @@ ou prova do commit exato. Não solicitar o JSON do operador para o repositório.
 Gates globais: revisão independente PR18 e correção filha, outra conta/sessão
 Windows autorizada, armazenamento ativo em claro/quota lógica, cobertura WPF vs
 WinForms e adapter OFF. Ver SECURITY_REVIEW_PR18.md e STACK_REVIEW_PLAN.md.
+
+## CI verificada desta entrega
+
+Código51b0691, run41843386924: cinco jobs aprovados. Linux3.11/3.12:181
+descobertos,154 executados,27 skips (25 Windows/2 browser). Windows Server2025
+3.11/3.12:181 descobertos,179 executados,2 skips browser. Chromium dedicado:2
+executados/0 skips. Nenhum skip de foreground nesta rodada; não explica o skip
+do relato humano anterior. Ver PROGRESS para HEAD documental/CI final.

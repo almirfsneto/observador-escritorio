@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 53026,
-      "sha256": "1fd83caf44a28648c8c988b8fdecf75aebcdb9eefc5ff7280b846979c1ddd7cb"
+      "size_bytes": 54920,
+      "sha256": "8ac8c68095cf91377bdeb3c8bd361148a4dfb8219f6201115f2cc2808d72007b"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 7708,
-      "sha256": "64a57e5885048c5a03643e5541c4eca5b59c413ae211402306f139cb080b4510"
+      "size_bytes": 8360,
+      "sha256": "9066aae68b6f3be2b39e4353b4e7e135c6be7d956bbf4598c453b7b96c80755c"
     },
     {
       "path": "SECURITY.md",
@@ -90,8 +90,8 @@
     },
     {
       "path": "docs/ACCEPTANCE_MATRIX.md",
-      "size_bytes": 3562,
-      "sha256": "d374fc924720d3a721927bd476a8ffe62807d71b39b58b02ce3873b5fd7cad1b"
+      "size_bytes": 3976,
+      "sha256": "87fdc0479ef9c94ced2df6362ad57ad3fc950ff552bf077cc0f6904b3525a21e"
     },
     {
       "path": "docs/ACCEPTANCE_REVIEW_SCHEMA.json",
@@ -195,8 +195,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 9223,
-      "sha256": "5fb0bbd0878e2327cdf73310aa747b3529a0f92efd4c05fb16e31087d951cdb2"
+      "size_bytes": 9564,
+      "sha256": "0d2160a42acf87729130dedd0d4e54ae756487556748f6fc3fc4c65d9e80f7f6"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
