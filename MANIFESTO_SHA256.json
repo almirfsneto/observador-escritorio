@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 12230,
-      "sha256": "4cd2ea2a170e0ce9a7a2eb4f4b50cc4b4f6076dffd7411791d8c29093656d14c"
+      "size_bytes": 13777,
+      "sha256": "4ba7576caf6950dba2f2dc58befed639f97b02cb96ccc1990f52e6e85862214a"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 23163,
-      "sha256": "8e4ab718b7657ab75ea93154cc38497af66d68a892f18b2765f1d091b7458300"
+      "size_bytes": 27858,
+      "sha256": "14f8c33a059a652e94ac2dd39051755496bb4b6e2146cd2fbf7115626e2fa978"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -35,13 +35,13 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 3800,
-      "sha256": "81fb8af1d4ae0e7cd9970762a6f7bc6b9a48f35d3a895c4c0972d4b0034c6e85"
+      "size_bytes": 4285,
+      "sha256": "5e14fed1f8bf5313701d22fcb2bb1556eddd38f341c987097d793e759b2a423b"
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 4404,
-      "sha256": "5177a7c08a733b1fca005d336ebd644628ecf36623724b6dbb594af2112f1e40"
+      "size_bytes": 5440,
+      "sha256": "635c844dcb83bd521a6ecfe1da83d4d0fac18af91884ffb294548a30275b2b49"
     },
     {
       "path": "SECURITY.md",
@@ -149,6 +149,11 @@
       "sha256": "57d0de53587bcec7657ce0ca2880abbe8693904974252b9e792a3ee4dd3a80c9"
     },
     {
+      "path": "docs/RETOMADA_AUTONOMA.md",
+      "size_bytes": 3702,
+      "sha256": "2120362bddcf455bff1fcd772e0294c9b2b29e858d12e89fe51154e5b91a5752"
+    },
+    {
       "path": "docs/REVIEW_PRS_1_2.md",
       "size_bytes": 3537,
       "sha256": "ff6b26a0efd7d842a20e660e703f4b784943e405413883e701230f8ceb1cc40a"
@@ -157,6 +162,11 @@
       "path": "docs/STORAGE_HARDENING.md",
       "size_bytes": 3783,
       "sha256": "3ed28eaa298c135d6ea5e13d44b0554e7820bd6ed79c605d0b7b4ef414ff3b1d"
+    },
+    {
+      "path": "docs/TASK_DISCOVERY.md",
+      "size_bytes": 4666,
+      "sha256": "d58deae42643ca856c425ea107decbb644132cd5b62b42d7a564f5dd0407dd22"
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
@@ -284,6 +294,11 @@
       "sha256": "8dfb186981c25b4824c735b23ac3f7c7f44e1b78592caf628780f43cec17235c"
     },
     {
+      "path": "src/observador/task_discovery.py",
+      "size_bytes": 11679,
+      "sha256": "976770174559340e26518e0abb0fbb973b9443d538af87163052b40be0535b26"
+    },
+    {
       "path": "src/observador/web_events.py",
       "size_bytes": 2887,
       "sha256": "8c181b8f17727dbd62af4b9593368f8bd7839df8141bd73bbf670832ff6481f2"
@@ -387,6 +402,11 @@
       "path": "tests/test_stream.py",
       "size_bytes": 5445,
       "sha256": "bd1d781320862b0d33eb56d308aa2f5917781b0c03392f3c792dc61f5f2dbb80"
+    },
+    {
+      "path": "tests/test_task_discovery.py",
+      "size_bytes": 4275,
+      "sha256": "88963aee5be54654da12b5be3c465f0c900819c2db87089ea15847af3a1e6290"
     },
     {
       "path": "tests/test_web_contract.py",

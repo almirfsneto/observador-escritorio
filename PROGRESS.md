@@ -300,6 +300,17 @@ unpacked; não foi contornada nem reportada como teste aprovado. Job CI real
 Chromium separado adicionado; resultado remoto ainda pendente. Testes unitários
 não substituem carregamento real nem aceite Chrome/Edge Windows.
 
+## Execução intensiva — descoberta de microtarefas
+
+Branch codex/task-discovery sobre extensão experimental. Motor paralelo ao legado,
+com segmentação/gaps, normalização sem IDs/alvos, variantes, contagem sem overlap,
+confiança heurística e cenários explícitos de economia. Corpus administrativo
+fictício: 36 eventos/oito rotinas/três variantes, família principal com oito
+ocorrências; legado no mesmo corpus não ligava IDs entre sessões. Relatório fora
+Git sem dados individuais. Comparadas licenças/capacidades PrefixSpan/PM4Py, sem
+adotar dependências. Linux: 91 descobertos, 80 executados, 11 testes específicos
+ignorados; testes de mineração aprovados. Evidência CI desta branch pendente.
+
 ### Evidência do endurecimento do armazenamento
 
 PR #7: CI 41741273177 no código 7bd09ff, quatro jobs aprovados Linux/Windows
@@ -335,3 +346,54 @@ valores/senha/URL excluídos, pausa/retomada/navegação, limite/rate e expiraç
 injetada, download local validado pelo importador Python. Não foi aceite humano
 Chrome/Edge Windows nem observação de ambiente profissional. Política local do
 executor permaneceu intacta. Correção posterior na base tenta symlink real.
+
+## Fechamento verificável da execução intensiva — 2026-11-03
+
+Quatro entregas em rascunho, empilhadas sobre PR6, sem merge em main:
+
+| PR / branch | Código e CI confirmados | Resultado |
+| --- | --- | --- |
+| #7 / codex/storage-reliability | fa04785 / [41742876982](https://github.com/almirfsneto/observador-escritorio/actions/runs/41742876982) | 4 jobs; Windows 84 executados/0 skips; Linux 75/9 skips |
+| #8 / codex/windows-coverage-probe | 805c791 / [41743703126](https://github.com/almirfsneto/observador-escritorio/actions/runs/41743703126) | 4 jobs; Windows 3.11 85/0 skips, 3.12 84/1 skip de foreground; Linux 75/10 skips |
+| #9 / codex/synthetic-browser-extension | fdec952 / [41744118720](https://github.com/almirfsneto/observador-escritorio/actions/runs/41744118720) | 5 jobs; Windows 87 executados/1 skip browser separado; Linux 77/11 skips; Chromium real 1/0 skips |
+| #10 / codex/task-discovery | 671230b / [41744120777](https://github.com/almirfsneto/observador-escritorio/actions/runs/41744120777) | 5 jobs; Windows 92 executados/1 skip browser separado; Linux 82/11 skips; Chromium real 1/0 skips |
+
+Cada matriz usa Python 3.11/3.12; o browser dedicado usa Python 3.12. **Skips
+são lacunas**, não aprovações. O skip específico de foreground do PR8 não ocorreu
+nos dois jobs Windows da integração final PR10. Jobs Windows executaram DACL,
+DPAPI, links, recuperação, UIA, comparação WPF/WinForms, assistente e escritor.
+.NET alvo 8 compilado; preparação real selecionou SDK8/build offline das três
+fixtures/provider necessários aos testes. Chromium 151.0.7922.34 carregou MV3 e
+validou interações, download/importação sanitizados e contagens/rate, pausa,
+expiração e timeOrigin divergente injetados. Reinício REAL de worker e 15 minutos
+humanos continuam pendentes; não confundir fault injection com esse aceite.
+
+Correções de CI registradas: alias SDDL LA resolvido por trustees numéricos;
+parâmetro de timestamp C# do probe corrigido; timeout intermitente do estimulador
+PowerShell em um job (41743078996) agora com estágios estáticos e teto de 30s,
+sem relaxar 30 Invoke/pausa/persistência e sem replay automático. O motivo interno
+daquele timeout não foi provado; futuras falhas expõem apenas estágio sanitizado.
+Preparação guiada inclui WinForms para checkout limpo, preservando WPF manual,
+estado inicialmente desativado e JSON v1. Browser encerra conservadoramente ao
+mudar timeOrigin do worker, além de relógio UTC/monotônico; não estende prazo.
+
+Baseline: 76 testes/68 Linux executados. Integração: 93 descobertos/82 Linux e
+92 Windows executados, mais um browser real em job dedicado. Não há falha aberta
+nas rodadas confirmadas. Compileall, wheel sem dependências runtime novas,
+manifestos de quatro branches e git diff --check conferidos. Última alteração
+documental desta entrega registra evidências; CI final do head também será
+conferida no PR. Nenhuma captura/relatório bruto foi versionado.
+
+**Pronto para laboratório:** orçamento/ACL/DPAPI de arquivo, diagnóstico Windows,
+extensão em perfil descartável e descoberta no corpus fictício. **Não pronto
+para piloto:** SQLite ativo em claro, quota física estrita/ACL adversarial não
+validadas, cobertura WinForms incompleta, integração web/Windows sem ACK global,
+heurísticas sem calibração, ausência de aceite humano Windows10/11 e Chrome/Edge.
+Autostart/serviço/screenshot/sincronização não foram habilitados. Não houve dados
+reais, computadores da equipe, sistemas excluídos, custos, deploy ou integração.
+
+**RETOMADA AUTÔNOMA:** docs/RETOMADA_AUTONOMA.md contém checkout, testes, evidências,
+limites e próxima entrega recomendada: diagnóstico fechado de saúde e fault
+injection de journal/filas, depois integração com proveniência/ACK e testes
+reais de suspensão MV3. O desenvolvimento desta execução termina com entregas
+revisáveis; nenhum agente/observador permanece trabalhando continuamente.
