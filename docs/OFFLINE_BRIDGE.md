@@ -72,7 +72,7 @@ ordem global por relógio ou ordem de chegada; gaps, relógios não sincronizado
 proveniência declarada são explícitos. Contagens não permitem inferir causalidade.
 Testes Python cobrem replay/duplicatas/conflitos, origem/aba negadas, gates,
 retomada/TTL, rollback sem ACK, novo dono/reabertura. Job Chromium dedicado usa
-CDP ServiceWorker.stopWorker na própria extensão descartável: exige close real,
+CDP Target.closeTarget na própria extensão descartável: exige close real,
 novo worker/timeOrigin e captura encerrada, pending batch preservado, retry e ACK
 local funcionando. Não é substituído por alteração de variáveis; se bloqueado,
 registrar lacuna/falha sem contornar política. Chrome/Edge Windows humanos continuam

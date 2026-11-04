@@ -150,8 +150,8 @@
     },
     {
       "path": "docs/OFFLINE_BRIDGE.md",
-      "size_bytes": 5346,
-      "sha256": "1bbe44ec1c0f0860634778a3def9bfa0db11ba15e39d4a82eac7f3e6bbad47ba"
+      "size_bytes": 5340,
+      "sha256": "97ca27cdb3454ea577c9b4f52f5e3d259f9454eaa575e74daff21c08f3c0f069"
     },
     {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
@@ -390,8 +390,8 @@
     },
     {
       "path": "tests/test_browser_extension.py",
-      "size_bytes": 13870,
-      "sha256": "577c644554b1b64815d68802fb8971ecea55e62ce111282c755d565abe6b525a"
+      "size_bytes": 13869,
+      "sha256": "cf5bbd8c5c17f1d191995755394fbcdb845280a7b9ce359cadd1e9a175deba69"
     },
     {
       "path": "tests/test_cli.py",

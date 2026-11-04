@@ -54,24 +54,22 @@ class BrowserExtensionTest(unittest.TestCase):
                     self.assertTrue(batch['events'])
                     ack=bridge.ingest(batch)
                     self.assertEqual(bridge.ingest(batch),ack)
-                    # ACTUAL CDP worker termination, not mutation of a stored timeOrigin.
-                    cdp=context.new_cdp_session(page)
-                    versions=[];restarted=[];closed=[]
-                    cdp.on('ServiceWorker.workerVersionUpdated',lambda value:versions.extend(value.get('versions',[])))
+                    # ACTUAL target termination in this disposable browser profile.
+                    cdp=context.browser.new_browser_cdp_session()
+                    restarted=[];destroyed=[]
                     context.on('serviceworker',lambda value:restarted.append(value))
-                    worker.on('close',lambda:closed.append(True))
-                    cdp.send('ServiceWorker.enable')
-                    deadline=time.monotonic()+8
-                    matches=[]
-                    while not matches and time.monotonic()<deadline:
-                        page.wait_for_timeout(100)
-                        matches=[v for v in versions if v.get('scriptURL')==worker.url and v.get('runningStatus')=='running']
-                    self.assertTrue(matches,'No owned extension worker version found')
+                    targets=cdp.send('Target.getTargets')['targetInfos']
+                    matches=[target for target in targets if target['type']=='service_worker' and target['url']==worker.url]
+                    self.assertEqual(len(matches),1,'Owned extension worker target is ambiguous')
+                    target_id=matches[0]['targetId']
+                    cdp.on('Target.targetDestroyed',lambda data:destroyed.append(True) if data['targetId']==target_id else None)
+                    cdp.send('Target.setDiscoverTargets',{'discover':True})
                     origin=worker.evaluate('performance.timeOrigin')
-                    cdp.send('ServiceWorker.stopWorker',{'versionId':matches[-1]['versionId']})
-                    deadline=time.monotonic()+8
-                    while (not restarted or not closed) and time.monotonic()<deadline:page.wait_for_timeout(100)
-                    self.assertTrue(closed,'Worker was not actually terminated')
+                    result=cdp.send('Target.closeTarget',{'targetId':target_id})
+                    self.assertTrue(result['success'],'Owned worker target could not be closed')
+                    deadline=time.monotonic()+10
+                    while (not restarted or not destroyed) and time.monotonic()<deadline:page.wait_for_timeout(100)
+                    self.assertTrue(destroyed,'No actual worker target destruction observed')
                     self.assertTrue(restarted,'Worker did not actually restart')
                     replacement=[w for w in restarted if w.url==worker.url][-1]
                     self.assertNotEqual(replacement.evaluate('performance.timeOrigin'),origin)
