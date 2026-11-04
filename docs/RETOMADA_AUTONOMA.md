@@ -1,3 +1,24 @@
+# Retomada atual — Issue27 / diagnóstico Windows e stop pré-worker
+
+Branch codex/suspended-cleanup-diagnostics, base exata PR25/d820396. Ler Issue27,
+atualizações22 e pareceres23–25. A CI voltou a executar após ação do responsável;
+base falha em dois testes SuspendedProbe em ambos os Windows. Não reutilizar a
+hipótese antiga de falha pré-step nem declarar causa antes do snapshot fechado.
+
+Diagnóstico ed7c50d/CI41929775944 comprovou fallback TerminateProcess prematuro:
+AccessDenied após Job confirmado, espera posterior sinalizada e handles fechados.
+Correção640bb36 espera saída pós-Job no orçamento original2s e só recupera
+corrida com provas; testes focados passaram nos dois Windows. P2 já implementa
+isolamento de stream/Tk/observação, startup com fallback e guard de execução única.
+PR28/código6e0cf86, CI41931710044: cinco jobs aprovados; suíte225, Windows
+223 executados/2 skips por Python, Linux184/41, Chromium2/0; foco suspenso11/0.
+TclError real de controles destruídos não impediu filhos/queue/sampler e manteve
+relatório false. Conferir checks do HEAD documental final no PR28 antes de aceitar.
+Ler docs/ISSUE27_CLEANUP.md para evidência, limites e distinção real/injetado.
+Rodar Windows3.11/3.12, Linux3.11/3.12 e Chromium; skips não são casos aprovados.
+Nenhuma integração do launcher suspenso/adapter, merge/rebase ou dado real.
+Histórico anterior abaixo descreve evidência por SHA, não o estado atual da CI.
+
 # Retomada atual — complemento AI02 após estudo AI03
 
 Continuar de codex/cleanup-worker-lifetime, filha de PR24/b974356 e PR23/5c37576.

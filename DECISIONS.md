@@ -227,3 +227,35 @@ com atraso artificial, sem UI/Win32; corrigido com worker não daemon e graça20
 no standalone. Contrapartida: API travada pode manter o processo aguardando, sem
 promessa de deadline global. Não sacrificar tentativas de cleanup por saída
 silenciosa. Nenhum launcher suspenso foi integrado, nenhum adapter habilitado.
+
+## D-036 — Observar a primeira falha Win32 antes de alterar cleanup
+
+Issue27: erro genérico de SuspendedProbe não identifica causa. Instrumentação
+exclusiva do harness registra fases/enums/contagens e confirmação pós-falha, mas
+a entrega diagnóstica conserva status de erro. Não assumir corrida de término,
+não aumentar timeout nem dispensar asserts. Step focado nos dois Windows antes
+da matriz completa; correção depende de evidência nativa, seguida de regressões.
+
+D-036 / causa confirmada: CI41929775944 nos dois Windows mostrou erro5 no
+fallback após Job confirmado e antes de esperar término; observação posterior
+sinalizou processo, handles fecharam. Esperar saída pós-Job e reutilizar o mesmo
+orçamento2s. Recuperação limitada a AccessDenied + espera sinalizada + Job
+confirmado, com erro preservado no diagnóstico; jamais tolerar close falho ou
+API inválida por essa regra. Origens win32/injected/híbrida são explícitas.
+
+## D-037 — Nenhuma exceção pré-worker pode pular teardown
+
+Issue27 P2: isolar stream/Tk/observação; construir/startar worker dentro de try
+com fallback síncrono. Barreira de startup impede publicar sucesso antes de
+conhecer erro de start; lock serializa worker/fallback. Categorias fixas controls
+e cleanup_worker mantêm incerteza mesmo com recursos encerrados. Não depender
+de repetir stop após finished=True. Não usar retry de close nem transformar
+TclError em skip. Mantém limite conhecido de API travada/worker não daemon.
+
+Evidência D-036/D-037:6e0cf86/CI41931710044 cinco jobs aprovados; Windows
+223 executados/2 skips por Python, Linux184/41 e Chromium2/0. Estudo focado11/0
+em cada Windows. TclError/close protegido foram falhas reais controladas;
+startup/retornos API portáveis são injetados; corrida com primeira espera
+simulada é híbrida. Diagnóstico inicial FALHOU intencionalmente para estabelecer
+causa antes da correção; não apagado nem promovido a passe. Revisão independente
+por SHA e gates humanos permanecem, sem integração do estudo ou adapter.

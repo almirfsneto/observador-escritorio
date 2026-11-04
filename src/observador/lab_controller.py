@@ -30,6 +30,7 @@ class LaboratoryWindow:
         self.sink = None
         self.cleanup = None
         self.cleanup_status = CleanupStatus()
+        self._cleanup_execution_lock = threading.Lock()
         self.failed_binding = None
         self.finished = False
         self.event_count = 0
@@ -113,19 +114,37 @@ class LaboratoryWindow:
             self.pause_btn.config(text='Pausar' if self.session.stream.enabled else 'Retomar')
 
     def stop(self):
-        if self.finished:
-            return
-        self.finished = True
-        if self.session:
-            self.session.stream.stop()
-        for button in (self.launch_btn, self.start_btn, self.pause_btn, self.stop_btn):
-            button.config(state=self.tk.DISABLED)
-        self.persist_box.config(state=self.tk.DISABLED)
-        self.status_var.set('Estado: ENCERRADO | reinicie para outro ensaio')
-        # Teardown must outlive a bounded UI/main join; otherwise interpreter
-        # shutdown can abandon later resources after a slow earlier operation.
-        self.cleanup = threading.Thread(target=self._cleanup, daemon=False)
-        self.cleanup.start()
+        if self.finished:return
+        # No fallible stream/UI operation may prevent worker or fallback cleanup.
+        if not hasattr(self,'cleanup_status'):self.cleanup_status=CleanupStatus()
+        if not hasattr(self,'_cleanup_execution_lock'):self._cleanup_execution_lock=threading.Lock()
+        status=self.cleanup_status;self.finished=True
+        if self.session:status.attempt('stream',lambda:self.session.stream.stop())
+        for button in (self.launch_btn,self.start_btn,self.pause_btn,self.stop_btn,self.persist_box):
+            status.attempt('controls',lambda b=button:b.config(state=self.tk.DISABLED))
+        status.attempt('controls',lambda:self.status_var.set('Estado: ENCERRADO | aguarde a limpeza'))
+        gate=threading.Event();started=False
+        def worker():
+            gate.wait()
+            self._cleanup_entry()
+        try:
+            self.cleanup=threading.Thread(target=worker,daemon=False)
+            self.cleanup.start()
+            if self.cleanup.ident is None:raise RuntimeError('cleanup_worker_start_unconfirmed')
+            started=True
+        except Exception:
+            status.fail('cleanup_worker')
+        finally:
+            # Even a start wrapper that raises AFTER launch records its error
+            # before cleanup can publish the outcome. Entry lock prevents doubles.
+            gate.set()
+            if not started:self._cleanup_entry()
+
+    def _cleanup_entry(self):
+        with self._cleanup_execution_lock:
+            if self.cleanup_status.finished:return
+            self.cleanup_status.attempt('cleanup_worker',self._cleanup)
+            if not self.cleanup_status.finished:self.cleanup_status.finish()
 
     def _cleanup_resources(self,status):
         failed=getattr(self,'failed_binding',None)
@@ -201,7 +220,7 @@ class LaboratoryWindow:
         finally:
             self.stop()
             if self.cleanup:
-                self.cleanup.join(timeout=20)
+                self.cleanup_status.attempt('cleanup_worker',lambda:self.cleanup.join(timeout=20))
 
 
 def main():

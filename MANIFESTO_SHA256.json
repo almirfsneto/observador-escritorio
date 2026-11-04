@@ -5,8 +5,8 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 2145,
-      "sha256": "0eaffea7f5803ce29d38148bb45d806020411130c57a107b86bf70ea7de9e9f2"
+      "size_bytes": 2310,
+      "sha256": "736080c15140a28fcdf9dd253a90665d23027434bc08e487a31b63547e342758"
     },
     {
       "path": ".gitignore",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 28007,
-      "sha256": "df08194714fd0be1873a58bc9d31044eeb94a54d590b33ea3a4072d56f3e3ed0"
+      "size_bytes": 30061,
+      "sha256": "db697f77cec4dd6c97573a47520fe44a2f9ab92d677a8b200c8ee0338295fc1d"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 66594,
-      "sha256": "149714f9abf317e5277b6733495ccec6c6e7d726df711f9cc6719f2a3469f47c"
+      "size_bytes": 73353,
+      "sha256": "2057228dbdff8eed3d573a8feed2aa18709a01412a486a5b2f1a60a614011034"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -159,6 +159,11 @@
       "sha256": "08c77babb31a2d468ceb63119c5ee585eaea29d90b75d158bad6c9de3df7a900"
     },
     {
+      "path": "docs/ISSUE27_CLEANUP.md",
+      "size_bytes": 4986,
+      "sha256": "c7a320ee0b6bbb899790e7f59ccb842f1f5a9c0d2d9f8c48824718de5ed5d757"
+    },
+    {
       "path": "docs/LAB_ENTREGA_2.md",
       "size_bytes": 2780,
       "sha256": "6aae7191602bc899f61aa6bd3accab2c0550a8ace09b2234b9393f352135dca3"
@@ -205,8 +210,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 14882,
-      "sha256": "d940cd915ee1e77db054bb3c1d811f77739fa8bd6624ea177eec2ace0dc11742"
+      "size_bytes": 16357,
+      "sha256": "26b63bae6ec16046d9463abaf9a44013051af3c8765280992367caba538b55f8"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -300,13 +305,13 @@
     },
     {
       "path": "src/observador/acceptance_session.py",
-      "size_bytes": 7606,
-      "sha256": "6398abc6dbc1c4608046c0084f7b9032d6441d2700d612bcc34a83837f2cf43c"
+      "size_bytes": 7759,
+      "sha256": "a30e068eef280edf659640faa08d8ab905e1aa6ba5b47130d83f316863b32126"
     },
     {
       "path": "src/observador/acceptance_test_runner.py",
-      "size_bytes": 4456,
-      "sha256": "44dbeff497263c553bb0351fe11b74e41bded3b0fc05df354ae688104c78b23a"
+      "size_bytes": 4479,
+      "sha256": "31a6f5c891d07aa0a3fd6370ccc9fd59692a2c12e96cab760b2386b04e08fdad"
     },
     {
       "path": "src/observador/acceptance_wizard.py",
@@ -315,8 +320,8 @@
     },
     {
       "path": "src/observador/cleanup.py",
-      "size_bytes": 2167,
-      "sha256": "c394d9ce139c56d6b3c0fddc8cba8221aa04e4ced68991b084e6be8b4745abca"
+      "size_bytes": 2195,
+      "sha256": "5d98e56cd6703539ce5ea885a6a96484ff3628bf5698b77ac56768ae854c7315"
     },
     {
       "path": "src/observador/collector.py",
@@ -345,8 +350,8 @@
     },
     {
       "path": "src/observador/lab_controller.py",
-      "size_bytes": 10367,
-      "sha256": "7f85e81d66557baaf11bdf7392fb6db42975e027995d3b74462876b19855a76c"
+      "size_bytes": 11486,
+      "sha256": "e5465d8b2dac4fcbfe818e9b88c7d27331eb871ab7a3038f8cc48a08baa93e1a"
     },
     {
       "path": "src/observador/lab_faults.py",
@@ -479,9 +484,14 @@
       "sha256": "46431de20d8a2da28775e27bc8477bbdb162c698956803b030ad2b08fc02929a"
     },
     {
+      "path": "tests/isolated_cleanup_diagnostic.py",
+      "size_bytes": 2736,
+      "sha256": "8bb01b06440bbc31c8928a7bbbf177bcae8473167434b769ff229b0bec97360a"
+    },
+    {
       "path": "tests/isolated_suspended_spawn.py",
-      "size_bytes": 6408,
-      "sha256": "2379fe3f4ab0d9796505a6e7914174914801231e5a5cab56851ea57c1ffe2d67"
+      "size_bytes": 9618,
+      "sha256": "1f469bb0673123ab9197b38efe39dded92d382f8173cb8f0ac3e6a57b28182b6"
     },
     {
       "path": "tests/test_acceptance_launcher.py",
@@ -614,6 +624,11 @@
       "sha256": "963a871c5311d191963968a2a5f68c41421637d9b52aec00ea749c1933caa358"
     },
     {
+      "path": "tests/test_stop_preworker.py",
+      "size_bytes": 8645,
+      "sha256": "d738081caff295420acd5e5974cd444856b8e0fbd6dab77e66035850fa641b63"
+    },
+    {
       "path": "tests/test_storage_hardening.py",
       "size_bytes": 7761,
       "sha256": "5f9fe26719138caf005a1e7df89aa417bc90489e2bcc5651961f4cdd02de102d"
@@ -629,9 +644,14 @@
       "sha256": "bd1d781320862b0d33eb56d308aa2f5917781b0c03392f3c792dc61f5f2dbb80"
     },
     {
+      "path": "tests/test_suspended_cleanup_diagnostics.py",
+      "size_bytes": 4420,
+      "sha256": "69a09ee742c5de5dea7b54a6faa931d6135dfa4e43987e439fcd3b4ddb1a263e"
+    },
+    {
       "path": "tests/test_suspended_study.py",
-      "size_bytes": 6222,
-      "sha256": "bdca017e8fcefc0751cd57844c9e3bfda378666ee5874ec9ac71812ddaa3c406"
+      "size_bytes": 9324,
+      "sha256": "23f58a71f7c6b0a440b84cb5dcd192b91904399e6860db875a136ebc5ad5aeea"
     },
     {
       "path": "tests/test_task_discovery.py",
