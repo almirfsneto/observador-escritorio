@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 20691,
-      "sha256": "3e8d39571ab7020f5f5f87fe416d63e8bfd45ad37028ad6ca55ad21d51f4bc37"
+      "size_bytes": 20991,
+      "sha256": "651fe38aac19f217b54691303446561dec53c725a83ba6e3e138cb5b3aede4eb"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 43856,
-      "sha256": "61a643cb7fab7cc9939fdeaa554b3771674d5f2eebe19a68ca33556328e525a9"
+      "size_bytes": 45605,
+      "sha256": "ca9611be028f22cf959406b3256dd98b7a450f0416f3c098fed1875ffa9ff47c"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -35,13 +35,13 @@
     },
     {
       "path": "README.md",
-      "size_bytes": 4637,
-      "sha256": "8da3cbc8f573268ff0bb7b2073be3d880f03598a50b101a9fcd505aaf3512dfc"
+      "size_bytes": 4849,
+      "sha256": "a0a9edbdb509f322517a66f72d9581e6b37a1875e3924ed759971db96beb652a"
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 6985,
-      "sha256": "54114fb779f4f360107d417f1a44e9db2dd08d5117754e706a3ba7a3aa8080ca"
+      "size_bytes": 7697,
+      "sha256": "70655782c37c7bac7a9fc8185ac14f261d03003fca7bcc1567e58a7a8324ff1d"
     },
     {
       "path": "SECURITY.md",
@@ -160,8 +160,8 @@
     },
     {
       "path": "docs/OWNED_CHANNEL.md",
-      "size_bytes": 5483,
-      "sha256": "9d70dbb6de9aff240ed8d5ea01bfc29550cd9a6c8579a7be85858ccfd326c8f5"
+      "size_bytes": 8417,
+      "sha256": "742e42c659855074e130c77eabd557bdd7230a53c20bbd185f63d63da7f52bd3"
     },
     {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
@@ -190,8 +190,13 @@
     },
     {
       "path": "docs/SOURCE_AUTHENTICATION.md",
-      "size_bytes": 10446,
-      "sha256": "d57e8f842fee3b2fba15671c3a42aa7926e2f4c4d56458ad0c0d564fc5395313"
+      "size_bytes": 10760,
+      "sha256": "e6188dda6fd95fcbd6f64ae934f4076d6b0a0fdd5c96e60f07852cd8e7573029"
+    },
+    {
+      "path": "docs/STACK_REVIEW_PLAN.md",
+      "size_bytes": 6856,
+      "sha256": "01af151980388c57775f5862e6238083e01547cac0f9f334ec227b192c4c5279"
     },
     {
       "path": "docs/STORAGE_HARDENING.md",
@@ -325,13 +330,13 @@
     },
     {
       "path": "src/observador/owned_channel.py",
-      "size_bytes": 13066,
-      "sha256": "088bbc3428c81e653441628d136dfd0fbe41c5cb5e1a87445955eb879a260776"
+      "size_bytes": 13349,
+      "sha256": "6e3f7498487b6c8e790abeca3a493fb2464ea37524ad433c8fae38d31b27296f"
     },
     {
       "path": "src/observador/owned_channel_child.py",
-      "size_bytes": 7151,
-      "sha256": "4113a20b875f74a3266f29775f4f48c1bdfb2bf21e6801c8704efe8e7e37f7ca"
+      "size_bytes": 7382,
+      "sha256": "d1d3064e6a62208e6547c249833d3a9c2b1872b923ed88272c9121422f4e66cf"
     },
     {
       "path": "src/observador/owned_channel_protocol.py",
@@ -399,6 +404,11 @@
       "sha256": "dd0c64d95f217ad29dcd3bff0874b186821ab2f52fe7990cdb71cd377f43a4fd"
     },
     {
+      "path": "tests/fixtures/owned_channel_owner.py",
+      "size_bytes": 504,
+      "sha256": "8bbe1f1bed6b48a02cffdc668f9dd65273dc5098066d52b71633ade8ee507529"
+    },
+    {
       "path": "tests/fixtures/web/synthetic-lab/index.html",
       "size_bytes": 1367,
       "sha256": "f13ad4a535c96d150ae1f278c9e426fde98743ad954bb91ea86160a5208f8822"
@@ -464,6 +474,11 @@
       "sha256": "c4d8659e4659701867995fea10e4d3194a0eb5d473898da916ef8904e09b5598"
     },
     {
+      "path": "tests/test_inbox_capacity.py",
+      "size_bytes": 3993,
+      "sha256": "ad1b7a7a2389a298108b7a50a5ce0334dcb4b06c62869e5a8bf11a5af8ce49f5"
+    },
+    {
       "path": "tests/test_inbox_retention.py",
       "size_bytes": 17615,
       "sha256": "facf4a5a71684d47f6052da3f42e647d530be912ef94468bbc9405d231e9b54d"
@@ -495,8 +510,8 @@
     },
     {
       "path": "tests/test_owned_channel.py",
-      "size_bytes": 5579,
-      "sha256": "9b8e51f81d30c0aaa55aa28ebd87cdcf9504f9bd6df84b06bca798636294812a"
+      "size_bytes": 19806,
+      "sha256": "86d55a744b045f12b6a92445e67b097ea82e5b5a2e8d5c33802b3861163ac66f"
     },
     {
       "path": "tests/test_queue_faults.py",

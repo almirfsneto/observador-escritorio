@@ -22,7 +22,7 @@ from .acceptance_metrics import OwnedJob
 from .private_directory import reject_links
 
 _LAUNCH_LOCK=threading.Lock()
-FAULTS={'normal','wrong_key','wrong_identity','bad_mac','short_mac','duplicate','nan','oversize','truncated','flood','stall','exit'}
+FAULTS={'normal','wrong_key','wrong_identity','bad_mac','short_mac','duplicate','nan','oversize','truncated','flood','stall','stall_sample','exit'}
 
 
 class OwnedSyntheticChannel:
@@ -43,7 +43,7 @@ class OwnedSyntheticChannel:
         self._epoch=str(uuid4());self.session=str(uuid4());self._generation=0;self._sequence=0;self._ordinal=0
         self._nonce=None;self._binding=None;self._deadline=None;self._last_clock=None;self._messages=0
         self._peer_verified=False;self._bootstrap_closed=False;self._shutdown_confirmed=True
-        self._last_error='none';self._proof_flags=None
+        self._last_error='none';self._proof_flags=None;self._phase='disabled'
 
     @property
     def process(self):return self._process
@@ -55,7 +55,8 @@ class OwnedSyntheticChannel:
                         proof_flags=deepcopy(self._proof_flags),messages=self._messages,
                         worker_alive=bool(self._thread and self._thread.is_alive()),
                         process_running=bool(self._process and self._process.poll() is None),
-                        shutdown_confirmed=self._shutdown_confirmed,last_error=self._last_error,
+                        shutdown_confirmed=self._shutdown_confirmed,last_error=self._last_error,phase=self._phase,
+                        fixture_exit_code=self._process.returncode if self._process else None,
                         adapter_enabled=False,inbox_ack=False,uia_pause_ack=False)
 
     def _guard(self):
@@ -79,7 +80,7 @@ class OwnedSyntheticChannel:
 
     def _launch(self):
         if sys.platform!='win32':raise OSError('owned_channel_windows_required')
-        self._kernel=Kernel();self._deadline=time.monotonic()+self.ttl_ms/1000
+        self._phase='launch';self._kernel=Kernel();self._deadline=time.monotonic()+self.ttl_ms/1000
         script=Path(__file__).with_name('owned_channel_child.py').absolute()
         reject_links(script);reject_links(Path(sys.executable).absolute())
         digest=wire.fixture_digest()
@@ -106,17 +107,17 @@ class OwnedSyntheticChannel:
                                                creationflags=subprocess.CREATE_NO_WINDOW)
             finally:
                 for handle in inherited:self._kernel.inherit(handle,False)
-        self._job.assign(self._process)
+        self._phase='identity';self._job.assign(self._process)
         child_identity=self._kernel.identity(int(self._process._handle))
         if child_identity['pid']!=self._process.pid or child_identity['session_slot']!=parent_identity['session_slot']:wire.reject()
         if wire.fixture_digest()!=digest:wire.reject()
         self._binding=dict(parent=parent_identity,child=child_identity,fixture_sha256=digest,ttl_ms=self.ttl_ms,handle_count=4)
         for handle in inherited:self._close_handle(handle)
-        self._key=secrets.token_bytes(32)
+        self._phase='bootstrap';self._key=secrets.token_bytes(32)
         self._kernel.write(key_write,self._key,min(self._deadline,time.monotonic()+5),self._guard)
         self._close_handle(key_write);self._bootstrap_closed=True
-        self._pair()
-        return self._command('start',0)
+        self._phase='handshake';self._pair()
+        self._phase='commands';return self._command('start',0)
 
     def _packet(self,kind,payload,sequence):
         return wire.seal(self._key,'parent',kind=kind,epoch=self._epoch,session=self.session,
@@ -129,8 +130,8 @@ class OwnedSyntheticChannel:
 
     def _exchange(self,raw,kind,sequence,timeout):
         self._guard();self.assert_owned_peer(self._process)
+        if self._messages>=wire.MAX_MESSAGES:wire.reject()
         self._messages+=1
-        if self._messages>wire.MAX_MESSAGES:wire.reject()
         self._send_raw(wire.length_header(len(raw))+raw,timeout)
         until=min(self._deadline,time.monotonic()+timeout)
         size=wire.frame_size(self._kernel.read(self._response_read,4,until,self._guard))
@@ -187,7 +188,7 @@ class OwnedSyntheticChannel:
                     future.set_result(result)
                     if self.state=='closed':break
                 except Exception:
-                    future.set_exception(wire.ChannelError('owned_channel_failed_closed'));raise
+                    future.set_exception(wire.ChannelError('owned_channel_failed_closed_at_'+self._phase));raise
         except Exception:
             self._last_error='failed_closed';self.state='failed'
         finally:

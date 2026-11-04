@@ -96,3 +96,10 @@
 - [ ] Análise de ameaças, pareamento autenticado e integração exclusivamente sintética revisada.
 - [x] P2: threat model, protocolo/simulador fechado, negativos/fuzz e probe separado de identidade de filho Windows.
 - [ ] P2: peer do canal verificado, chave entregue por handle privado, testes adversariais/IPC e adapter opt-in; NÃO habilitados pelo simulador.
+
+## Issue 17 — canal herdado e auditoria
+- [x] Etapa A isolada: processo IPC Windows real, lista mínima de handles, bootstrap privado e HMAC com identidade kernel; primeira CI41809413254 aprovada.
+- [x] Testes reais adicionais escritos: decoy/descendente/WPF/filho não possuído, replay/contexto, duas instâncias/pausa, kill/timeout/cancelamento e cap64; confirmar nova CI.
+- [x] Saturação real1024/10000/32 sem reset/monkeypatch, clocks injetados; Linux aprovado, Windows a conferir.
+- [x] Plano de consolidação/revisão independente, sem merges/rebases em docs/STACK_REVIEW_PLAN.md.
+- [ ] Aprovação independente/outra conta/Windows10/11 e autenticação do WindowsObserver C#; adapter continua OFF.

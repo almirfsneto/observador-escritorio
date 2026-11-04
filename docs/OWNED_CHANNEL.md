@@ -79,3 +79,46 @@ humanos ainda são lacunas, não skips promovidos a aprovação.
 
 Etapa B (adapter WPF) permanece OFF até prova/revisão integrada. Mesmo Etapa A
 aprovada não demonstra auth do provider C# antigo nem cobertura UIA nova.
+
+## Primeira prova executada e auditoria ampliada
+
+22f99e5 / CI41809413254: cinco jobs aprovados; Windows3.11/3.12 executaram os três
+novos testes reais, incluindo handshake/proof, limpeza de flags/descendente,
+pausa/reproof, dez modos adversariais do filho, timeout e expiração real de3s.
+Núcleo155 descobertos, Windows153 executados/2 browsers separados skipped,
+Linux139/16 skips; Chromium2 reais no job dedicado. Isso comprova o canal da
+fixture IPC sob as premissas descritas, NÃO o provider UIA C# ou um piloto.
+
+Ampliação no próximo commit testa: decoy herdável fora da lista e unrelated
+child com herança irrestrita; foreign Popen recusado sem matá-lo; frames reais
+repetidos e de outra geração/nonce/sessão/direção; duas instâncias com pause,
+restart e chaves distintas; kill real do parent, recursos/mensagem64, cancelamento
+de operação pendente e nenhuma chave em argv/env. Erros têm fase estática e exit
+code da própria fixture, sem conteúdo livre/chave/frame. Não chamar PID reuse
+forçado de algo provado: alteração de creation ticks é fault injection.
+
+Harness end-to-end de testes, sem adapter runtime: contador da fixture autenticada
+é convertido pelo TESTE em Event fictício e gravado com API de OfflineBridge.
+Confere ACK/retry/pausa e marker após24h por CLOCK INJETADO. Não são24h observadas,
+nem captura WPF integrada, nem autorização de fonte automaticamente concedida.
+
+Capacidade: testes normais de admissão atingem1024 batch IDs (1024 reaberturas),
+10000 event IDs em100 lotes e32 fontes em32 aberturas, sem monkeypatch de caps.
+Expiração/purge/restart não liberam markers. SQLite integrity_check e nova admissão
+fechada verificam limite persistente. Prazos avançam por relógio injetado; orçamento
+continua lógico, não quota física. Nenhum reset/rotação automática foi implementado.
+
+Política futura de rotação deve ser revisada: metadados mínimos permanentes ou
+índice de revogação externo DURÁVEL e autenticado, epoch/cadeia de arquivos
+fechados, fonte explicitamente aposentada incapaz de voltar com ID/seq velhos,
+ACK detalhado limitado e tratamento receipt_expired_or_unknown. Arquivar/apagar
+markers sem uma fronteira persistente de revogação reabre replay e é proibido.
+Enquanto não houver esse projeto/revisão, saturação encerra novas admissões.
+
+Teste adicional inicia a fixture WPF real com close_fds=True, sem passar chave ou
+handles. Verifica que os valores dos endpoints do parent não designam os mesmos
+objetos no WPF por DuplicateHandle/CompareObjectHandles (número de handle pode ser
+reutilizado para outro objeto). Não modifica o executável WPF ou lê seus controles.
+A chave é gerada APÓS Popen; argv e lista de herança são conferidos em teste sem
+imprimir segredo. Ausência de env override + geração pós-spawn exclui passar essa
+chave no environment inicial do peer. Não há alegação de isolamento de memória.

@@ -629,3 +629,28 @@ UIA nova, rede ou coleta. Testes iniciais: três wire portáveis aprovados; trê
 Windows reais aguardam CI, skips Linux não representam prova. Contrato/riscos em
 docs/OWNED_CHANNEL.md. Próximas etapas independentes: adversariais/capacidade e
 plano de revisão/consolidação sem merge/rebase de branches anteriores.
+
+### Issue17 — primeira comprovação Windows e avanço independente de P2
+
+PR18 /22f99e5 / [CI41809413254](https://github.com/almirfsneto/observador-escritorio/actions/runs/41809413254):
+5/5 jobs aprovados; Windows3.11/3.12 153 executados/2 browsers skipped; Linux139
+executados/16 skips;155 descobertos, Chromium2 reais sem skips. Os três testes
+Windows NOVOS executaram processos/handles reais, inclusive dez modos adversariais,
+chave privada/handshake, pausa/reproof/cleanup e TTL natural curto de3s. Não é
+simulador de PR16, nem prova de autenticação do provider C# antigo ou aceite humano.
+
+P2 ampliada: saturação REAL das constantes1024/10000/32 via API normal, purge e
+reaberturas sem reset, passou localmente em~3,5s; clocks de retenção INJETADOS.
+Testes Windows adicionais de decoy/filho externo/replay/contexto/duas instâncias/
+restart/kill do parent/retorno de IO/cap64 e harness inbox24h ainda precisam CI.
+Diagnóstico novo usa fase/exitcode fixos do processo próprio, nunca chave/frame.
+Adapter WPF/agente segue OFF. Plano de consolidação/revisão independente será
+registrado sem alterar/rebasear/integrar qualquer PR anterior.
+
+Plano de consolidação/revisão independente em docs/STACK_REVIEW_PLAN.md contém
+cadeia/SHAs capturados, unidades de revisão e gates futuros, sem executar merge,
+rebase, squash ou retarget. Acrescentado teste WPF real de não herança de endpoints
+com comparação de objetos (evita confundir número reciclado com handle herdado),
+sem modificar fixture/agent/aceite. Publicação do segundo commit encontrou erro
+interno GitHub commit_refs/HTTP500; não há recusa de autorização. Código está
+commitado localmente e será publicado por caminho suportado, preservando históricos.
