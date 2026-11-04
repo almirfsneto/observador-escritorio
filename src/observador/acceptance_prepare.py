@@ -216,7 +216,9 @@ class Preparation:
             config = folder / 'NuGet.Config'
             config.write_text('<configuration><packageSources><clear /></packageSources></configuration>')
             report['checks']['offline_build'] = 'FALHOU'
-            for directory, name in PROJECTS.values():
+            # Comparative automated checks also need the legacy synthetic fixture.
+            # The manual lab still opens WPF; report v1 retains its two required hashes.
+            for directory, name in (*PROJECTS.values(), ('SyntheticTaskApp', 'SyntheticTaskApp')):
                 project = str(self.root / 'tools' / directory / (name + '.csproj'))
                 commands = [
                     [dotnet, 'restore', project, '--configfile', str(config), '-p:NuGetAudit=false', '--disable-parallel'],
