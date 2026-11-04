@@ -61,3 +61,10 @@ Controle mantém pause/fim fail-closed e ACK nativo. Teste Windows do controlado
 injeta estado de storage indisponível e exige pausa confirmada, depois retomada
 explícita; não é aceite humano nem teste de falha física de energia/SSD. Tests de
 faults transacionais separam commit conhecido de rollback/outcome incerto.
+
+Written conta INSERTs de uma transação commitada; se a cota de linhas expurga
+registros nessa mesma transação, eles entram também em purged e podem nunca ter
+ficado visíveis fora dela. Não interpretar written como retenção indefinida.
+Exemplo local medido com um evento fictício: principal atual 16.384 bytes, pico
+agregado amostrado com journal 29.208, reserva 4.390.920 e limite 13.631.488 bytes,
+9 observações. Valores dependem da plataforma/rodada, não são teto físico ou SLA.

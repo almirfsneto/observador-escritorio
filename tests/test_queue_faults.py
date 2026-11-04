@@ -61,7 +61,8 @@ class QueueFaultTest(unittest.TestCase):
             path=Path(tmp)/'queue/db.sqlite3'
             now=datetime.now(timezone.utc)
             store=LabEventQueue(path,clock=lambda:now)
-            store.insert(event());store.close()
+            try:store.insert(replace(event(),timestamp_utc=now.isoformat()))
+            finally:store.close()
             now+=timedelta(hours=2)
             sink=AsyncLabQueue(path,clock=lambda:now)
             sink.close()
@@ -106,7 +107,7 @@ class QueueFaultTest(unittest.TestCase):
             now=datetime.now(timezone.utc)
             store=LabEventQueue(path,clock=lambda:now)
             try:
-                store.insert(event())
+                store.insert(replace(event(),timestamp_utc=now.isoformat()))
                 self.assertGreater(store.budget.peak_observed,path.stat().st_size)
                 self.assertLessEqual(store.budget.peak_observed,store.budget.limit)
                 now+=timedelta(hours=2)
