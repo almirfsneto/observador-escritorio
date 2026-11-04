@@ -423,3 +423,16 @@ click sem ação. Corpus rotulado: TP17/FP0/FN0/TN28 em 45 pares artificiais, se
 alegação real. Linux: 120 descobertos, 108 executados/12 ignorados. Teste CDP real
 de worker stop/restart e ACK arquivo adicionado ao job Chromium; resultado remoto
 pendente. Gate PR6, aceite humano e piloto continuam intocados/pendentes.
+
+### Evidência da prioridade 1 e correção de fixture temporal
+
+PR12, código 88b8b2d: CI 41748698571, cinco jobs aprovados. Windows 3.11/3.12:
+108 descobertos, 107 executados e um browser separado ignorado; Linux 97/11
+ignorados. Chromium anterior: um teste real aprovado. Native/.NET8, contadores,
+pausa por falha de saúde com ACK, writer e reabertura preservados. Medição local
+sintética: 16.384 bytes atuais, pico agregado observado 29.208 com journal,
+reserva 4.390.920/limite 13.631.488, 9 amostras — não quota física.
+Na integração PR13, dois testes de TTL com relógio congelado criavam eventos em
+hora real após preparação Windows às vezes >100ms. Corrigidos para usar o mesmo
+relógio injetado, mantendo tolerância da fila; cleanup usa finally. Evidência
+posterior confirmará a revisão. Branch de aceite PR6 permanece em 3d4a770.

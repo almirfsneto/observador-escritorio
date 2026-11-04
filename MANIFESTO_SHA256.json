@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 29633,
-      "sha256": "47a8c0db730a9c06bd1c33ff6e9639520c7ab7a00d900b5c157716d9bda23f7f"
+      "size_bytes": 30493,
+      "sha256": "3a5695e5477e1514f806abf21cf76f471c42b6a2ac278df693214cd33208c9b3"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -115,8 +115,8 @@
     },
     {
       "path": "docs/DIAGNOSTICS.md",
-      "size_bytes": 4090,
-      "sha256": "5892eb01a4411eb9087e565623103b402ab603555e5556548113567af62238ef"
+      "size_bytes": 4587,
+      "sha256": "ec4e00ba57de1dc684ce4ec45a0fd659bfd36006a2f69f00146f0ae9f17e0e18"
     },
     {
       "path": "docs/DIAGNOSTICS_SCHEMA.json",
@@ -445,8 +445,8 @@
     },
     {
       "path": "tests/test_queue_faults.py",
-      "size_bytes": 8819,
-      "sha256": "515875b64b3f8691a3fefca53f820d474ce510124cc42167df540aca4a998bf7"
+      "size_bytes": 8921,
+      "sha256": "8a68e7f4e576989213b010865e375b9c2cc63e3573335077d5211253bd77c5ac"
     },
     {
       "path": "tests/test_storage_hardening.py",
