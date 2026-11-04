@@ -485,8 +485,8 @@
     },
     {
       "path": "tests/isolated_suspended_spawn.py",
-      "size_bytes": 8234,
-      "sha256": "0f283df4b577f5fb30854e9e17da2a93548c941f590a789eae4cc50df2ef79be"
+      "size_bytes": 8299,
+      "sha256": "170bee279fd8a6e012bcb7b70954ec329e8e6cb857c28d6d394f4dc87cf69f7e"
     },
     {
       "path": "tests/test_acceptance_launcher.py",

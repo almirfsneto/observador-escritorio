@@ -9,7 +9,9 @@ import sys
 from types import SimpleNamespace
 
 # Allow only this repository's source when run as the isolated crash fixture.
-if __name__=='__main__':sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
+if __name__=='__main__':
+    sys.path.insert(0,str(Path(__file__).resolve().parent))
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from observador.acceptance_metrics import OwnedJob
 from observador.cleanup import CleanupStatus
 from observador.win32_handles import close_handle_once,declare_close_handle
