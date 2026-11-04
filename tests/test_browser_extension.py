@@ -15,7 +15,7 @@ from observador.web_events import validate_web_export
 @unittest.skipUnless(os.environ.get('OBS_BROWSER_TEST') == '1','Real browser test enabled in dedicated web CI job')
 class BrowserExtensionTest(unittest.TestCase):
     def test_offline_bridge_ack_survives_real_service_worker_stop_and_restart(self):
-        from playwright.sync_api import sync_playwright
+        from playwright.sync_api import sync_playwright,expect
         from observador.offline_bridge import OfflineBridge,read_batch,canonical
         root=Path(__file__).resolve().parents[1]
         class QuietHandler(SimpleHTTPRequestHandler):
@@ -44,7 +44,7 @@ class BrowserExtensionTest(unittest.TestCase):
                     bridge.authorize(declared);bridge.control('start')
                     ticket=Path(profile)/'ticket.json';ticket.write_text(json.dumps(bridge.ticket(declared['instance'])))
                     popup.locator('#bridge-ticket').set_input_files(ticket)
-                    popup.wait_for_function("document.getElementById('bridge-status').textContent==='Ticket aceito'")
+                    expect(popup.locator('#bridge-status')).to_have_text('Ticket aceito')
                     page.locator('#save').click();page.wait_for_timeout(300)
                     def download_batch():
                         with popup.expect_download() as downloaded:
@@ -81,7 +81,7 @@ class BrowserExtensionTest(unittest.TestCase):
                     self.assertEqual(bridge.ingest(retry),ack)
                     acknowledgment=Path(profile)/'ack.json';acknowledgment.write_text(json.dumps(ack))
                     popup.locator('#bridge-ack').set_input_files(acknowledgment)
-                    popup.wait_for_function("document.getElementById('bridge-status').textContent==='ACK confirmado'")
+                    expect(popup.locator('#bridge-status')).to_have_text('ACK confirmado')
                     pending=replacement.evaluate('async(id)=>(await chrome.storage.session.get("sessions")).sessions[id].bridge.pending',tab_id)
                     self.assertIsNone(pending)
                     self.assertEqual(len(bridge.source_events()[0]['events']),len(batch['events']))
