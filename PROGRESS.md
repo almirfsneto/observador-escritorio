@@ -488,3 +488,19 @@ ler docs/RETOMADA_AUTONOMA.md, DIAGNOSTICS.md e OFFLINE_BRIDGE.md. Próxima aç�
 independente: retenção do inbox com receipts/ACK recuperáveis e testes de limites,
 depois desenho de IPC autenticado e adaptador opt-in Windows, sem ligar coleta.
 Último commit documental registra evidência; a CI do HEAD será conferida também.
+
+## Issue 14 — P1 retenção segura do inbox — 2026-11-04
+
+Base exata cf90de6/PR13, branch nova codex/inbox-retention. Documentos obrigatórios
+e referências da Issue/retomada lidos. Baseline Linux 121 descobertos: 109
+executados/12 skips específicos. Payload 1h, receipt 24h, markers de IDs globais e
+high-water persistentes sem TTL, migração v1 atômica e erro fechado após perda da
+janela de ACK. Quota preserva markers, counters agregados, fail-closed e relógio
+regressivo conservador. Retenção separada de expiração de sessão e ACK histórico.
+14 testes novos locais aprovados: fronteiras, replay pós-purge, conflitos,
+restart, duas instâncias, lock/FULL SQLite reais, BUSY/FULL/IO injetados, retorno
+pós-commit, os._exit pré/pós-commit ingest/purge + integrity_check, modelo aleatório
+seed 1401/100 operações. CI Linux/Windows/Chromium a conferir no PR desta entrega.
+Limites/contrato em docs/INBOX_RETENTION.md. PR6 intacto; sem coleta, rede de dados,
+instalação, deploy, merge ou afirmação de piloto. Próxima prioridade: análise de
+ameaças/autenticação verificável; não ligar transporte sem prova de origem.

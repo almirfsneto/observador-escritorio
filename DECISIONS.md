@@ -121,3 +121,9 @@
 - **Evidência:** Chromium preserva ServiceWorkerDevToolsAgentHost após StopWorker. Teste exige Inspector.targetCrashed do WorkerStopped e uma nova performance.timeOrigin, mais buffer persistido/producer encerrado/retry/ACK real; não exige wrapper/target destruído nem muta timeOrigin para simular restart.
 - **Segurança:** CSP mantida, asserções DOM no popup, perfil descartável permitido em CI; bloqueio unpacked local não contornado. Referência consultada: chromium/chromium, content/browser/devtools/service_worker_devtools_agent_host.cc (WorkerStopped/Close), sem importar código.
 - **Limites:** isso não valida todos os casos de idle/sono/energia, nem autentica arquivo/ACK, nem muda gates humanos. Precisão/recall só no corpus rotulado artificial; próxima etapa é retenção de inbox/receipts e desenho de IPC autenticado, não monitoramento real.
+
+## D-027 — Retenção com markers finitos permanentes, ACK de duração limitada
+- **Decisão:** inbox v2 migra v1 atomicamente; payload 1h, receipt/ACK 24h desde admissão, IDs globais e high-water por fonte sem TTL. Expurgo não elimina proteção histórica. Cap de markers bloqueia admissão, nunca eviction/reset.
+- **Recuperação:** retry vivo é leitura independente de quota; receipt vencido produz receipt_expired_or_unknown, não negação de commit. Clock regressivo fecha admissão/congela purge; avanço UTC ainda é risco explícito.
+- **Alternativas:** apagar IDs junto ao payload permitiria replay; hash/Bloom limitado introduziria colisões/falsos positivos; histórico ilimitado viola orçamento. Cap conservador requer revisão antes de qualquer uso contínuo.
+- **Limites:** SQLite claro, orçamento lógico/amostrado, limpeza somente quando executada, sem relógio confiável/admin-proof, exactly-once ou aceite humano. Contratos anteriores/PR6 preservados.

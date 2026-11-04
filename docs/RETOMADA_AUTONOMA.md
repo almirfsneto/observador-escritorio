@@ -90,3 +90,13 @@ em causalidade nem span em ganho real.
 Nenhum monitoramento de pessoas, dado real, instalação na equipe, autostart,
 screenshot real, telemetria, recurso pago, deploy, merge ou piloto autorizado.
 Aceite humano Windows10/11, Chrome/Edge e gates LGPD permanecem pendentes.
+
+## Atualização Issue 14 / P1
+
+Entrega em codex/inbox-retention sobre PR13/cf90de6; ler INBOX_RETENTION.md.
+Não usar PR13 isolado para novas alterações de retenção. Payload 1h/receipt24h,
+markers sem TTL/caps bloqueantes, migração v1 conservadora. Após receipt vencer,
+receipt_expired_or_unknown não significa ausência de commit. Não resetar inbox
+para contornar limite. CI nova ainda precisa ser conferida no PR/head; baseline
+121 e 14 testes novos locais. Próximo estágio: P2 em branch filha distinta,
+ameaças/autenticação com testes negativos; nenhum IPC inseguro será habilitado.

@@ -10,6 +10,7 @@ import threading
 import time
 from uuid import UUID,uuid4
 
+from .lab_faults import LabFaultPlan
 from .events import Event
 from .web_events import validate_web_export
 from .dpapi_archive import validate_archive_event
@@ -22,6 +23,10 @@ BATCH_KEYS={'schema_version','kind','bridge_epoch','generation','batch_sequence'
 ACK_KEYS={'schema_version','kind','bridge_epoch','generation','batch_sequence','batch_id','source_instance',
           'digest','accepted_count','written_count','source_gap_count','source_last_sequence','scope','status'}
 MAX_BYTES=256*1024
+EVENT_TTL_MS=3600*1000
+RECEIPT_TTL_MS=24*3600*1000
+MAX_BATCH_MARKERS=1024
+MAX_EVENT_MARKERS=10000
 
 
 class BridgeError(ValueError):pass
@@ -143,8 +148,14 @@ class OfflineBridge:
     Sources are DECLARED synthetic provenance authorized by a trusted caller.
     This file bridge does not authenticate browser origin or replace native PID binding.
     """
-    def __init__(self,path,*,clock=lambda:datetime.now(timezone.utc),monotonic=time.monotonic):
+    def __init__(self,path,*,clock=lambda:datetime.now(timezone.utc),monotonic=time.monotonic,fault_plan=None):
         self.clock,self.monotonic=clock,monotonic
+        if fault_plan is not None and type(fault_plan) is not LabFaultPlan:raise BridgeError('bridge_fault_plan_rejected')
+        self.fault_plan=fault_plan
+        self.metrics=dict(events_purged=0,receipts_purged=0,ack_recovered=0,receipt_unavailable=0,
+                          capacity_rejected=0,storage_errors=0,clock_regressions=0)
+        self._clock_floor=int(self.clock().timestamp()*1000)
+        self._mono_floor=self.monotonic()
         self.state='disabled';self.bindings={};self.lock=threading.RLock()
         self.path=Path(path).absolute();reject_links(self.path)
         safe_output_directory(Path(__file__).resolve().parents[2],self.path.parent)
@@ -158,21 +169,18 @@ class OfflineBridge:
         self.conn=sqlite3.connect(self.path,timeout=.05)
         try:
             secure_file(self.path)
-            if existed and (self.conn.execute('PRAGMA application_id').fetchone()[0]!=0x4f425342 or self.conn.execute('PRAGMA user_version').fetchone()[0]!=1):
+            if existed and (self.conn.execute('PRAGMA application_id').fetchone()[0]!=0x4f425342 or self.conn.execute('PRAGMA user_version').fetchone()[0] not in (1,2)):
                 raise BridgeError('bridge_database_format_rejected')
             self.conn.execute('PRAGMA journal_mode=DELETE');self.conn.execute('PRAGMA synchronous=FULL')
             self.conn.execute('PRAGMA secure_delete=ON');self.conn.execute('PRAGMA cache_spill=OFF')
-            self.conn.execute('PRAGMA temp_store=MEMORY')
+            self.conn.execute('PRAGMA temp_store=MEMORY');self.conn.execute('PRAGMA cache_size=-2048')
             page_size=self.conn.execute('PRAGMA page_size').fetchone()[0]
             pages=4*1024*1024//page_size
             if self.conn.execute(f'PRAGMA max_page_count={pages}').fetchone()[0]>pages:raise BridgeError('bridge_database_too_large')
             if self.conn.execute('PRAGMA quick_check').fetchone()[0]!='ok':raise BridgeError('bridge_integrity_failed')
-            self.conn.executescript('''CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY,value TEXT NOT NULL);
-                CREATE TABLE IF NOT EXISTS sources (instance TEXT PRIMARY KEY,source_json TEXT NOT NULL,last_batch INTEGER NOT NULL,last_sequence INTEGER NOT NULL);
-                CREATE TABLE IF NOT EXISTS receipts (instance TEXT NOT NULL,batch_id TEXT NOT NULL,digest TEXT NOT NULL,ack_json TEXT NOT NULL,PRIMARY KEY(instance,batch_id));
-                CREATE TABLE IF NOT EXISTS events (instance TEXT NOT NULL,event_id TEXT NOT NULL,source_sequence INTEGER NOT NULL,payload_json TEXT NOT NULL,PRIMARY KEY(instance,event_id));''')
             self.conn.execute('BEGIN IMMEDIATE')
             with self.conn:
+                self._schema()
                 self.conn.execute('INSERT OR IGNORE INTO meta VALUES (?,?)',('epoch',str(uuid4())))
                 self.conn.execute('INSERT OR IGNORE INTO meta VALUES (?,?)',('generation','0'))
                 self.epoch=str(uuid4())  # New process revokes previous uncommitted tickets.
@@ -180,11 +188,82 @@ class OfflineBridge:
                 self.generation=int(self.conn.execute('SELECT value FROM meta WHERE key="generation"').fetchone()[0])+1
                 self.conn.execute('UPDATE meta SET value=? WHERE key="generation"',(str(self.generation),))
                 self.conn.execute('PRAGMA application_id=1329746754')
-                self.conn.execute('PRAGMA user_version=1')
+                self.conn.execute('PRAGMA user_version=2')
         except Exception:
             self.conn.close();raise BridgeError('bridge_database_unavailable') from None
         self.expires=self.deadline=None
         self.last_clock=self.clock()
+        try:self.purge()
+        except Exception:
+            self.conn.close();raise
+
+    def _schema(self):
+        self.conn.execute('CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY,value TEXT NOT NULL)')
+        self.conn.execute('CREATE TABLE IF NOT EXISTS sources (instance TEXT PRIMARY KEY,source_json TEXT NOT NULL,last_batch INTEGER NOT NULL,last_sequence INTEGER NOT NULL)')
+        self.conn.execute('CREATE TABLE IF NOT EXISTS receipts (instance TEXT NOT NULL,batch_id TEXT NOT NULL,digest TEXT NOT NULL,ack_json TEXT NOT NULL,PRIMARY KEY(instance,batch_id))')
+        self.conn.execute('CREATE TABLE IF NOT EXISTS events (instance TEXT NOT NULL,event_id TEXT NOT NULL,source_sequence INTEGER NOT NULL,payload_json TEXT NOT NULL,PRIMARY KEY(instance,event_id))')
+        # Markers have no TTL. Their finite capacity is an admission stop, never eviction.
+        self.conn.execute('CREATE TABLE IF NOT EXISTS batch_markers (batch_id TEXT PRIMARY KEY,instance TEXT NOT NULL,digest TEXT NOT NULL)')
+        self.conn.execute('CREATE TABLE IF NOT EXISTS event_markers (event_id TEXT PRIMARY KEY,instance TEXT NOT NULL)')
+        for table in ('events','receipts'):
+            columns={row[1] for row in self.conn.execute('PRAGMA table_info('+table+')')}
+            if 'committed_ms' not in columns:
+                self.conn.execute('ALTER TABLE '+table+' ADD COLUMN committed_ms INTEGER NOT NULL DEFAULT 0')
+                # v1 had no admission clock. Grant a full window from migration, not event UTC.
+                self.conn.execute('UPDATE '+table+' SET committed_ms=?',(self._clock_floor,))
+        self.conn.execute('INSERT OR IGNORE INTO meta VALUES (?,?)',('retention_ms',str(self._clock_floor)))
+        if self.conn.execute('PRAGMA user_version').fetchone()[0]==1:
+            # Collision/over-capacity => rollback the entire migration, preserve original.
+            self.conn.execute('INSERT INTO batch_markers SELECT batch_id,instance,digest FROM receipts')
+            self.conn.execute('INSERT INTO event_markers SELECT event_id,instance FROM events')
+        if (self.conn.execute('SELECT COUNT(*) FROM batch_markers').fetchone()[0]>MAX_BATCH_MARKERS or
+                self.conn.execute('SELECT COUNT(*) FROM event_markers').fetchone()[0]>MAX_EVENT_MARKERS):
+            raise BridgeError('bridge_marker_capacity_reached')
+
+    def _hit(self,stage):
+        if self.fault_plan:self.fault_plan.hit(stage)
+
+    def _retention_now(self):
+        persisted=int(self.conn.execute('SELECT value FROM meta WHERE key="retention_ms"').fetchone()[0])
+        wall=int(self.clock().timestamp()*1000);mono=self.monotonic()
+        if wall<self._clock_floor or mono<self._mono_floor or wall<persisted:
+            self.metrics['clock_regressions']+=1
+            if self.state in ('active','paused','disabled'):self.state='expired'
+            # Freeze retention on backward wall/monotonic jumps, including across restart.
+            return max(persisted,self._clock_floor)
+        current=max(wall,persisted,self._clock_floor)
+        self._clock_floor=current;self._mono_floor=mono
+        return current
+
+    def purge(self):
+        '''Explicit synchronous maintenance; runs on open/read/ingest, even paused/expired.
+
+        Expiration uses local admission time, not producer timestamps. No background daemon.
+        '''
+        with self.lock:
+            try:
+                self.budget.check()
+                with self.conn:
+                    self.conn.execute('BEGIN IMMEDIATE');self._assert_owner()
+                    now=self._retention_now()
+                    events=self.conn.execute('DELETE FROM events WHERE committed_ms<=?',(now-EVENT_TTL_MS,)).rowcount
+                    receipts=self.conn.execute('DELETE FROM receipts WHERE committed_ms<=?',(now-RECEIPT_TTL_MS,)).rowcount
+                    self.conn.execute('UPDATE meta SET value=? WHERE key="retention_ms"',(str(now),))
+                    self.budget.check(reserve=False);self._hit('purge_before_commit')
+                self.metrics['events_purged']+=events;self.metrics['receipts_purged']+=receipts
+                self._hit('purge_after_commit')
+                return dict(events=events,receipts=receipts)
+            except (sqlite3.Error,OSError,BridgeError):
+                self.metrics['storage_errors']+=1;self.state='failed'
+                raise BridgeError('bridge_retention_failed_reopen_required') from None
+
+    def retention_snapshot(self):
+        '''Owner-thread diagnostic, not for UI callbacks; counters are process-local.'''
+        counts={table:self.conn.execute('SELECT COUNT(*) FROM '+table).fetchone()[0]
+                for table in ('events','receipts','event_markers','batch_markers','sources')}
+        return dict(schema_version=1,kind='synthetic_inbox_retention',state=self.state,counts=counts,
+                    counters=dict(self.metrics),budget=self.budget.snapshot(),physical_quota=False)
+
 
     def authorize(self,source):
         source=deepcopy(validate_source(source))
@@ -253,42 +332,64 @@ class OfflineBridge:
         digest=hashlib.sha256(canonical(batch).encode()).hexdigest()
         with self.lock:
             self._expire()
+            self._assert_owner()
             if self.bindings.get(instance)!=source:raise BridgeError('bridge_source_not_authorized')
-            old=self.conn.execute('SELECT digest,ack_json FROM receipts WHERE instance=? AND batch_id=?',(instance,batch['batch_id'])).fetchone()
-            if old:
+            old=self.conn.execute('SELECT digest,ack_json,committed_ms FROM receipts WHERE instance=? AND batch_id=?',(instance,batch['batch_id'])).fetchone()
+            if old and old[2]>self._retention_now()-RECEIPT_TTL_MS:
                 if old[0]!=digest:raise BridgeError('bridge_batch_id_conflict')
+                self.metrics['ack_recovered']+=1
                 return json.loads(old[1])  # Historical durable ACK, no fresh admission even while paused.
+            self.purge()
+            marker=self.conn.execute('SELECT digest FROM batch_markers WHERE batch_id=?',(batch['batch_id'],)).fetchone()
+            if marker:
+                self.metrics['receipt_unavailable']+=1
+                raise BridgeError('receipt_expired_or_unknown')
             if self.state!='active' or batch['bridge_epoch']!=self.epoch or batch['generation']!=self.generation:raise BridgeError('bridge_stale_or_inactive')
             last_batch,last_sequence=self.conn.execute('SELECT last_batch,last_sequence FROM sources WHERE instance=?',(instance,)).fetchone()
+            if batch['batch_sequence']<=last_batch:
+                self.metrics['receipt_unavailable']+=1
+                raise BridgeError('receipt_expired_or_unknown')
             if batch['batch_sequence']!=last_batch+1:raise BridgeError('bridge_batch_replay_or_gap')
             if events[0].metadata['source_sequence']<=last_sequence:raise BridgeError('bridge_event_replay')
-            if self.conn.execute('SELECT COUNT(*) FROM receipts').fetchone()[0]>=128 or self.conn.execute('SELECT COUNT(*) FROM events').fetchone()[0]+len(events)>10000:raise BridgeError('bridge_capacity_reached')
+            if (self.conn.execute('SELECT COUNT(*) FROM receipts').fetchone()[0]>=128 or
+                    self.conn.execute('SELECT COUNT(*) FROM events').fetchone()[0]+len(events)>10000 or
+                    self.conn.execute('SELECT COUNT(*) FROM batch_markers').fetchone()[0]>=MAX_BATCH_MARKERS or
+                    self.conn.execute('SELECT COUNT(*) FROM event_markers').fetchone()[0]+len(events)>MAX_EVENT_MARKERS):
+                self.metrics['capacity_rejected']+=1
+                raise BridgeError('bridge_capacity_reached_markers_preserved')
             missing=0;previous=last_sequence
             for event in events:
                 sequence=event.metadata['source_sequence'];missing+=sequence-previous-1;previous=sequence
-                if self.conn.execute('SELECT 1 FROM events WHERE instance=? AND event_id=?',(instance,event.event_id)).fetchone():raise BridgeError('bridge_event_identity_reused')
+                if self.conn.execute('SELECT 1 FROM event_markers WHERE event_id=?',(event.event_id,)).fetchone():raise BridgeError('bridge_event_identity_reused')
             ack=dict(schema_version=1,kind='synthetic_bridge_ack',bridge_epoch=self.epoch,generation=self.generation,
                 batch_sequence=batch['batch_sequence'],batch_id=batch['batch_id'],source_instance=instance,digest=digest,
                 accepted_count=len(events),written_count=len(events),source_gap_count=missing,source_last_sequence=previous,
                 scope='durable_local_inbox_not_business_completion',status='committed')
-            self.budget.check()
             try:
+                self.budget.check();self._hit('before_transaction')
                 with self.conn:
                     self.conn.execute('BEGIN IMMEDIATE')
                     self._assert_owner()
                     progress=self.conn.execute('SELECT last_batch,last_sequence FROM sources WHERE instance=?',(instance,)).fetchone()
                     if progress!=(last_batch,last_sequence):raise BridgeError('bridge_progress_changed')
-                    self.conn.executemany('INSERT INTO events VALUES (?,?,?,?)',[(instance,e.event_id,e.metadata['source_sequence'],canonical(e.to_dict())) for e in events])
+                    committed_ms=self._retention_now()
+                    if self.state!='active':raise BridgeError('bridge_clock_changed')
+                    self.conn.executemany('INSERT INTO events VALUES (?,?,?,?,?)',[(instance,e.event_id,e.metadata['source_sequence'],canonical(e.to_dict()),committed_ms) for e in events])
+                    self.conn.executemany('INSERT INTO event_markers VALUES (?,?)',[(e.event_id,instance) for e in events])
+                    self.conn.execute('INSERT INTO batch_markers VALUES (?,?,?)',(batch['batch_id'],instance,digest))
+                    self._hit('after_insert')
                     self.conn.execute('UPDATE sources SET last_batch=?,last_sequence=? WHERE instance=?',(batch['batch_sequence'],previous,instance))
-                    self.conn.execute('INSERT INTO receipts VALUES (?,?,?,?)',(instance,batch['batch_id'],digest,canonical(ack)))
-                    self.budget.check(reserve=False)
+                    self.conn.execute('INSERT INTO receipts VALUES (?,?,?,?,?)',(instance,batch['batch_id'],digest,canonical(ack),committed_ms))
+                    self.budget.check(reserve=False);self._hit('before_commit')
+                self._hit('after_commit')
             except (sqlite3.Error,OSError):
-                self.state='failed'
+                self.state='failed';self.metrics['storage_errors']+=1
                 raise BridgeError('bridge_commit_failed_retry_requires_receipt_check') from None
             return ack
 
     def source_events(self):
         # Never impose a global timestamp sort on independent sources.
+        self.purge()
         result=[]
         for instance,source in sorted(self.bindings.items()):
             rows=self.conn.execute('SELECT payload_json FROM events WHERE instance=? ORDER BY source_sequence',(instance,)).fetchall()

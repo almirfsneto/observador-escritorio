@@ -88,3 +88,9 @@
 - [ ] Retenção do inbox/receipts com recuperação após restart e limites adicionais.
 - [ ] IPC autenticado/adaptador Windows opt-in e coordenação confirmada de produtores.
 - [ ] Dataset independente, calibração, Chrome/Edge e Windows 10/11 humanos; PR6 permanece reservado.
+
+## Issue 14 — retenção e autenticação sintéticas
+- [x] Implementar TTL separado de payload/receipt, markers permanentes limitados e ACK recuperável.
+- [x] Testes de crash, replay após purge, conflitos, clocks, quota e migração v1.
+- [ ] Confirmar matriz Linux/Windows e Chromium nos novos heads.
+- [ ] Análise de ameaças, pareamento autenticado e integração exclusivamente sintética revisada.

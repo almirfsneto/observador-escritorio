@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 16775,
-      "sha256": "9827b7bf3e4927f9311cb3c4d290a9d9e953635572517b19e337d3ac6c260540"
+      "size_bytes": 17758,
+      "sha256": "d9ea38dbc724072bd84e0842f110e291f04b37411b8d51acb2c6f25460c8b8bc"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 34113,
-      "sha256": "ca4d623cee27e6215f4a77cb56b0844c2cb85bbf4560a32c0f3540804550d0b3"
+      "size_bytes": 35263,
+      "sha256": "9310145035c984485f50e908a399e1a04fd440f1c4ecba38f100759fe2d5d49b"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -40,8 +40,8 @@
     },
     {
       "path": "ROADMAP.md",
-      "size_bytes": 6237,
-      "sha256": "4d4fcbf84ccde6614f187cc16b5fce28ffa8a2f5774d399dfc614c20d79153d4"
+      "size_bytes": 6647,
+      "sha256": "476dd73eabbba5ceffac3deece4fe1ad6bba88c39b6071c3f2bb205570ce64f3"
     },
     {
       "path": "SECURITY.md",
@@ -134,6 +134,11 @@
       "sha256": "0b69608005cb899aaf56ffd65509bf12653277ed24be10b2075f9d3e7fc7db1a"
     },
     {
+      "path": "docs/INBOX_RETENTION.md",
+      "size_bytes": 5811,
+      "sha256": "bf337da1cae8e0518eb02c4ac18bb900231f5f07822db0c3efd717f04b04ff4f"
+    },
+    {
       "path": "docs/LAB_ENTREGA_2.md",
       "size_bytes": 2780,
       "sha256": "6aae7191602bc899f61aa6bd3accab2c0550a8ace09b2234b9393f352135dca3"
@@ -170,8 +175,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 5427,
-      "sha256": "ad6702b3783e49054ed7ebd51947e8f0c883df0cbc5d759abc4e9875648bbb05"
+      "size_bytes": 6030,
+      "sha256": "797eb9d7978610498957409c98efd5eb99a1bec23782a53eb2d9efcfac2038d5"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -305,8 +310,8 @@
     },
     {
       "path": "src/observador/offline_bridge.py",
-      "size_bytes": 19437,
-      "sha256": "76ead416572081cede87d76cd172dcda2ffda643a70b86c414d339a869c03bea"
+      "size_bytes": 25958,
+      "sha256": "a73066d03b354849106e228f8ed20b48c465973324a1cca3a0c670717565d9c7"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -417,6 +422,11 @@
       "path": "tests/test_events.py",
       "size_bytes": 1649,
       "sha256": "c4d8659e4659701867995fea10e4d3194a0eb5d473898da916ef8904e09b5598"
+    },
+    {
+      "path": "tests/test_inbox_retention.py",
+      "size_bytes": 13241,
+      "sha256": "7d5e6280e092584cca8f4243c82649f04595ca7fcda4c187ac44e37b34b6166b"
     },
     {
       "path": "tests/test_lab_queue.py",
