@@ -411,6 +411,19 @@ CI Windows/browser pendente. Nenhum resultado representa aceite humano. Próxima
 prioridade desta execução: bridge offline/proveniência/ACK, worker real e negativos
 de mineração. PR6 permanece reservado ao responsável, sem alterações.
 
+## Issue 11 — prioridade 2: bridge offline e negativos
+
+Branch codex/offline-source-bridge sobre a entrega de diagnósticos. Inbox próprio,
+fontes/slots declarados autorizados, tickets e gerações, sequence por fonte,
+receipt+eventos transacionais, replay/conflicto e ACK local explícito. Sem socket,
+upload, NativeMessaging ou mudança de permissões. Popup importa ticket/ACK locais
+e exporta batch pendente estável; integração Windows automática não foi forçada.
+Negativos de mineração corrigem merge por substituição semântica, gaps/clock e
+click sem ação. Corpus rotulado: TP17/FP0/FN0/TN28 em 45 pares artificiais, sem
+alegação real. Linux: 120 descobertos, 108 executados/12 ignorados. Teste CDP real
+de worker stop/restart e ACK arquivo adicionado ao job Chromium; resultado remoto
+pendente. Gate PR6, aceite humano e piloto continuam intocados/pendentes.
+
 ### Evidência da prioridade 1 e correção de fixture temporal
 
 PR12, código 88b8b2d: CI 41748698571, cinco jobs aprovados. Windows 3.11/3.12:
@@ -423,3 +436,55 @@ Na integração PR13, dois testes de TTL com relógio congelado criavam eventos 
 hora real após preparação Windows às vezes >100ms. Corrigidos para usar o mesmo
 relógio injetado, mantendo tolerância da fila; cleanup usa finally. Evidência
 posterior confirmará a revisão. Branch de aceite PR6 permanece em 3d4a770.
+
+## Issue 11 — evidência integrada e limites de retomada
+
+As duas prioridades foram implementadas em entregas separadas, sobre PR10:
+- PR12 / codex/closed-lab-diagnostics / b9cb6ec:
+  [CI 41752385456](https://github.com/almirfsneto/observador-escritorio/actions/runs/41752385456),
+  cinco jobs aprovados; Linux 98 executados/11 específicos ignorados, Windows
+  3.11/3.12 108 executados/um browser separado ignorado, Chromium um teste real.
+- PR13 / codex/offline-source-bridge / código integrado 633d3ec:
+  [CI 41752388247](https://github.com/almirfsneto/observador-escritorio/actions/runs/41752388247),
+  cinco jobs aprovados; 121 descobertos, Linux 109 executados/12 específicos
+  ignorados, Windows 3.11/3.12 119 executados/dois browsers separados ignorados.
+  Chromium executou DOIS testes reais, sem skips: fluxo MV3 anterior e reinício
+  real + bridge/receipt/ACK. Skips não comprovam funcionalidade; nesse conjunto,
+  browser está coberto no job dedicado, não no núcleo Windows.
+
+Prova do restart: Inspector.targetCrashed emitido por WorkerStopped do Chromium,
+seguido de nova performance.timeOrigin, estado ENcerrado do produtor, mesmo lote
+pendente com dois eventos, retry idêntico sem regravação e ACK consumido no popup.
+Nenhuma alteração de variável substituiu essa prova. Target/Worker wrapper de
+DevTools pode sobreviver ao GlobalScope: esperar targetDestroyed/close era erro
+do harness, corrigido com eventos do ciclo de vida e novo contexto. CSP do popup
+permanece intacta: asserção DOM substituiu espera dinâmica bloqueada, sem bypass.
+Política unpacked do executor local não foi contornada. Suspensão natural por
+ociosidade/sono do OS e Chrome/Edge humanos continuam sem aceite.
+
+Falhas corrigidas na CI: fixture congelava relógio da fila e gerava evento em
+hora real (Windows lento ultrapassava 100ms); agora ambos usam o relógio injetado.
+Fechamento incompleto é testado com bloqueio sintético: timeout limitado, snapshot
+não bloqueia e registra writer_shutdown_incomplete; depois liberação/flush e
+limpeza comprovados. Rollback incerto não vira perda/commit inventado. Budget
+inclui amostra de journal vivo; medição local registrada em DIAGNOSTICS.md.
+.NET8, native/UIA WPF 30/30, pausa/retomada com ACK, writer, ACL/DPAPI e gate
+anterior preservados; WinForms continua sem ação Invoke comprovada nesse caminho.
+
+Negativos de mineração: 10 traces/42 eventos, 45 pares, TP17 FP0 FN0 TN28,
+precisão/recall 1 **somente no corpus construído**; não é acurácia real. Click/foco
+sem ação, conflitos/duplicatas, fonte negada, sequência faltante, clock regressivo
+e interrupções não são colados silenciosamente a tarefas. Dataset independente,
+calibração e causalidade continuam pendentes. Economia não é inferida como fato.
+
+Branch PR6 reservada ao responsável permanece em 3d4a770; não houve mudanças nela,
+merge de PR, instalação na equipe, dados reais, deploy ou transmissão de capturas.
+SQLite ativo/inbox seguem em claro, orçamento não é quota física, fonte/ACK por
+arquivo não são autenticados contra falsificador local e inbox não tem expurgo
+por tempo. Não apto a piloto; aceite Windows10/11/Chrome/Edge/LGPD permanece.
+
+Retomada integrada: buscar codex/offline-source-bridge e criar outra branch;
+ler docs/RETOMADA_AUTONOMA.md, DIAGNOSTICS.md e OFFLINE_BRIDGE.md. Próxima ação
+independente: retenção do inbox com receipts/ACK recuperáveis e testes de limites,
+depois desenho de IPC autenticado e adaptador opt-in Windows, sem ligar coleta.
+Último commit documental registra evidência; a CI do HEAD será conferida também.

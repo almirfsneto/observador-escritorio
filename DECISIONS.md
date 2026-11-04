@@ -108,3 +108,16 @@
 - **Decisão:** schema fechado v1 e snapshots por componente, sem identificadores/payloads. Equações por lifetime/estágio, gauges cacheados e lacunas de amostra/proveniência; história recusa replay/regressões sem prometer autenticidade ou exactly-once.
 - **Armazenamento:** distinguir commit conhecido de rejeição/duplicata/outcome incerto. Rollback falho fecha writer e registra incerteza; erro após commit não conta commit como perdido. Erro assíncrono rejeita pendências e não retoma sozinho.
 - **Limites:** snapshots não globais, contadores voláteis, purge inclui DB anterior; orçamento observado não é quota física e SQLite continua em claro. Branch PR6 e JSON de aceite v1 intocados.
+
+## D-024 - Bridge por arquivos locais e ACK de inbox, sem IPC implícito
+- **Decisão:** contrato fechado de fontes fictícias, tickets/gerações, high-water por fonte, batches idempotentes e receipt transacional persistido; transferência manual de arquivos, sem rede/permissões MV3 novas. Novo dono revoga tickets antigos, histórico commitado continua consultável.
+- **Limites:** proveniência de arquivo é declaração, não autenticação; hash não é assinatura. ACK não é intenção/resultado de negócio nem pausa global de produtores. Não impor ordem/relógio global; inbox separado limitado e em claro, sem expurgo temporal automático. IPC autenticado e integração contínua ficam posteriores.
+
+## D-025 - Negativos de mineração sem substituição semântica silenciosa
+- **Decisão:** variantes só revisão opcional/repetição adjacente; substituições/missing etapas são hipóteses distintas. Sequência local precede relógio, gaps/clock regressivo cortam tarefas; foco conhecido filtrado não gera gap. Click sem ação é ruído.
+- **Avaliação:** pares rotulados exclusivamente artificiais (10 traces/45 pares), TP17/FP0/FN0/TN28. Precisão/recall no corpus não é acurácia fora dele; não inferir causalidade nem tempo economizável.
+
+## D-026 - Provar reinício do contexto, não desaparecimento do host DevTools
+- **Evidência:** Chromium preserva ServiceWorkerDevToolsAgentHost após StopWorker. Teste exige Inspector.targetCrashed do WorkerStopped e uma nova performance.timeOrigin, mais buffer persistido/producer encerrado/retry/ACK real; não exige wrapper/target destruído nem muta timeOrigin para simular restart.
+- **Segurança:** CSP mantida, asserções DOM no popup, perfil descartável permitido em CI; bloqueio unpacked local não contornado. Referência consultada: chromium/chromium, content/browser/devtools/service_worker_devtools_agent_host.cc (WorkerStopped/Close), sem importar código.
+- **Limites:** isso não valida todos os casos de idle/sono/energia, nem autentica arquivo/ACK, nem muda gates humanos. Precisão/recall só no corpus rotulado artificial; próxima etapa é retenção de inbox/receipts e desenho de IPC autenticado, não monitoramento real.

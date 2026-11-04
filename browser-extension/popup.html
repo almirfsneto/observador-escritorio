@@ -3,4 +3,8 @@
 <p>127.0.0.1:8765/synthetic-lab/ • até 15 minutos. Sem valores, URL ou upload.</p>
 <button id="start">Iniciar ensaio explícito</button><button id="pause">Pausar</button><button id="resume">Retomar</button><button id="stop">Encerrar</button>
 <p id="status">DESATIVADO</p><button id="export">Exportar JSON sintético local</button>
+<hr><p>Ponte offline experimental: ticket e ACK somente de arquivos locais revisados.</p>
+<label>Ticket <input id="bridge-ticket" type="file" accept=".json"></label>
+<button id="bridge-export">Exportar lote da ponte</button>
+<label>ACK <input id="bridge-ack" type="file" accept=".json"></label><p id="bridge-status">Ponte desativada</p>
 <script src="popup.js"></script></body></html>

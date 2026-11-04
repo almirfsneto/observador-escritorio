@@ -1,4 +1,5 @@
 'use strict';
+importScripts('bridge_protocol.js');
 const ACTIONS = new Set(['save','review','download','rename','move','register','open_menu','select_menu','select_tab','submit','navigate','transition']);
 const ROLES = new Set(['button','menuitem','tab','window','control']);
 const allowed = value => {
@@ -25,6 +26,7 @@ async function handle(message, sender) {
     if (s && !s.ended) return {ok:false};
     if (Object.keys(sessions).length >= 2 && !s) return {ok:false};
     s = {id:crypto.randomUUID(),enabled:true,ended:false,generation:1,sequence:0,expires:now+15*60*1000,lastClock:now,
+         slot:Object.entries(sessions).some(([key,value])=>Number(key)!==tabId && value.slot===1)?2:1,
          workerOrigin:performance.timeOrigin,deadline:performance.now()+15*60*1000,
          events:[],dropped:0,rejected:0,rateAt:now,rateCount:0};
     sessions[tabId]=s;
@@ -44,6 +46,10 @@ async function handle(message, sender) {
         target:message.role+'-'+message.control_id,duration_ms:0,screenshot_ref:null,
         metadata:{category:'synthetic',control_role:message.role,source_sequence:++s.sequence}});
     }
+  } else if (popup && ['bridge_ticket','bridge_export','bridge_ack'].includes(message.kind)) {
+    const result=await bridgeMessage(message.kind,s,message);
+    if(s){sessions[tabId]=s;await chrome.storage.session.set({sessions});}
+    return result;
   } else if (!['status','export'].includes(message.kind)) return {ok:false};
   if (s) { sessions[tabId]=s; await chrome.storage.session.set({sessions}); }
   if (popup && message.kind === 'export') return {ok:true,report:{schema_version:1,kind:'synthetic_web_extension',capture_real:false,pilot_authorized:false,

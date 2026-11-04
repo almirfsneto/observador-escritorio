@@ -77,3 +77,8 @@ Somente laboratório sintético, ainda sem autorização de piloto:
 [descoberta de microtarefas](docs/TASK_DISCOVERY.md).
 O SQLite ativo continua em claro; WinForms permanece com cobertura limitada.
 [Retomada autônoma e próximos testes](docs/RETOMADA_AUTONOMA.md).
+
+Issue 11: [diagnóstico fechado e faults sintéticos](docs/DIAGNOSTICS.md),
+[ponte offline por arquivos/ACK](docs/OFFLINE_BRIDGE.md) e
+[retomada atualizada](docs/RETOMADA_AUTONOMA.md). A ponte não possui socket nem
+autenticação de peers/retenção temporal de inbox; continua restrita a laboratório.

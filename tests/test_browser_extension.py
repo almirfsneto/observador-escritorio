@@ -14,6 +14,97 @@ from observador.web_events import validate_web_export
 
 @unittest.skipUnless(os.environ.get('OBS_BROWSER_TEST') == '1','Real browser test enabled in dedicated web CI job')
 class BrowserExtensionTest(unittest.TestCase):
+    def test_offline_bridge_ack_survives_real_service_worker_stop_and_restart(self):
+        from playwright.sync_api import sync_playwright,expect
+        from observador.offline_bridge import OfflineBridge,read_batch,canonical
+        root=Path(__file__).resolve().parents[1]
+        class QuietHandler(SimpleHTTPRequestHandler):
+            def log_message(self,*args):pass
+        server=ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(QuietHandler,directory=str(root/'tests/fixtures/web')))
+        thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+        try:
+            with tempfile.TemporaryDirectory() as profile,sync_playwright() as p:
+                extension=str(root/'browser-extension')
+                context=p.chromium.launch_persistent_context(profile,executable_path=os.environ.get('OBS_CHROMIUM_PATH') or p.chromium.executable_path,
+                    headless=True,ignore_default_args=['--disable-extensions'],args=['--no-sandbox',f'--disable-extensions-except={extension}',
+                    f'--load-extension={extension}','--disable-background-networking','--disable-sync','--no-first-run'])
+                bridge=OfflineBridge(Path(profile)/'inbox/bridge.sqlite3')
+                try:
+                    worker=context.service_workers[0] if context.service_workers else context.wait_for_event('serviceworker')
+                    extension_id=worker.url.split('/')[2]
+                    page=context.new_page();page.goto('http://127.0.0.1:8765/synthetic-lab/index.html')
+                    page.wait_for_selector('#observador-lab-status')
+                    tab_id=worker.evaluate('async()=> (await chrome.tabs.query({url:"http://127.0.0.1/*"}))[0].id')
+                    popup=context.new_page();popup.goto(f'chrome-extension://{extension_id}/popup.html')
+                    popup.evaluate('(id)=>chrome.tabs.update(id,{active:true})',tab_id);popup.reload()
+                    popup.wait_for_function('typeof tabId === "number"')
+                    popup.evaluate("document.getElementById('start').click()")
+                    page.wait_for_function("document.getElementById('observador-lab-status').textContent.includes('ATIVO')")
+                    declared=worker.evaluate('async(id)=>{const s=(await chrome.storage.session.get("sessions")).sessions[id];return {kind:"web",version:1,instance:s.id,origin:"http://127.0.0.1:8765",tab_slot:s.slot};}',tab_id)
+                    bridge.authorize(declared);bridge.control('start')
+                    ticket=Path(profile)/'ticket.json';ticket.write_text(json.dumps(bridge.ticket(declared['instance'])))
+                    popup.locator('#bridge-ticket').set_input_files(ticket)
+                    expect(popup.locator('#bridge-status')).to_have_text('Ticket aceito')
+                    page.locator('#save').click();page.wait_for_timeout(300)
+                    def download_batch():
+                        with popup.expect_download() as downloaded:
+                            popup.evaluate("document.getElementById('bridge-export').click()")
+                        return read_batch(downloaded.value.path())
+                    batch=download_batch()
+                    self.assertTrue(batch['events'])
+                    ack=bridge.ingest(batch)
+                    self.assertEqual(bridge.ingest(batch),ack)
+                    # Chromium preserves its DevTools agent host across worker restarts.
+                    # Observe WorkerStopped's Inspector notification and a new JS time origin.
+                    cdp=context.browser.new_browser_cdp_session()
+                    targets=cdp.send('Target.getTargets')['targetInfos']
+                    matches=[target for target in targets if target['type']=='service_worker' and target['url']==worker.url]
+                    self.assertEqual(len(matches),1,'Owned extension worker target is ambiguous')
+                    target_id=matches[0]['targetId']
+                    session_id=cdp.send('Target.attachToTarget',{'targetId':target_id,'flatten':False})['sessionId']
+                    responses={};lifecycle=[];command_id=[0]
+                    def received(data):
+                        if data['sessionId']!=session_id:return
+                        message=json.loads(data['message'])
+                        if 'id' in message:responses[message['id']]=message
+                        elif message.get('method')=='Inspector.targetCrashed':lifecycle.append('worker_stopped')
+                    cdp.on('Target.receivedMessageFromTarget',received)
+                    def worker_command(method,params=None):
+                        command_id[0]+=1;identifier=command_id[0]
+                        cdp.send('Target.sendMessageToTarget',{'sessionId':session_id,
+                            'message':json.dumps(dict(id=identifier,method=method,params=params or {}))})
+                        deadline=time.monotonic()+8
+                        while identifier not in responses and time.monotonic()<deadline:page.wait_for_timeout(50)
+                        self.assertIn(identifier,responses,'Owned worker did not answer CDP command')
+                        response=responses.pop(identifier)
+                        self.assertNotIn('error',response,'Owned worker CDP command failed')
+                        return response['result']
+                    worker_command('Inspector.enable')
+                    worker_command('Runtime.enable')
+                    origin=worker_command('Runtime.evaluate',{'expression':'performance.timeOrigin','returnByValue':True})['result']['value']
+                    self.assertTrue(cdp.send('Target.closeTarget',{'targetId':target_id})['success'])
+                    deadline=time.monotonic()+8
+                    while not lifecycle and time.monotonic()<deadline:page.wait_for_timeout(50)
+                    self.assertTrue(lifecycle,'No actual WorkerStopped lifecycle event observed')
+                    worker_command('Runtime.runIfWaitingForDebugger')
+                    page.wait_for_function("document.getElementById('observador-lab-status').textContent.includes('ENCERRADO')")
+                    replacement_origin=worker_command('Runtime.evaluate',{'expression':'performance.timeOrigin','returnByValue':True})['result']['value']
+                    self.assertNotEqual(replacement_origin,origin)
+                    retry=download_batch()
+                    self.assertEqual(canonical(retry),canonical(batch))
+                    self.assertEqual(bridge.ingest(retry),ack)
+                    acknowledgment=Path(profile)/'ack.json';acknowledgment.write_text(json.dumps(ack))
+                    popup.locator('#bridge-ack').set_input_files(acknowledgment)
+                    expect(popup.locator('#bridge-status')).to_have_text('ACK confirmado')
+                    expression='chrome.storage.session.get("sessions").then(d=>d.sessions['+str(tab_id)+'].bridge.pending)'
+                    pending=worker_command('Runtime.evaluate',{'expression':expression,'awaitPromise':True,'returnByValue':True})['result']['value']
+                    self.assertIsNone(pending)
+                    self.assertEqual(len(bridge.source_events()[0]['events']),len(batch['events']))
+                    print('SYNTHETIC_BRIDGE_RESTART_VERIFIED',json.dumps(dict(events=len(batch['events']),worker_restarted=True,
+                          receipt_replayed=True,producer_stopped=True,human_acceptance=False)))
+                finally:bridge.close();context.close()
+        finally:server.shutdown();server.server_close();thread.join(timeout=3)
+
     def test_real_mv3_allowlist_privacy_pause_navigation_limits_and_expiry(self):
         from playwright.sync_api import sync_playwright
         root=Path(__file__).resolve().parents[1]
