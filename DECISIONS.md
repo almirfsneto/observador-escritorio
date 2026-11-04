@@ -89,3 +89,7 @@
 - **Decisão:** probe explícito separado, SetWinEventHook process-scoped e apenas eventos de acessibilidade de botões nativos. Exporta contagens/custo/atraso agregado e não alimenta ui_action.
 - **Motivo:** STATECHANGE não demonstra ativação; absence de Invoke não pode ser corrigida inventando clique. WPF/WinForms são exercitados com controles padrão, mesma rajada e pausa confirmada.
 - **Limites:** objetos filhos sem HWND individual, clicks humanos e aplicativos profissionais não estão cobertos por esta medição. Propor adapter semântico opt-in quando incompatível, sem hooks de conteúdo.
+
+## D-020 - Extensão MV3 local com contrato fechado e estado efêmero
+- **Decisão:** storage.session, origem 127.0.0.1:8765/caminho sintético, permissão só storage, geração por pausa, IDs aleatórios, sem conteúdo e exportação por download local explícito. Event v1 continua compatível; importador específico rejeita payloads fora da projeção.
+- **Limites:** host pattern não limita porta; guardas no worker/content fazem isso. Timestamp é de recepção; unload/suspensão pode perder mensagens. Política unpacked bloqueia execução no executor: não contornar; CI usa Chromium descartável, e Chrome/Edge reais permanecem gate separado.

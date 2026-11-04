@@ -289,6 +289,17 @@ WinForms, contagens UIA/WinEvent, custo próprio e atraso de callback, pause ACK
 Linux: 84 descobertos, 74 executados, dez Windows skipped. Compilação e desktop
 Windows dependem da CI em acompanhamento; não equivalem ao aceite humano.
 
+## Execução intensiva — extensão web sintética
+
+Branch codex/synthetic-browser-extension sobre a entrega de cobertura Windows.
+MV3 opt-in, loopback/origem/caminho exatos, sem permissões amplas, valores ou URLs
+exportados. Popup de início/pausa/fim, prazo/limites, worker serial e exportação
+local; importador Event v1 fechado. Site fictício com formulário/senha/menu/tabs/
+tabela/navegação e teste real Playwright. Política Chromium deste executor impede
+unpacked; não foi contornada nem reportada como teste aprovado. Job CI real
+Chromium separado adicionado; resultado remoto ainda pendente. Testes unitários
+não substituem carregamento real nem aceite Chrome/Edge Windows.
+
 ### Evidência do endurecimento do armazenamento
 
 PR #7: CI 41741273177 no código 7bd09ff, quatro jobs aprovados Linux/Windows
@@ -312,3 +323,15 @@ fundamenta adapter complementar, em vez de inferir ações. Probe durou ~2,2s,
 consumiu ~109–141ms de CPU e ~29 MiB de working set pico em rodadas CI; valores
 amostrais do processo próprio, não SLA. Latência reportada zero quando não houve
 callback aceito é ausência de amostra, não atraso zero garantido.
+
+### Evidência de extensão MV3 real
+
+PR #9, código 5dcf7d5: CI 41742054304, cinco jobs aprovados (matriz núcleo
+Linux/Windows 3.11/3.12 + Chromium real). Núcleo: 87 descobertos; Linux 76
+executados/11 ignorados; Windows 85 executados/dois ignorados (symlink presumido
+naquela revisão e browser separado). Job web executou um teste real aprovado,
+Chromium 151.0.7922.34: 27 eventos sanitizados, carregamento MV3/popup/guardas,
+valores/senha/URL excluídos, pausa/retomada/navegação, limite/rate e expiração
+injetada, download local validado pelo importador Python. Não foi aceite humano
+Chrome/Edge Windows nem observação de ambiente profissional. Política local do
+executor permaneceu intacta. Correção posterior na base tenta symlink real.

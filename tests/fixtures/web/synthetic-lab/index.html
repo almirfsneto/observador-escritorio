@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="observador-synthetic-lab" content="v1"><title>Fixture web fictícia</title>
+<h1>Laboratório fictício: nunca usar dados reais</h1>
+<form data-observador-action="submit" data-observador-role="control" onsubmit="event.preventDefault()">
+<input id="normal" value="PROCESSO-FICTICIO-001"><input id="password" type="password" value="SENHA-FICTICIA-NAO-COLETAR"><button id="submit" type="submit">Cadastrar formulário</button></form>
+<button id="save" data-observador-action="save" data-observador-role="button">Salvar</button>
+<button id="menu" data-observador-action="open_menu" data-observador-role="button" onclick="document.getElementById('items').hidden=false">Abrir menu</button>
+<div id="items" role="menu" hidden><button id="menuitem" role="menuitem" data-observador-action="select_menu" data-observador-role="menuitem">Item fictício</button></div>
+<button id="tab" role="tab" data-observador-action="select_tab" data-observador-role="tab">Aba fictícia</button>
+<table><tr><td>Documento fictício</td><td><button id="register" data-observador-action="register" data-observador-role="button">Cadastrar</button></td></tr></table>
+<a id="next" href="next.html?token=NAO_EXPORTAR#SIGILO-FICTICIO" data-observador-action="navigate" data-observador-role="button">Próxima tela fictícia</a>
+</html>

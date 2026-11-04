@@ -5,8 +5,8 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 1701,
-      "sha256": "1ffbab164ed0ecad1f67493743646c684a6d951fddd4361f85c54d29b65966e7"
+      "size_bytes": 2145,
+      "sha256": "0eaffea7f5803ce29d38148bb45d806020411130c57a107b86bf70ea7de9e9f2"
     },
     {
       "path": ".gitignore",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 11573,
-      "sha256": "7cfabfde7476a2ef7f9e318061d591e2ef4ed063c858b2353bf8915d7beb80f0"
+      "size_bytes": 12230,
+      "sha256": "4cd2ea2a170e0ce9a7a2eb4f4b50cc4b4f6076dffd7411791d8c29093656d14c"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 21711,
-      "sha256": "74791230e8d942bf739dc3bff415acb1f2d83b3c78a1fec0b9ef383602137446"
+      "size_bytes": 23163,
+      "sha256": "8e4ab718b7657ab75ea93154cc38497af66d68a892f18b2765f1d091b7458300"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -57,6 +57,31 @@
       "path": "VALIDAR_LABORATORIO.cmd",
       "size_bytes": 445,
       "sha256": "16e7f846947534653c160408fd5f6965cf4ef795cc43e377bd62df2d961db333"
+    },
+    {
+      "path": "browser-extension/content.js",
+      "size_bytes": 2784,
+      "sha256": "5bd87a0797f45aafd80f5267fdf5977b6a9d2c0f38107bcf4361af9654e9c4e4"
+    },
+    {
+      "path": "browser-extension/manifest.json",
+      "size_bytes": 624,
+      "sha256": "b52e9290a441cd9d43c27000241feb9a0ec79486896232d22d14c1f2502eec95"
+    },
+    {
+      "path": "browser-extension/popup.html",
+      "size_bytes": 558,
+      "sha256": "1afce544af0d973c2e66dd20cb7f4689a542c00a232d68eec3200da71914bde0"
+    },
+    {
+      "path": "browser-extension/popup.js",
+      "size_bytes": 1029,
+      "sha256": "17515ef7c684fa1fef63a74e6305d5e14bb22bce7d8a46c4c4b31b42cbd3eb5f"
+    },
+    {
+      "path": "browser-extension/worker.js",
+      "size_bytes": 4047,
+      "sha256": "96bf154a1f20a9839686399f783cc0e016d0b870a1e0d4c62cc8457519a1c85c"
     },
     {
       "path": "docs/ACEITE_REPORT_SCHEMA.json",
@@ -137,6 +162,11 @@
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
       "size_bytes": 6368,
       "sha256": "ef5e84b6a82157f13cea10ed6d76358e66577da4cee833313655a9bb42166d54"
+    },
+    {
+      "path": "docs/WEB_EXTENSION.md",
+      "size_bytes": 3850,
+      "sha256": "26fb0afcd621d18f1973c45c9fb4277b09aecdfac3e30ecff263bd546a600dfa"
     },
     {
       "path": "docs/WINDOWS_COVERAGE.md",
@@ -254,6 +284,11 @@
       "sha256": "8dfb186981c25b4824c735b23ac3f7c7f44e1b78592caf628780f43cec17235c"
     },
     {
+      "path": "src/observador/web_events.py",
+      "size_bytes": 2887,
+      "sha256": "8c181b8f17727dbd62af4b9593368f8bd7839df8141bd73bbf670832ff6481f2"
+    },
+    {
       "path": "src/observador/windows.py",
       "size_bytes": 1562,
       "sha256": "e3cf6407f687941f3d298c4bac28a6c189438c5d01c0bd3046dac962fba0fb7b"
@@ -262,6 +297,16 @@
       "path": "src/observador/windows_probe.ps1",
       "size_bytes": 2237,
       "sha256": "dd0c64d95f217ad29dcd3bff0874b186821ab2f52fe7990cdb71cd377f43a4fd"
+    },
+    {
+      "path": "tests/fixtures/web/synthetic-lab/index.html",
+      "size_bytes": 1367,
+      "sha256": "f13ad4a535c96d150ae1f278c9e426fde98743ad954bb91ea86160a5208f8822"
+    },
+    {
+      "path": "tests/fixtures/web/synthetic-lab/next.html",
+      "size_bytes": 278,
+      "sha256": "46431de20d8a2da28775e27bc8477bbdb162c698956803b030ad2b08fc02929a"
     },
     {
       "path": "tests/test_acceptance_launcher.py",
@@ -287,6 +332,11 @@
       "path": "tests/test_acceptance_windows.py",
       "size_bytes": 5295,
       "sha256": "29b8810acc339699a6f04cd676e4f46514d6469c42db06a8bbde44e215b5d643"
+    },
+    {
+      "path": "tests/test_browser_extension.py",
+      "size_bytes": 7682,
+      "sha256": "0a78a855056bf9a51bb65c5c79142995205be8defcc6d1d67f6a18b956553c6d"
     },
     {
       "path": "tests/test_cli.py",
@@ -337,6 +387,11 @@
       "path": "tests/test_stream.py",
       "size_bytes": 5445,
       "sha256": "bd1d781320862b0d33eb56d308aa2f5917781b0c03392f3c792dc61f5f2dbb80"
+    },
+    {
+      "path": "tests/test_web_contract.py",
+      "size_bytes": 1953,
+      "sha256": "3bc513cf63cd03942837ec7b11f8800ada4d1e898f1f075bc1c610eba09329ca"
     },
     {
       "path": "tests/test_windows_controller.py",
