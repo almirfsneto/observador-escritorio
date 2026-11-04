@@ -11,6 +11,7 @@ class CleanupDiagnostic:
     def __init__(self):
         self.phases=dict.fromkeys(PHASES,'not_attempted');self.first_failure=None
         self.native_errors=dict.fromkeys(PHASES,'none');self.after_failure_wait='not_attempted'
+        self.process_exit_confirmed=False;self.exit_race_confirmed=False
 
     def note(self,phase,state,*,native=False):
         if phase not in PHASES or state not in STATES:raise ValueError('diagnostic_rejected')
@@ -38,9 +39,12 @@ class CleanupDiagnostic:
         return result
 
     def snapshot(self,probe):
-        return dict(kind='isolated_cleanup_diagnostic',phases=dict(self.phases),
+        origin=getattr(probe,'diagnostic_origin','unknown')
+        if origin not in ('win32','injected','win32_with_injected_wait','unknown'):raise ValueError('diagnostic_rejected')
+        return dict(kind='isolated_cleanup_diagnostic',origin=origin,phases=dict(self.phases),
                     first_failure=self.first_failure,native_errors=dict(self.native_errors),
-                    after_failure_wait=self.after_failure_wait,
+                    after_failure_wait=self.after_failure_wait,process_exit_confirmed=self.process_exit_confirmed,
+                    exit_race_confirmed=self.exit_race_confirmed,
                     resources=probe.status.snapshot(),assigned=probe.assigned,
                     job=dict(processes_confirmed=probe.job.processes_confirmed,
                              cleanup_confirmed=probe.job.cleanup_confirmed,close_state=probe.job.close_state),

@@ -235,3 +235,10 @@ exclusiva do harness registra fases/enums/contagens e confirmação pós-falha, 
 a entrega diagnóstica conserva status de erro. Não assumir corrida de término,
 não aumentar timeout nem dispensar asserts. Step focado nos dois Windows antes
 da matriz completa; correção depende de evidência nativa, seguida de regressões.
+
+D-036 / causa confirmada: CI41929775944 nos dois Windows mostrou erro5 no
+fallback após Job confirmado e antes de esperar término; observação posterior
+sinalizou processo, handles fecharam. Esperar saída pós-Job e reutilizar o mesmo
+orçamento2s. Recuperação limitada a AccessDenied + espera sinalizada + Job
+confirmado, com erro preservado no diagnóstico; jamais tolerar close falho ou
+API inválida por essa regra. Origens win32/injected/híbrida são explícitas.

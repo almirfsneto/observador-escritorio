@@ -1,5 +1,6 @@
 """AI03 isolated Win32 study. Production launchers are deliberately unchanged."""
 import ctypes
+import json
 from pathlib import Path
 import queue
 import subprocess
@@ -38,16 +39,21 @@ class WindowsSuspendedStudyTest(unittest.TestCase):
                     self.assertGreaterEqual(W.DWORD.from_buffer(accounting,40).value,2)
                 finally:probe.close()
                 self.assertTrue(probe.job.processes_confirmed);self.assertTrue(probe.status.confirmed)
+                self.assertTrue(probe.diagnostic.process_exit_confirmed)
+                print('ISOLATED_CLEANUP_CONFIRMED '+json.dumps(probe.diagnostic.snapshot(probe),sort_keys=True))
             finally:
                 kernel.inherit(read,False);kernel.close(read);kernel.close(write)
         print('REAL_SUSPENDED_MEMBERSHIP_BEFORE_RESUME no_inherited_decoy descendants_zero isolated_only')
 
     def test_injected_pre_resume_errors_cleanup_real_suspended_children(self):
-        for fault in ('before_assign','after_assign','membership','resume'):
+        for fault in ('before_assign','after_assign','assign','membership','resume'):
             with tempfile.TemporaryDirectory() as tmp:
                 marker=Path(tmp)/'synthetic.started';probe=SuspendedProbe(marker)
                 try:
-                    if fault=='membership':
+                    if fault=='assign':
+                        with patch.object(probe.job.api,'AssignProcessToJobObject',return_value=False):
+                            with self.assertRaisesRegex(OSError,'^owned_job_unavailable$'):probe.start()
+                    elif fault=='membership':
                         with patch.object(probe.api,'IsProcessInJob',return_value=False):
                             with self.assertRaisesRegex(OSError,'^isolated_job_membership_unconfirmed$'):probe.start()
                     elif fault=='resume':
@@ -59,6 +65,44 @@ class WindowsSuspendedStudyTest(unittest.TestCase):
                 finally:probe.close()
                 self.assertTrue(probe.status.confirmed);self.assertFalse(marker.exists())
         print('REAL_SUSPENDED_CHILDREN_CLEANED_AFTER_INJECTED_FAILURES no_resume no_production_integration')
+
+    def test_real_protected_process_handle_stays_unconfirmed_and_other_handles_close(self):
+        from ctypes import wintypes as W
+        with tempfile.TemporaryDirectory() as tmp:
+            probe=SuspendedProbe(Path(tmp)/'synthetic.started');api=probe.api;raw=probe.process.handle
+            api.SetHandleInformation.argtypes=[W.HANDLE,W.DWORD,W.DWORD];api.SetHandleInformation.restype=W.BOOL
+            self.assertTrue(api.SetHandleInformation(raw,2,2))
+            try:
+                with self.assertRaisesRegex(OSError,'^isolated_cleanup_unconfirmed$'):probe.close()
+                snapshot=probe.diagnostic.snapshot(probe)
+                self.assertEqual(snapshot['first_failure'],'process_handle_close')
+                self.assertEqual(snapshot['handles'],{'process':'failed','thread':'closed'})
+                self.assertTrue(snapshot['process_exit_confirmed']);self.assertFalse(probe.status.confirmed)
+                self.assertEqual(api.WaitForSingleObject(raw,0),0)
+                with self.assertRaises(OSError):probe.close() # No numeric slot retry.
+            finally:
+                # Test-only recovery of our still-live, deliberately protected handle.
+                self.assertTrue(api.SetHandleInformation(raw,2,0));self.assertTrue(api.CloseHandle(raw))
+        print('REAL_PROTECTED_SUSPENDED_HANDLE_REJECTED process_exited cleanup_unconfirmed no_retry')
+
+    def test_real_exit_race_requires_signaled_process_with_injected_initial_wait(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            probe=SuspendedProbe(Path(tmp)/'synthetic.started')
+            try:
+                probe.assign();probe.job.close()
+                self.assertEqual(probe.api.WaitForSingleObject(probe.process.handle,2000),0)
+                probe.diagnostic_origin='win32_with_injected_wait'
+                wait=probe.api.WaitForSingleObject;calls=[]
+                def initial_timeout(handle,milliseconds):
+                    calls.append(milliseconds)
+                    return 258 if len(calls)==1 else wait(handle,milliseconds)
+                with patch.object(probe.api,'WaitForSingleObject',side_effect=initial_timeout):probe.close()
+                snapshot=probe.diagnostic.snapshot(probe)
+                self.assertTrue(snapshot['exit_race_confirmed']);self.assertTrue(snapshot['process_exit_confirmed'])
+                self.assertEqual(snapshot['native_errors']['process_fallback'],'access_denied')
+                self.assertTrue(probe.status.confirmed)
+            finally:probe.close()
+        print('REAL_TERMINATE_EXITED_PROCESS_REJECTED initial_wait_injected final_exit_and_job_confirmed')
 
     def crash_case(self,phase):
         api=kernel_api()

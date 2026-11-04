@@ -990,3 +990,24 @@ Não há promoção de status.confirmed ou mudança de timeout/checagens. Step f
 Windows antecede suíte completa para obter evidência causal antes de corrigir.
 Prioridade2: stop pré-worker será corrigido após esse diagnóstico, com injeções
 e fallback se thread não iniciar. Todos os PRs anteriores preservados.
+
+### Issue27 P1 — causa demonstrada antes da correção
+
+Diagnóstico ed7c50d/CI41929775944: Linux3.11/3.12 e Chromium success; ambos
+Windows FALHARAM no estudo focado4 testes/2 erros, sem skips. Logs dos dois
+Windows consultados: first_failure=process_fallback, native_error=access_denied,
+job_terminate/job_zero/job_handle_close=passed, processes_confirmed=true;
+process_wait inicial=timeout, after_failure_wait=passed, ambos handles=closed.
+A falha era o fallback TerminateProcess prematuro após Job zero: o código
+transformava BOOL false em erro antes da confirmação posterior que provava saída.
+Não foi falha comprovada de CloseHandle/Job nem vazamento de handle.
+
+Correção: quando atribuição retornou sucesso e Job terminou/zerou/fechou, aguardar
+o processo antes do fallback. Mantém orçamento original de2s por processo;
+fallback só usa o remanescente, sem aumento de timeout. AccessDenied no fallback
+só pode ser recuperado com espera sinalizada e Job confirmado; evento de erro
+continua visível com exit_race_confirmed. Outras falhas de API/espera/close
+permanecem cleanup_unconfirmed e os demais handles continuam tentados.
+Cinco regressões injetadas passaram localmente; dois novos Windows preparados:
+close protegido continua recusado, e API real de término em processo já saído
+com primeira espera INJETADA. Novos resultados nativos ainda a conferir.

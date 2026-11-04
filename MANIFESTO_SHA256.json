@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 28492,
-      "sha256": "6fa977e9c69428706e76bebdb8831a03d4208b888514e1c3b850ba3973b9fff4"
+      "size_bytes": 28969,
+      "sha256": "9d72c48a3422abd9b6ee75ad6099eb0e2a211f0ed72745e7a4b0eb30a42c1e79"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 67646,
-      "sha256": "ea6bbe57de27f3a82a94b08378fa4b1365ea589b948c972310bf2a3f8e6e505d"
+      "size_bytes": 69031,
+      "sha256": "7940c647003e830624cd44953fa8a61dc853bb17e51b12bd7cb8bc87f8bdce15"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -480,13 +480,13 @@
     },
     {
       "path": "tests/isolated_cleanup_diagnostic.py",
-      "size_bytes": 2349,
-      "sha256": "a767daecde17bc33dbfa73b82966109b00260329aa53c057ac005bf08be71ea1"
+      "size_bytes": 2736,
+      "sha256": "8bb01b06440bbc31c8928a7bbbf177bcae8473167434b769ff229b0bec97360a"
     },
     {
       "path": "tests/isolated_suspended_spawn.py",
-      "size_bytes": 8299,
-      "sha256": "170bee279fd8a6e012bcb7b70954ec329e8e6cb857c28d6d394f4dc87cf69f7e"
+      "size_bytes": 9618,
+      "sha256": "1f469bb0673123ab9197b38efe39dded92d382f8173cb8f0ac3e6a57b28182b6"
     },
     {
       "path": "tests/test_acceptance_launcher.py",
@@ -634,9 +634,14 @@
       "sha256": "bd1d781320862b0d33eb56d308aa2f5917781b0c03392f3c792dc61f5f2dbb80"
     },
     {
+      "path": "tests/test_suspended_cleanup_diagnostics.py",
+      "size_bytes": 4420,
+      "sha256": "69a09ee742c5de5dea7b54a6faa931d6135dfa4e43987e439fcd3b4ddb1a263e"
+    },
+    {
       "path": "tests/test_suspended_study.py",
-      "size_bytes": 6222,
-      "sha256": "bdca017e8fcefc0751cd57844c9e3bfda378666ee5874ec9ac71812ddaa3c406"
+      "size_bytes": 9324,
+      "sha256": "23f58a71f7c6b0a440b84cb5dcd192b91904399e6860db875a136ebc5ad5aeea"
     },
     {
       "path": "tests/test_task_discovery.py",
