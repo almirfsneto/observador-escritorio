@@ -131,7 +131,7 @@ class AuthModelTest(unittest.TestCase):
             kernel.ProcessIdToSessionId.argtypes=[wintypes.DWORD,ctypes.POINTER(wintypes.DWORD)]
             kernel.ProcessIdToSessionId.restype=wintypes.BOOL
             slot=wintypes.DWORD();self.assertTrue(kernel.ProcessIdToSessionId(child.pid,ctypes.byref(slot)))
-            ticks=creation_ticks(child.pid)
+            ticks=creation_ticks(child)
             self.assertEqual(inspect_owned_child(child,target,ticks,slot.value)['pid'],child.pid)
             for path,created,session in ((wrong,ticks,slot.value),(target,ticks+1,slot.value),(target,ticks,slot.value+1)):
                 with self.assertRaisesRegex(ValueError,'^owned_child_identity_rejected$'):

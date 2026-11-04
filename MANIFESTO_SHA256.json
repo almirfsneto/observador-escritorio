@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 25593,
-      "sha256": "5fd66b12bb9b785bfa690260059625484e37c24b69cab17d185c20c521c12249"
+      "size_bytes": 26719,
+      "sha256": "d0d2fd67f9109d02bdd82bd6f62ad2b82432ff2944f0f8b4f24b14a55baa1d16"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 61397,
-      "sha256": "3086a2e6be03c367b962943bae91d56efdf4a214ff00f2cf1faf4af2fc3b63fe"
+      "size_bytes": 63803,
+      "sha256": "32705e234fc5ae86cb2d7de6124f83198ba22fd9920907f2d2d0beef0de32b3c"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -174,6 +174,11 @@
       "sha256": "8d72e7b389a8ff99dc480543eb46abeccbb6809ccd17c1369a4b2be05ee04203"
     },
     {
+      "path": "docs/LEGACY_BINDING_CLEANUP.md",
+      "size_bytes": 3720,
+      "sha256": "61a8f93af5cdf0a9d055423d77d4ed0d3a12e92866a0fbf32150d4f0a3f3b7e7"
+    },
+    {
       "path": "docs/OFFLINE_BRIDGE.md",
       "size_bytes": 5388,
       "sha256": "b4a71f91c08b45bce9cea652a830c49c52f055c7bb68d04ddb6106cc1a4e7835"
@@ -200,8 +205,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 11560,
-      "sha256": "55a940523324ddea22555facc2f47fad350ce181f9d04ca815905601b54149c7"
+      "size_bytes": 12524,
+      "sha256": "b8f351e6d3a9b4ac9b6430cce87bb64b388fecba616835fc11b5ef1ccf876e8e"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -290,18 +295,23 @@
     },
     {
       "path": "src/observador/acceptance_session.py",
-      "size_bytes": 7892,
-      "sha256": "ece848ced137875d83a8fa8dadb9462f4bcda2636930b915d4c059c42da60ef0"
+      "size_bytes": 7606,
+      "sha256": "6398abc6dbc1c4608046c0084f7b9032d6441d2700d612bcc34a83837f2cf43c"
     },
     {
       "path": "src/observador/acceptance_test_runner.py",
-      "size_bytes": 4409,
-      "sha256": "e69924d6fa0a9425e1c10cf3922ceb6f18b2242dae62ec7f137126778eb3afd3"
+      "size_bytes": 4432,
+      "sha256": "2f8eb057d34b713a3e402ee62ac0589e08b8602861ffcc5f286a9006badd5aa6"
     },
     {
       "path": "src/observador/acceptance_wizard.py",
       "size_bytes": 19646,
       "sha256": "bf5404f0f771d129823caacc09ff3f39db96ca6a0fed575166038a01a7ae0ab2"
+    },
+    {
+      "path": "src/observador/cleanup.py",
+      "size_bytes": 2167,
+      "sha256": "c394d9ce139c56d6b3c0fddc8cba8221aa04e4ced68991b084e6be8b4745abca"
     },
     {
       "path": "src/observador/collector.py",
@@ -330,8 +340,8 @@
     },
     {
       "path": "src/observador/lab_controller.py",
-      "size_bytes": 9389,
-      "sha256": "2091c4abb5ab1fa2511bbb3d6e4d75f9733da4aa7bd0269c01627d5897771995"
+      "size_bytes": 10208,
+      "sha256": "c0483b181177059b52934fbe5009f8ed9d66a5a20fa9a38a9f8855659010aa56"
     },
     {
       "path": "src/observador/lab_faults.py",
@@ -355,8 +365,8 @@
     },
     {
       "path": "src/observador/native_session.py",
-      "size_bytes": 5740,
-      "sha256": "807397dbac7fa82ef726d01de6560743d26b2efe53cc7b2605bed41b63705c71"
+      "size_bytes": 5145,
+      "sha256": "4994c92ed6f7f736d73e17ea52380a25999933c2f1ea3939081d5f20f3b0d515"
     },
     {
       "path": "src/observador/offline_bridge.py",
@@ -382,6 +392,11 @@
       "path": "src/observador/owned_channel_win32.py",
       "size_bytes": 7652,
       "sha256": "6f9f016a1b21d51c68e94becb961e019a25f3ab64683594c44d435fd8e440fc8"
+    },
+    {
+      "path": "src/observador/owned_identity.py",
+      "size_bytes": 2407,
+      "sha256": "7a92e95eb8f8272ffc0fa92f18b00bfef3283acb1aba51f52c4c2e84685ed85f"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -549,14 +564,19 @@
       "sha256": "d5531f5af57581d96697e5efc63255d17c8acb1238ffd05f41b9666c3577cd0b"
     },
     {
+      "path": "tests/test_legacy_cleanup.py",
+      "size_bytes": 14270,
+      "sha256": "25ed436fc38cef50bcc9e94c8da148d4352ed9cf1016b5c0bbb7cf35cfc2be40"
+    },
+    {
       "path": "tests/test_mining_negatives.py",
       "size_bytes": 3460,
       "sha256": "f3283ed2fcb184895f7736f5f2797d96afc47bdad922cd52b802865c2c418643"
     },
     {
       "path": "tests/test_native_windows.py",
-      "size_bytes": 4992,
-      "sha256": "15f809986cd99ea61dd3e2f6c40e200a03cf52798c146d8c6f9d162744efab36"
+      "size_bytes": 4980,
+      "sha256": "8f1e119bee1d193ca2510e71c49dffae7ee0fc346106f53607237c4804d6f91c"
     },
     {
       "path": "tests/test_offline_bridge.py",
@@ -575,8 +595,8 @@
     },
     {
       "path": "tests/test_source_auth_model.py",
-      "size_bytes": 8487,
-      "sha256": "8b759f4c855313885b53253c1ae3ddd890e011b7d6089cd18ce8d97c19f03f40"
+      "size_bytes": 8483,
+      "sha256": "963a871c5311d191963968a2a5f68c41421637d9b52aec00ea749c1933caa358"
     },
     {
       "path": "tests/test_storage_hardening.py",
@@ -605,18 +625,18 @@
     },
     {
       "path": "tests/test_windows_controller.py",
-      "size_bytes": 7616,
-      "sha256": "9a451e0c5ea57c1d9df110ee0301197f6101c19139b9e41823fd6af9dfa395db"
+      "size_bytes": 7612,
+      "sha256": "4c7a9a48a44b33d6186e0be08caf1113f43ab18904fe277db7e4d8cc1b85ea53"
     },
     {
       "path": "tests/test_windows_coverage.py",
-      "size_bytes": 4803,
-      "sha256": "febfc8590747da58703b819891ceb1f4873ccae5fb0b667f6541665d3cac8340"
+      "size_bytes": 4795,
+      "sha256": "c814897e22f9ff4ba7bec2b86ff9b9a0314f70f78218a8c84eca20ec7d9f431b"
     },
     {
       "path": "tests/test_windows_desktop.py",
-      "size_bytes": 4606,
-      "sha256": "35f00b7fe97187a8f27c58c18488552fc93438b1c2950a16bcaa2c102e8f8147"
+      "size_bytes": 4602,
+      "sha256": "1fd60599b47c45e4f79fb31823c67150ede54caf027121f03c7d93fffba4abb8"
     },
     {
       "path": "tests/windows_support.py",

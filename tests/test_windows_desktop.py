@@ -23,7 +23,7 @@ class DesktopAutomationTest(unittest.TestCase):
         fixture = subprocess.Popen([str(target)])
         session = None
         try:
-            expected_ticks = creation_ticks(fixture.pid)
+            expected_ticks = creation_ticks(fixture)
             def exercise(phase):
                 result = subprocess.run(
                     ['powershell.exe', '-NoProfile', '-NonInteractive', '-File',

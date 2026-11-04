@@ -892,3 +892,41 @@ ao publicar a regressão seguinte, não contadas como aprovadas. A entrega não
 encerra o critério6 sem revisão por pessoa distinta. Próxima tarefa: revisor
 auditar diff focado e confirmar ownership/teardown usando provas por SHA; depois
 tratar o inventário residual em entrega própria, sem habilitar adapter ou piloto.
+
+## Issue22 — AI-01/AI-02 — 2026-11-04
+
+Base PR21/8abbb5b, nova codex/legacy-binding-cleanup. Auditoria da Issue22 aceita
+tecnicamente A1–A4/Issue20 por revisão IA distinta, sem assinatura humana/piloto.
+AI-01: identidade legado por duplicata do Popen retido, criação/PID conferidos,
+CloseHandle verificado; sem PID lookup ou provider após falha de binding/close.
+AI-02: cleanup por recurso com enums/contagens fechados, sempre tenta demais
+filhos/sink/sampler/joins/IO; children_stopped=false se algum recurso fica incerto.
+Startup parcial também faz teardown; não fecha pipe sob thread ainda viva.
+Schema v1/CMD e PR6 intactos. Contrato em docs/LEGACY_BINDING_CLEANUP.md.
+
+Baseline195: Linux164/31 skips. Revisão206:172 executados/34 skips locais; oito
+negativos/controle novos passaram, três Windows novos aguardam CI. São injeções,
+não reuso real de PID ou falhas do operador. AI-03 terá análise e experimento
+isolado em filha separada, sem alterar launcher em uso, adapter ou demais gates.
+
+### Issue22 AI01/02 — PR23 e bloqueio de CI
+
+PR23: https://github.com/almirfsneto/observador-escritorio/pull/23, código
+a332be4beb61fa219d136582e3b005c72e43be9f, base PR21/8abbb5b.
+CI push41900708978 e PR41900750727 falharam nos CINCO jobs antes de qualquer
+etapa: steps null/vazios, conclusão em poucos segundos, logs BlobNotFound.
+Uma reexecução controlada do PR (attempt2) repetiu cinco falhas sem etapas.
+Não há teste CI aprovado ou Windows novo comprovado nesta entrega. Causa
+administrativa não exposta; consulta de anotações não suportada pelo conector
+e CLI normal recebeu Forbidden. Não atribuir a cobrança/quota sem evidência.
+
+Local Linux:206 descobertos,172 executados/34 skips (32 Windows/2 browser).
+Oito regressões portáveis novas executadas; três Windows novas apenas preparadas
+e compiladas, NÃO executadas. Snapshot de sintaxe/wheel/diff conferido. Chromium
+local tem ExtensionInstallBlocklist=*; não contornado nem contado como aprovado.
+A CI completa deve ser reexecutada após restaurar o serviço/permissão do Actions.
+Revisor técnico deve considerar patch ainda SEM comprovação Windows desta revisão.
+
+Próximo passo independente viável: finalizar estudo AI03 em filha separada, sem
+alterar Popen→assign dos launchers existentes ou habilitar adapter. Nova revisão
+IA por SHA não é assinatura humana; AI04 continua integralmente aberto.

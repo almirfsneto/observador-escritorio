@@ -9,6 +9,7 @@ from .lab_session import fixture_path, make_lab_policy
 from .native_session import NativeSession, observer_path
 from .lab_queue import AsyncLabQueue
 from .diagnostics import DiagnosticRecorder
+from .cleanup import CleanupStatus
 
 
 class LaboratoryWindow:
@@ -28,6 +29,8 @@ class LaboratoryWindow:
         self.session = None
         self.sink = None
         self.cleanup = None
+        self.cleanup_status = CleanupStatus()
+        self.failed_binding = None
         self.finished = False
         self.event_count = 0
         tk.Label(self.root, text='LABORATORIO FICTICIO - INICIALMENTE DESATIVADO',
@@ -93,7 +96,9 @@ class LaboratoryWindow:
             if self.persist.get():
                 self.sink = AsyncLabQueue(self.data_target)
             self.session.set_active(True)
-        except (OSError, ValueError):
+        except (OSError, ValueError) as error:
+            self.failed_binding=getattr(error,'resource',None)
+            if self.failed_binding is not None:self.cleanup_status.fail('session')
             self.status_var.set('ERRO: nao foi possivel vincular o observador ao aplicativo ficticio.')
             self.stop()
             return
@@ -120,20 +125,25 @@ class LaboratoryWindow:
         self.cleanup = threading.Thread(target=self._cleanup, daemon=True)
         self.cleanup.start()
 
+    def _cleanup_resources(self,status):
+        failed=getattr(self,'failed_binding',None)
+        if isinstance(failed,NativeSession):
+            status.stop_process('provider',failed.process)
+        if self.session:
+            status.attempt('session',self.session.close)
+            status.check('session',lambda:getattr(self.session,'cleanup_confirmed',True))
+            status.stop_process('provider',self.session.process)
+        if self.sink:
+            status.attempt('sink',self.sink.close)
+            status.check('sink',lambda:not self.sink.worker.is_alive())
+        status.stop_process('fixture',self.fixture)
+
     def _cleanup(self):
-        try:
-            if self.session:
-                self.session.close()
-        finally:
-            if self.sink:
-                self.sink.close()
-            if self.fixture and self.fixture.poll() is None:
-                self.fixture.terminate()
-                try:
-                    self.fixture.wait(timeout=2)
-                except subprocess.TimeoutExpired:
-                    self.fixture.kill()
-                    self.fixture.wait(timeout=2)
+        if self.cleanup_status.finished:return
+        self._cleanup_resources(self.cleanup_status)
+        self.cleanup_status.finish()
+
+    def cleanup_snapshot(self):return self.cleanup_status.snapshot()
 
     def tick(self):
         if self.closed:
@@ -165,6 +175,8 @@ class LaboratoryWindow:
                                     ' | expira: ' + stream.expires_at.isoformat(timespec='seconds'))
                 self.events_var.set(f'Eventos: {self.event_count} | perdas de fila: '
                                     f'{stream.dropped + stream.native_dropped} | lacunas: {stream.sequence_gaps}')
+        if self.cleanup_status.finished and not self.cleanup_status.confirmed:
+            self.status_var.set('Estado: ENCERRADO | limpeza nao confirmada; revisao necessaria')
         self.tick_job = self.root.after(100, self.tick)
 
     def on_events(self, events):

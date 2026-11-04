@@ -61,7 +61,7 @@ class NativeProtocolTest(unittest.TestCase):
         # Keep stdin open and do not create NativeSession: its own expiry/kill
         # fallback must not mask a broken native watchdog or observation deadline.
         process = subprocess.Popen([str(self.executable), '--protocol-test', str(self.fixture.pid),
-                                    sys.executable, str(creation_ticks(self.fixture.pid)),
+                                    sys.executable, str(creation_ticks(self.fixture)),
                                     (datetime.now(timezone.utc) + timedelta(seconds=6)).isoformat()],
                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         try:
@@ -80,7 +80,7 @@ class NativeProtocolTest(unittest.TestCase):
 
     def test_rejects_different_creation_time(self):
         result = subprocess.run([str(self.executable), '--protocol-test', str(self.fixture.pid),
-                                 sys.executable, str(creation_ticks(self.fixture.pid) + 1),
+                                 sys.executable, str(creation_ticks(self.fixture) + 1),
                                  (datetime.now(timezone.utc) + timedelta(seconds=10)).isoformat()],
                                 input='', text=True, capture_output=True, timeout=8)
         self.assertEqual(result.returncode, 2)
@@ -88,7 +88,7 @@ class NativeProtocolTest(unittest.TestCase):
 
     def test_eof_from_dead_controller_stops_provider(self):
         process = subprocess.Popen([str(self.executable), '--protocol-test', str(self.fixture.pid),
-                                    sys.executable, str(creation_ticks(self.fixture.pid)),
+                                    sys.executable, str(creation_ticks(self.fixture)),
                                     (datetime.now(timezone.utc) + timedelta(seconds=10)).isoformat()],
                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         try:
