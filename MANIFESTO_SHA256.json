@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 14553,
-      "sha256": "d53ec3e384f149c0adafbcb6cb8c1bc52b2e0bc6bae5d8670f37d7ccb4a31057"
+      "size_bytes": 15825,
+      "sha256": "cc2d50c550bb35bb6c616dfb98bd6ffa8e4ee2a8b8976a9105b7fa7da6f0f28d"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 28748,
-      "sha256": "cd5cb7d597375c54ab397fe9b1c7ba8de6008163ce8c55be564a20e7591858c3"
+      "size_bytes": 29633,
+      "sha256": "47a8c0db730a9c06bd1c33ff6e9639520c7ab7a00d900b5c157716d9bda23f7f"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -59,6 +59,11 @@
       "sha256": "16e7f846947534653c160408fd5f6965cf4ef795cc43e377bd62df2d961db333"
     },
     {
+      "path": "browser-extension/bridge_protocol.js",
+      "size_bytes": 3887,
+      "sha256": "cb9275f09d42322df1182ce4c07a7fc9d9073df34dd3fda5d4c1b94cee55d5cd"
+    },
+    {
       "path": "browser-extension/content.js",
       "size_bytes": 2784,
       "sha256": "5bd87a0797f45aafd80f5267fdf5977b6a9d2c0f38107bcf4361af9654e9c4e4"
@@ -70,18 +75,18 @@
     },
     {
       "path": "browser-extension/popup.html",
-      "size_bytes": 558,
-      "sha256": "1afce544af0d973c2e66dd20cb7f4689a542c00a232d68eec3200da71914bde0"
+      "size_bytes": 895,
+      "sha256": "9fa3d558136e7d45e3a80a29f235bab5abb7082e613abf230873d2fa31e20c6d"
     },
     {
       "path": "browser-extension/popup.js",
-      "size_bytes": 1029,
-      "sha256": "17515ef7c684fa1fef63a74e6305d5e14bb22bce7d8a46c4c4b31b42cbd3eb5f"
+      "size_bytes": 2075,
+      "sha256": "aecebd2a41a0597ce95f51811b34be8440e2e51ede983b8092df770f71d77f8d"
     },
     {
       "path": "browser-extension/worker.js",
-      "size_bytes": 4047,
-      "sha256": "96bf154a1f20a9839686399f783cc0e016d0b870a1e0d4c62cc8457519a1c85c"
+      "size_bytes": 4438,
+      "sha256": "f662aa30ec147cdffc88c29c0b0494e08b199f9c814a7f5c17f11cd99915a9af"
     },
     {
       "path": "docs/ACEITE_REPORT_SCHEMA.json",
@@ -144,6 +149,11 @@
       "sha256": "8d72e7b389a8ff99dc480543eb46abeccbb6809ccd17c1369a4b2be05ee04203"
     },
     {
+      "path": "docs/OFFLINE_BRIDGE.md",
+      "size_bytes": 5346,
+      "sha256": "1bbe44ec1c0f0860634778a3def9bfa0db11ba15e39d4a82eac7f3e6bbad47ba"
+    },
+    {
       "path": "docs/PILOTO_WINDOWS_CHECKLIST.md",
       "size_bytes": 923,
       "sha256": "0e1604a195d538758d9b4edf8cbac9da54159c26166dede1b007e953a1db55e1"
@@ -175,8 +185,8 @@
     },
     {
       "path": "docs/TASK_DISCOVERY.md",
-      "size_bytes": 4666,
-      "sha256": "d58deae42643ca856c425ea107decbb644132cd5b62b42d7a564f5dd0407dd22"
+      "size_bytes": 5981,
+      "sha256": "3786ef5025dc17d60a4ec9c0a4ff97b1c18fcbc20052bf59ab84c7c24eae7a83"
     },
     {
       "path": "docs/VALIDACAO_MANUAL_WINDOWS.md",
@@ -284,9 +294,19 @@
       "sha256": "a720572a012628b5d2a6c3f37d88e9f7b633debc462d3e30f38be059edf35508"
     },
     {
+      "path": "src/observador/mining_evaluation.py",
+      "size_bytes": 2979,
+      "sha256": "04c83f573d1768af1c62b26518e490472f92e690b8ad86a611d1e3d30983143e"
+    },
+    {
       "path": "src/observador/native_session.py",
       "size_bytes": 5740,
       "sha256": "807397dbac7fa82ef726d01de6560743d26b2efe53cc7b2605bed41b63705c71"
+    },
+    {
+      "path": "src/observador/offline_bridge.py",
+      "size_bytes": 19404,
+      "sha256": "ca1ad57485e401b8048f5d27ce5caab74e6fd6ab396281e8c6a8dec1cbcffc63"
     },
     {
       "path": "src/observador/private_directory.py",
@@ -315,8 +335,8 @@
     },
     {
       "path": "src/observador/task_discovery.py",
-      "size_bytes": 11679,
-      "sha256": "976770174559340e26518e0abb0fbb973b9443d538af87163052b40be0535b26"
+      "size_bytes": 13733,
+      "sha256": "7305f4b7b557b1755deed9f9495d26e708e6e42cb37a8139e9b9ed555057e04d"
     },
     {
       "path": "src/observador/web_events.py",
@@ -370,8 +390,8 @@
     },
     {
       "path": "tests/test_browser_extension.py",
-      "size_bytes": 7682,
-      "sha256": "0a78a855056bf9a51bb65c5c79142995205be8defcc6d1d67f6a18b956553c6d"
+      "size_bytes": 13919,
+      "sha256": "211698f694be9602ffb1669a62741eda44d7769d07c43868ea83eb8e17191dbe"
     },
     {
       "path": "tests/test_cli.py",
@@ -409,9 +429,19 @@
       "sha256": "d5531f5af57581d96697e5efc63255d17c8acb1238ffd05f41b9666c3577cd0b"
     },
     {
+      "path": "tests/test_mining_negatives.py",
+      "size_bytes": 3460,
+      "sha256": "f3283ed2fcb184895f7736f5f2797d96afc47bdad922cd52b802865c2c418643"
+    },
+    {
       "path": "tests/test_native_windows.py",
       "size_bytes": 4992,
       "sha256": "15f809986cd99ea61dd3e2f6c40e200a03cf52798c146d8c6f9d162744efab36"
+    },
+    {
+      "path": "tests/test_offline_bridge.py",
+      "size_bytes": 8441,
+      "sha256": "1ca727ac468e05bd1e6907b433a98474e6912c6807d386f90320d34ddd3277da"
     },
     {
       "path": "tests/test_queue_faults.py",
@@ -435,8 +465,8 @@
     },
     {
       "path": "tests/test_task_discovery.py",
-      "size_bytes": 4275,
-      "sha256": "88963aee5be54654da12b5be3c465f0c900819c2db87089ea15847af3a1e6290"
+      "size_bytes": 4350,
+      "sha256": "4349cd3d20979d8aa9368f63170214e252acbd99873297e70a2ef61c5fb7c0ce"
     },
     {
       "path": "tests/test_web_contract.py",

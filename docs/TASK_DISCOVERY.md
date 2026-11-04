@@ -64,3 +64,23 @@ metadata dos repositórios; dependências transitivas não auditadas. Nenhum có
 artefato ou biblioteca incorporado. Comparação é arquitetural/funcional e com
 baseline próprio, não benchmark executado dessas bibliotecas. Uma integração
 futura exige auditoria de licença/versão/transitivas e comparação quantitativa.
+
+## Negativos e avaliação da Issue 11
+
+A evolução conservadora separa substituição semântica (tarefa distinta) de revisão
+opcional/repetição adjacente. Não mistura caminhos só porque a distância de edição
+é pequena. Escolha de âncora considera suporte das variantes, mantendo agrupamento
+estrela, sem fechamento transitivo ilimitado. Click genérico e foco sem ação não
+entram como etapas de trabalho; Invoke/Toggle continuam sem prova de resultado.
+
+Se a fonte fornece sequência completa, ela determina a ordem local. Gap observado
+ou relógio regressivo corta segmento; foco explicitamente presente e filtrado não
+vira gap fictício. Ausência de sequência é lacuna, não ordem forte inferida. IDs
+com sequência conflitante são rejeitados; sessão interrompida não é colada a outra.
+
+observador.mining_evaluation avalia atribuição de pares de traces completos a
+famílias, em corpus rotulado artificial labelled_negative_v1: 10 traces, 42 eventos,
+45 pares, tarefas filing/review-routing/interrupted. Resultado local: TP17, FP0,
+FN0, TN28, precisão/recall 1 neste corpus pequeno. **Não é acurácia real**, calibração,
+comparação externa ou estimativa de ganho. Casos foram construídos para testar
+regras; ampliar corpus independente e negativos antes de qualquer conclusão.

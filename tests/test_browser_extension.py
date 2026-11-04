@@ -14,6 +14,82 @@ from observador.web_events import validate_web_export
 
 @unittest.skipUnless(os.environ.get('OBS_BROWSER_TEST') == '1','Real browser test enabled in dedicated web CI job')
 class BrowserExtensionTest(unittest.TestCase):
+    def test_offline_bridge_ack_survives_real_service_worker_stop_and_restart(self):
+        from playwright.sync_api import sync_playwright
+        from observador.offline_bridge import OfflineBridge,read_batch,canonical
+        root=Path(__file__).resolve().parents[1]
+        class QuietHandler(SimpleHTTPRequestHandler):
+            def log_message(self,*args):pass
+        server=ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(QuietHandler,directory=str(root/'tests/fixtures/web')))
+        thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+        try:
+            with tempfile.TemporaryDirectory() as profile,sync_playwright() as p:
+                extension=str(root/'browser-extension')
+                context=p.chromium.launch_persistent_context(profile,executable_path=os.environ.get('OBS_CHROMIUM_PATH') or p.chromium.executable_path,
+                    headless=True,ignore_default_args=['--disable-extensions'],args=['--no-sandbox',f'--disable-extensions-except={extension}',
+                    f'--load-extension={extension}','--disable-background-networking','--disable-sync','--no-first-run'])
+                bridge=OfflineBridge(Path(profile)/'inbox/bridge.sqlite3')
+                try:
+                    worker=context.service_workers[0] if context.service_workers else context.wait_for_event('serviceworker')
+                    extension_id=worker.url.split('/')[2]
+                    page=context.new_page();page.goto('http://127.0.0.1:8765/synthetic-lab/index.html')
+                    page.wait_for_selector('#observador-lab-status')
+                    tab_id=worker.evaluate('async()=> (await chrome.tabs.query({url:"http://127.0.0.1/*"}))[0].id')
+                    popup=context.new_page();popup.goto(f'chrome-extension://{extension_id}/popup.html')
+                    popup.evaluate('(id)=>chrome.tabs.update(id,{active:true})',tab_id);popup.reload()
+                    popup.wait_for_function('typeof tabId === "number"')
+                    popup.evaluate("document.getElementById('start').click()")
+                    page.wait_for_function("document.getElementById('observador-lab-status').textContent.includes('ATIVO')")
+                    declared=worker.evaluate('async(id)=>{const s=(await chrome.storage.session.get("sessions")).sessions[id];return {kind:"web",version:1,instance:s.id,origin:"http://127.0.0.1:8765",tab_slot:s.slot};}',tab_id)
+                    bridge.authorize(declared);bridge.control('start')
+                    ticket=Path(profile)/'ticket.json';ticket.write_text(json.dumps(bridge.ticket(declared['instance'])))
+                    popup.locator('#bridge-ticket').set_input_files(ticket)
+                    popup.wait_for_function("document.getElementById('bridge-status').textContent==='Ticket aceito'")
+                    page.locator('#save').click();page.wait_for_timeout(300)
+                    def download_batch():
+                        with popup.expect_download() as downloaded:
+                            popup.evaluate("document.getElementById('bridge-export').click()")
+                        return read_batch(downloaded.value.path())
+                    batch=download_batch()
+                    self.assertTrue(batch['events'])
+                    ack=bridge.ingest(batch)
+                    self.assertEqual(bridge.ingest(batch),ack)
+                    # ACTUAL CDP worker termination, not mutation of a stored timeOrigin.
+                    cdp=context.new_cdp_session(page)
+                    versions=[];restarted=[];closed=[]
+                    cdp.on('ServiceWorker.workerVersionUpdated',lambda value:versions.extend(value.get('versions',[])))
+                    context.on('serviceworker',lambda value:restarted.append(value))
+                    worker.on('close',lambda:closed.append(True))
+                    cdp.send('ServiceWorker.enable')
+                    deadline=time.monotonic()+8
+                    matches=[]
+                    while not matches and time.monotonic()<deadline:
+                        page.wait_for_timeout(100)
+                        matches=[v for v in versions if v.get('scriptURL')==worker.url and v.get('runningStatus')=='running']
+                    self.assertTrue(matches,'No owned extension worker version found')
+                    origin=worker.evaluate('performance.timeOrigin')
+                    cdp.send('ServiceWorker.stopWorker',{'versionId':matches[-1]['versionId']})
+                    deadline=time.monotonic()+8
+                    while (not restarted or not closed) and time.monotonic()<deadline:page.wait_for_timeout(100)
+                    self.assertTrue(closed,'Worker was not actually terminated')
+                    self.assertTrue(restarted,'Worker did not actually restart')
+                    replacement=[w for w in restarted if w.url==worker.url][-1]
+                    self.assertNotEqual(replacement.evaluate('performance.timeOrigin'),origin)
+                    page.wait_for_function("document.getElementById('observador-lab-status').textContent.includes('ENCERRADO')")
+                    retry=download_batch()
+                    self.assertEqual(canonical(retry),canonical(batch))
+                    self.assertEqual(bridge.ingest(retry),ack)
+                    acknowledgment=Path(profile)/'ack.json';acknowledgment.write_text(json.dumps(ack))
+                    popup.locator('#bridge-ack').set_input_files(acknowledgment)
+                    popup.wait_for_function("document.getElementById('bridge-status').textContent==='ACK confirmado'")
+                    pending=replacement.evaluate('async(id)=>(await chrome.storage.session.get("sessions")).sessions[id].bridge.pending',tab_id)
+                    self.assertIsNone(pending)
+                    self.assertEqual(len(bridge.source_events()[0]['events']),len(batch['events']))
+                    print('SYNTHETIC_BRIDGE_RESTART_VERIFIED',json.dumps(dict(events=len(batch['events']),worker_restarted=True,
+                          receipt_replayed=True,producer_stopped=True,human_acceptance=False)))
+                finally:bridge.close();context.close()
+        finally:server.shutdown();server.server_close();thread.join(timeout=3)
+
     def test_real_mv3_allowlist_privacy_pause_navigation_limits_and_expiry(self):
         from playwright.sync_api import sync_playwright
         root=Path(__file__).resolve().parents[1]

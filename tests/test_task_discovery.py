@@ -48,7 +48,8 @@ class TaskDiscoveryTest(unittest.TestCase):
             self.assertFalse(scenario['feasibility_validated'])
             self.assertLessEqual(scenario['potential_seconds'],candidate['total_observed_span_seconds'])
         base=events[0]
-        distant=[replace(base,event_id=str(uuid4()),timestamp_utc=(datetime.fromisoformat(base.timestamp_utc)+timedelta(minutes=i)).isoformat()) for i in range(3)]
+        distant=[replace(base,event_id=str(uuid4()),timestamp_utc=(datetime.fromisoformat(base.timestamp_utc)+timedelta(minutes=i)).isoformat(),
+                         metadata={**base.metadata,'source_sequence':i+1}) for i in range(3)]
         self.assertEqual(discover_tasks(distant)['candidates'],[])
 
     def test_same_timestamp_uses_source_sequence_and_never_exports_targets(self):

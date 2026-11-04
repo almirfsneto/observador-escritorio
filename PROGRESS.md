@@ -410,3 +410,16 @@ UUID e journal vivo testados. Linux: 108 descobertos, 97 executados/11 ignorados
 CI Windows/browser pendente. Nenhum resultado representa aceite humano. Próxima
 prioridade desta execução: bridge offline/proveniência/ACK, worker real e negativos
 de mineração. PR6 permanece reservado ao responsável, sem alterações.
+
+## Issue 11 — prioridade 2: bridge offline e negativos
+
+Branch codex/offline-source-bridge sobre a entrega de diagnósticos. Inbox próprio,
+fontes/slots declarados autorizados, tickets e gerações, sequence por fonte,
+receipt+eventos transacionais, replay/conflicto e ACK local explícito. Sem socket,
+upload, NativeMessaging ou mudança de permissões. Popup importa ticket/ACK locais
+e exporta batch pendente estável; integração Windows automática não foi forçada.
+Negativos de mineração corrigem merge por substituição semântica, gaps/clock e
+click sem ação. Corpus rotulado: TP17/FP0/FN0/TN28 em 45 pares artificiais, sem
+alegação real. Linux: 120 descobertos, 108 executados/12 ignorados. Teste CDP real
+de worker stop/restart e ACK arquivo adicionado ao job Chromium; resultado remoto
+pendente. Gate PR6, aceite humano e piloto continuam intocados/pendentes.

@@ -1,6 +1,6 @@
 """Bounded, synthetic-only task candidates. Temporal recurrence is not causality."""
 from collections import defaultdict
-from bisect import bisect_right
+from bisect import bisect_right,bisect_left
 from dataclasses import dataclass
 from datetime import datetime
 import hashlib
@@ -56,6 +56,19 @@ def _distance_one(left,right):
     return 2
 
 
+def compatible_variant(left,right):
+    """Conservative optional review/repetition; semantic substitution is a different task."""
+    if left==right:return True
+    if not left or not right or left[0]!=right[0] or left[-1]!=right[-1] or abs(len(left)-len(right))!=1:
+        return False
+    shorter,longer=(left,right) if len(left)<len(right) else (right,left)
+    if 1-1/len(longer)<.7:return False
+    for index,step in enumerate(longer):
+        if longer[:index]+longer[index+1:]!=shorter:continue
+        if step[2]=='review' or (index>0 and longer[index-1]==step) or (index+1<len(longer) and longer[index+1]==step):return True
+    return False
+
+
 def discover_tasks(events, *, min_count=2, max_steps=8, max_gap_seconds=30,
                    assumed_automation_seconds=None, top=20):
     if (type(min_count) is not int or min_count<2 or type(max_steps) is not int or not 2<=max_steps<=8
@@ -66,6 +79,8 @@ def discover_tasks(events, *, min_count=2, max_steps=8, max_gap_seconds=30,
             or not math.isfinite(assumed_automation_seconds) or not 0<=assumed_automation_seconds<=3600):
         raise ValueError('discovery_scenario_rejected')
     groups=defaultdict(list)
+    known_sequences=defaultdict(set)
+    ordering_gaps=set()
     seen={}
     duplicate=skipped=count=0
     for index,event in enumerate(events):
@@ -84,18 +99,36 @@ def discover_tasks(events, *, min_count=2, max_steps=8, max_gap_seconds=30,
         if (event.metadata.get('category') not in ('synthetic','laboratory','demo') or event.app not in APPS
                 or event.device_id not in ('laboratorio-sintetico','demo-device-01')):
             raise ValueError('discovery_synthetic_source_required')
-        if event.event_type not in ('ui_action','file_action','browser_action') or event.action not in ACTIONS:
+        group_key=(event.device_id,event.session_id)
+        sequence=event.metadata.get('source_sequence')
+        if sequence is not None:
+            if sequence in known_sequences[group_key]:raise ValueError('discovery_source_sequence_conflict')
+            known_sequences[group_key].add(sequence)
+        if event.event_type not in ('ui_action','file_action','browser_action') or event.action not in ACTIONS or event.action=='click':
             skipped+=1
             continue
         role=event.metadata.get('control_role','control')
         signature=(APPS[event.app],event.event_type,event.action,role)
-        groups[(event.device_id,event.session_id)].append((event,index,signature))
+        groups[group_key].append((event,index,signature))
     segments=[]
-    for group in groups.values():
-        group.sort(key=lambda item:(_stamp(item[0]),item[0].metadata.get('source_sequence',0),item[1]))
+    for key,group in groups.items():
+        sequenced=all('source_sequence' in item[0].metadata for item in group)
+        if sequenced:group.sort(key=lambda item:item[0].metadata['source_sequence'])
+        else:
+            group.sort(key=lambda item:(_stamp(item[0]),item[1]))
+            ordering_gaps.add('source_order_unavailable')
+        known=sorted(known_sequences[key])
         current=[]
         for item in group:
-            if current and (_stamp(item[0])-_stamp(current[-1][0])>max_gap_seconds or len(current)>=64):
+            boundary=False
+            if current:
+                delta=_stamp(item[0])-_stamp(current[-1][0])
+                if delta<0:ordering_gaps.add('source_clock_regressed');boundary=True
+                if sequenced:
+                    before=current[-1][0].metadata['source_sequence'];after=item[0].metadata['source_sequence']
+                    if after-before-1>bisect_left(known,after)-bisect_right(known,before):
+                        ordering_gaps.add('observation_sequence_gap');boundary=True
+            if current and (boundary or delta>max_gap_seconds or len(current)>=64):
                 segments.append(current);current=[]
             current.append(item)
         if current:segments.append(current)
@@ -134,12 +167,16 @@ def discover_tasks(events, *, min_count=2, max_steps=8, max_gap_seconds=30,
         if not redundant:closed.append(fp)
     families=[]
     consumed=set()
+    # Prefer an anchor that explains several supported optional variants, rather
+    # than letting one longer variant consume the shorter common anchor first.
+    anchors=tuple(closed)
+    closed.sort(key=lambda fp:(-len(fp)*sum(len(exact[other]) for other in anchors if compatible_variant(fp,other)),fp))
     for canonical in closed:
         if canonical in consumed:continue
         variants=[canonical]
         for other in closed:
             if (other in consumed or other==canonical or canonical[0]!=other[0] or canonical[-1]!=other[-1]):continue
-            if _distance_one(canonical,other)<=1 and 1-1/max(len(canonical),len(other))>=.7:variants.append(other)
+            if compatible_variant(canonical,other):variants.append(other)
         occurrences=_disjoint([o for variant in variants for o in exact[variant]])
         if len(occurrences)<min_count:continue
         consumed.update(variants)
@@ -168,7 +205,7 @@ def discover_tasks(events, *, min_count=2, max_steps=8, max_gap_seconds=30,
     return dict(schema_version=1,kind='synthetic_task_candidates',capture_real=False,pilot_authorized=False,
                 input_events=count,eligible_events=sum(map(len,segments)),duplicates_removed=duplicate,skipped_events=skipped,
                 sessions=len(groups),segments=len(segments),candidates=families[:top],
-                gaps=['human_review_required','candidate_families_are_not_additive']+(['candidate_review_limited'] if limited else []))
+                gaps=['human_review_required','candidate_families_are_not_additive']+sorted(ordering_gaps)+(['candidate_review_limited'] if limited else []))
 
 
 def synthetic_office_corpus(repetitions=8):
