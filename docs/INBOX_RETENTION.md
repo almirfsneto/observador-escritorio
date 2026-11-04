@@ -38,7 +38,8 @@ Não há exactly-once distribuído nem ordem global entre fontes.
 
 O maior relógio local observado em manutenção é persistido atomicamente. UTC
 regressivo (inclusive após restart) ou monotônico regressivo encerra admissão e
-congela expurgo no último limite seguro, preservando ACKs. UTC congelado pode
+congela expurgo no último limite seguro, preservando ACKs. Reabertura expirada
+permite vincular somente fonte já conhecida para recuperação read-only; não start. UTC congelado pode
 atrasar limpeza; monotônico continua limitando a sessão. Salto UTC para frente
 pode antecipar expurgo irreversível: não existe relógio confiável persistente nem
 proteção contra administrador. Reabrir com relógio corrigido, nunca resetar markers.

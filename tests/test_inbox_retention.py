@@ -224,6 +224,14 @@ raise RuntimeError('crash_not_reached')
             result=subprocess.run([sys.executable,'-c',script,str(root),stage],env=env,capture_output=True,timeout=15)
             self.assertEqual(result.returncode,73,result.stderr.decode(errors='replace'))
             batch=json.loads((root/'batch.json').read_text())
+            # Inspect recovered SQLite BEFORE constructor retention changes observable rows.
+            raw=sqlite3.connect(root/'inbox/db.sqlite3')
+            try:
+                self.assertEqual(raw.execute('PRAGMA integrity_check').fetchone()[0],'ok')
+                expected_events=0 if stage in ('before_commit','purge_after_commit') else 2
+                self.assertEqual(raw.execute('SELECT COUNT(*) FROM events').fetchone()[0],expected_events)
+                self.assertEqual(raw.execute('SELECT COUNT(*) FROM receipts').fetchone()[0],int(stage!='before_commit'))
+            finally:raw.close()
             b=OfflineBridge(root/'inbox/db.sqlite3',clock=lambda:self.now+timedelta(seconds=3601))
             try:
                 b.authorize(batch['source'])
