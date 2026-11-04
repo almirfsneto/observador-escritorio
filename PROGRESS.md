@@ -488,3 +488,62 @@ ler docs/RETOMADA_AUTONOMA.md, DIAGNOSTICS.md e OFFLINE_BRIDGE.md. Próxima aç�
 independente: retenção do inbox com receipts/ACK recuperáveis e testes de limites,
 depois desenho de IPC autenticado e adaptador opt-in Windows, sem ligar coleta.
 Último commit documental registra evidência; a CI do HEAD será conferida também.
+
+## Issue 14 — P1 retenção segura do inbox — 2026-11-04
+
+Base exata cf90de6/PR13, branch nova codex/inbox-retention. Documentos obrigatórios
+e referências da Issue/retomada lidos. Baseline Linux 121 descobertos: 109
+executados/12 skips específicos. Payload 1h, receipt 24h, markers de IDs globais e
+high-water persistentes sem TTL, migração v1 atômica e erro fechado após perda da
+janela de ACK. Quota preserva markers, counters agregados, fail-closed e relógio
+regressivo conservador. Retenção separada de expiração de sessão e ACK histórico.
+14 testes novos locais aprovados: fronteiras, replay pós-purge, conflitos,
+restart, duas instâncias, lock/FULL SQLite reais, BUSY/FULL/IO injetados, retorno
+pós-commit, os._exit pré/pós-commit ingest/purge + integrity_check, modelo aleatório
+seed 1401/100 operações. CI Linux/Windows/Chromium a conferir no PR desta entrega.
+Limites/contrato em docs/INBOX_RETENTION.md. PR6 intacto; sem coleta, rede de dados,
+instalação, deploy, merge ou afirmação de piloto. Próxima prioridade: análise de
+ameaças/autenticação verificável; não ligar transporte sem prova de origem.
+
+Revisão P1: recuperação read-only de fonte conhecida funciona também quando a
+reabertura detecta clock regressivo, sem permitir start; tentativa de migração
+v1 com colisão global de IDs dá rollback integral e conserva versão/payloads.
+15 testes novos de retenção, 136 totais (Linux124 executados/12 skips). README e
+contrato offline apontam a retenção v2 para evitar descrição obsoleta sem TTL.
+
+### P1 — evidência CI e revisão final
+
+PR15 / código 448c3aa / [CI 41757902728](https://github.com/almirfsneto/observador-escritorio/actions/runs/41757902728):
+5/5 jobs aprovados. Núcleo136 descobertos: Linux124 executados/12 skips,
+Windows3.11/3.12 134 executados/2 browsers separados skipped. Chromium2 testes
+reais sem skips, incluindo worker restart/receipt/ACK. WPF30/30 Invoke, controlador
+60 eventos/60 escritos/0 descartados e filhos encerrados nos dois Pythons.
+15 testes novos de retenção passaram em Linux e Windows. Revisão final do teste
+kill passa a inspecionar SQLite ANTES do construtor fazer purge, distinguindo
+pré/pós-commit de purge por linhas efetivamente recuperadas; depois reabertura
+confirma receipt/markers/integridade. Código não muda nessa revisão de evidência.
+Windows CI é automação sintética Server2025, não aceite Windows10/11 humano.
+
+### P1 — correção de rollback/commit incerto na revisão adversarial
+
+Identificado risco de ler receipt ainda não commitado se rollback da conexão
+falhasse. Transação explícita agora fecha conexão em rollback falho OU exceção
+no próprio retorno de commit, mesmo quando in_transaction=false. Não reutiliza
+conexão incerta; snapshot counts.*=null/reopen_required=true/uncertain_transactions,
+ACK só após reabertura. Falha posterior a commit retornado com sucesso continua
+caso distinto, com receipt durável recuperável. Três regressões adicionais cobrem
+rollback pré/pós falha, commit realizado seguido de retorno perdido, e EOF de
+JSON truncado. 18 testes de retenção/139 totais: Linux127 executados/12 skips.
+Nova CI obrigatória nesta revisão; evidência anterior não é atribuída a ela.
+Medição local anterior:32 lotes/64 eventos fictícios,~30,2ms, pico agregado lógico
+observado184920 bytes em132 amostras, reserva4390920/limite13631488; não quota/SLA.
+
+### P1 — confirmação da revisão de segurança
+
+PR15 / código6d521cf / [CI41759340778](https://github.com/almirfsneto/observador-escritorio/actions/runs/41759340778):
+5/5 jobs aprovados. Python3.11/3.12: Linux127 executados/12 skips; Windows137
+executados/2 browsers separados skipped;139 descobertos. Chromium2 reais sem
+skips. Rollback falho e retorno de commit incerto executados nos quatro jobs,
+com reabertura/integridade e nenhum ACK da conexão descartada. 18 novos testes
+de retenção; EOF/truncamento também negativo. Manifesto/wheel/compileall/diff
+verificados. Esta atualização final é documental; CI do HEAD também será conferida.
