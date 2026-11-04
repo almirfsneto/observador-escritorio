@@ -1,3 +1,13 @@
+# Retomada atual — Issue22 / AI01 e AI02
+
+Branch codex/legacy-binding-cleanup, filha de PR21/8abbb5b. Ver PR/HEAD/CI em
+PROGRESS e checks da entrega. Ler Issue22 e LEGACY_BINDING_CLEANUP.md. Binding
+legado agora duplica referência retida; cleanup é independente por recurso.
+AI03 fica em análise/teste isolado separado, sem mudança no launcher em uso.
+Revisor IA deve conferir SHAs finais nesta conversa; não simular assinatura
+humana. PR6/anteriores intactos, schema v1/CMD preservados, adapter OFF, sem
+merge/rebase/deploy/coleta real/piloto. Histórico anterior abaixo.
+
 # Retomada atual — Issue 20 / fechamento verificado
 
 Continuar de **codex/verified-handle-cleanup**, filha de PR19/bee7d1c. Consultar

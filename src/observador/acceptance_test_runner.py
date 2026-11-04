@@ -21,7 +21,7 @@ PLATFORM_REASONS={
 }
 MODULES=('test_acceptance_windows.','test_native_windows.','test_windows_controller.',
          'test_windows_desktop.','test_windows_coverage.','test_source_auth_model.',
-         'test_storage_hardening.','test_owned_channel.','test_handle_lifetime.')
+         'test_storage_hardening.','test_owned_channel.','test_handle_lifetime.','test_legacy_cleanup.')
 
 
 def summarize(result,platform=sys.platform):

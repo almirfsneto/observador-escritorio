@@ -153,25 +153,19 @@ class AcceptanceLaboratory(LaboratoryWindow):
         super().close()
 
     def _cleanup(self):
-        try:
-            super()._cleanup()
-        finally:
-            if self.secondary and self.secondary.poll() is None:
-                self.secondary.terminate()
-                try:
-                    self.secondary.wait(timeout=2)
-                except subprocess.TimeoutExpired:
-                    self.secondary.kill()
-                    self.secondary.wait(timeout=2)
+        status=self.cleanup_status
+        if status.finished:return
+        self._cleanup_resources(status)
+        status.stop_process('secondary',self.secondary)
+        def close_sampler():
             with self.sampling_lock:
-                self.sampler.close()
-                self.sampling_closed = True
-            if self.session:
-                self.recorder.observe(self.session.stream)
-            if self.sink:
-                self.recorder.data['counters'].update(queue_written=self.sink.written,
-                    queue_discarded=self.sink.discarded, queue_purged=self.sink.purged)
-            children = [self.fixture, self.secondary, self.session.process if self.session else None]
-            self.recorder.data['children_stopped'] = (all(child is None or child.poll() is not None for child in children)
-                and (self.sink is None or not self.sink.worker.is_alive())
-                and self.sampler.cleanup_confirmed)
+                try:self.sampler.close()
+                finally:self.sampling_closed=True
+        status.attempt('sampler',close_sampler)
+        status.check('sampler',lambda:self.sampler.cleanup_confirmed)
+        if self.session:status.attempt('observation',lambda:self.recorder.observe(self.session.stream))
+        if self.sink:
+            status.attempt('observation',lambda:self.recorder.data['counters'].update(
+                queue_written=self.sink.written,queue_discarded=self.sink.discarded,queue_purged=self.sink.purged))
+        status.finish()
+        self.recorder.data['children_stopped']=status.confirmed

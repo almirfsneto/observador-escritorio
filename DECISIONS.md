@@ -190,3 +190,14 @@ Evidência D-032: código7740254/CI41857555311 teve cinco jobs aprovados. As fal
 de CloseHandle protegido em job/probe foram REAIS e controladas nos dois Windows;
 falhas de terminate/query/identidade continuam INJETADAS. Não promover skips ou
 CI a aceite humano. Revisão distinta do implementador permanece pendente.
+
+## D-033 — Binding legado por capacidade e teardown independente
+
+Issue22/AI01–02: duplicar handle do Popen retido com direitos de query/sync, conferir
+PID/criação antes de provider e validar fechamento. Falha retém dono e impede
+launch, sem fallback PID. Cleanup independente registra enums/contagens sem
+exceções brutas; falha de sink/secondary/IO não interrompe os demais recursos.
+Não fechar wrapper IO bloqueado por thread viva; registrar incerteza. Confirmação
+no v1 só após todos os recursos, sem alterar seu schema.
+Auditoria IA da Issue22 é evidência técnica distinta, não assinatura humana nem
+aprovação end-to-end. AI03 requer design/ensaio isolado separado; adapter OFF.

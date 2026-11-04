@@ -44,7 +44,7 @@ class ControllerAutomationTest(unittest.TestCase):
                     process = subprocess.Popen(
                         ['powershell.exe', '-NoProfile', '-NonInteractive', '-File',
                          str(root / 'tools/exercise_fixture.ps1'), '-TargetPid', str(window.fixture.pid),
-                         '-StartTicks', str(creation_ticks(window.fixture.pid)), '-TargetPath', str(target),
+                         '-StartTicks', str(creation_ticks(window.fixture)), '-TargetPath', str(target),
                          '-Phase', phase], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     stages = deque(maxlen=8)
                     allowed = {'stage=bootstrap','stage=runtime_ready','stage=root_ready','stage=controls_ready','stage=exercise_done'}

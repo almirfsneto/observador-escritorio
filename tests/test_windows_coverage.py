@@ -33,7 +33,7 @@ class ComparativeCoverageTest(unittest.TestCase):
                     time.sleep(.02)
                 self.assertEqual(session.stream.health, 'active')
                 probe = subprocess.Popen([str(observer), '--coverage-probe', str(fixture.pid), str(target),
-                                         str(creation_ticks(fixture.pid)), expires.isoformat()],
+                                         str(creation_ticks(fixture)), expires.isoformat()],
                                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
                                         text=True, encoding='utf-8')
                 ready = queue.Queue()
@@ -43,7 +43,7 @@ class ComparativeCoverageTest(unittest.TestCase):
                 reader.join(timeout=1)
                 started = time.monotonic()
                 exercise = subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-File',str(root/'tools/exercise_fixture.ps1'),
-                                          '-TargetPid',str(fixture.pid),'-StartTicks',str(creation_ticks(fixture.pid)),
+                                          '-TargetPid',str(fixture.pid),'-StartTicks',str(creation_ticks(fixture)),
                                           '-TargetPath',str(target),'-Phase','burst'], capture_output=True, text=True, timeout=15)
                 self.assertEqual(exercise.returncode, 0, 'Synthetic comparative exercise failed')
                 self.assertEqual(json.loads(exercise.stdout)['status'], 'ok')
