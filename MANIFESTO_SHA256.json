@@ -340,8 +340,8 @@
     },
     {
       "path": "tests/test_windows_controller.py",
-      "size_bytes": 6071,
-      "sha256": "55b964ed11093f4a1fef2f03d5a67bc14728f82e378d4211751d46f2b29497c2"
+      "size_bytes": 6855,
+      "sha256": "3cdcbdd022e43b51eed7fc90f806907700a33d0ac631685fdb9935c93f0e7804"
     },
     {
       "path": "tests/test_windows_coverage.py",
@@ -395,8 +395,8 @@
     },
     {
       "path": "tools/exercise_fixture.ps1",
-      "size_bytes": 2851,
-      "sha256": "93a61731f1a7992e99862b3b4acca8f9bac23223eb737bbb907c8c536f3fa64f"
+      "size_bytes": 3115,
+      "sha256": "d09db4b40518a9088cfc794c81e21d121a798cb51e357786e20c9345d56b62f1"
     },
     {
       "path": "tools/synthetic_windows_app.ps1",
