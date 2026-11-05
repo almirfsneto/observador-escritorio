@@ -5,9 +5,13 @@ Branch filha codex/job-at-creation-study; ler Issue29, Issue22/atualizações,
 parecer28 e docs/JOB_AT_CREATION_STUDY.md. Somente harness em tests/: não migrar
 launchers/canais/NativeSession/C# nem habilitar adapter. Issue30 NÃO iniciada;
 esperar revisão independente da Issue29 antes de discutir outra etapa.
-Sete negativos/contratos portáveis passaram; dez Windows aguardam CI verde por
-SHA. Duas primeiras rodadas falharam na premissa de exatamente2 membros. Ver
-JOB_AT_CREATION_STUDY para origem adicional desconhecida e lista completa/zero.
+PR31 / código518678a / CI41959802089 passou5/5. Windows3.11/3.12:240 executados/
+2 skips browser por Python; foco novo17/0, antigo11/0. Linux191/51 por Python;
+Chromium2/0. Dez casos Windows +sete portáveis novos executados nos dois Windows.
+Membros adicionais não identificados: lista completa do Job contém os conhecidos;
+positivo e nested externo aberto confirmaram zero de todos. Não inferir identidade
+nem abrir PIDs extras. Rodadas falhas de contagem e barreira CLI preservadas em
+PROGRESS. Último commit só documental: conferir CI do HEAD final no PR31.
 Conferir resultados reais, skips, crash com raiz sem Job alvo e prova nested
 externo aberto. Não inferir suporte humano10/11 de runner Server. PR6/anteriores
 preservados; sem merge/rebase/instalação/coleta/piloto. Histórico abaixo.

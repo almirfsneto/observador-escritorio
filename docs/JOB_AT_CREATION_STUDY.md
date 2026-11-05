@@ -87,10 +87,10 @@ protegido. Exceções de wrapper e rejeição semântica não recebem GetLastErr
 
 ## Limites e retomada
 
-Até CI verde por SHA, dez casos Windows preparados; rodadas iniciais falharam
-na premissa de cardinalidade. Não transferir os passes parciais para aprovação. Skips Linux/plataforma não
+Dez casos Windows executados na CI518678a, conforme evidência abaixo; rodadas
+iniciais falharam e não são aprovações. Conferir também CI do HEAD final. Skips Linux/plataforma não
 são passe; job Chromium mantém duas provas dedicadas. Windows-latest é runner
-Server, não aceite Windows10/11 interativo. Suporte documentado Windows10+/Server
+Server x64, não aceite Windows10/11 interativo nem prova ARM64/x86. Suporte documentado Windows10+/Server
 2016+ não garante qualquer hierarquia/direitos: restrição deve falhar fechado,
 sem breakaway para contornar políticas. Uma lista de um Job e um descendant por
 fixture não cobre todos criadores/processos, WMI/brokers, hierarquias incompatíveis,
@@ -113,3 +113,38 @@ No Windows PowerShell: definir $env:PYTHONPATH='src' antes dos comandos python.
 - [STARTUPINFOEXW / cb](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-startupinfoexw)
 - [Job lifetime / kill on last close](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)
 - [Nested Jobs e limitações](https://learn.microsoft.com/en-us/windows/win32/procthread/nested-jobs)
+
+## Checklist de revisão independente por SHA
+
+1. Conferir ancestral exato508c38ad e diff sem src/, ferramentas ou extensão.
+2. Auditar tamanhos/assinaturas, storage de lpValue, ausência de assign e breakaway,
+   herança FALSE e Job não herdável; membership obrigatório antes de resume.
+3. Conferir logs Windows3.11/3.12 de cada crash barrier, inclusive nested pós-resume
+   com outer_zero_confirmed=true e root_target_job_handles=0; raiz não pode matar
+   filho para satisfazer asserção nem reter Job alvo.
+4. Conferir lista completa dos membros no positivo, ZERO após término e fechamento
+   de Job/atributos/thread/processo/capacidades da raiz; não assumir só dois membros.
+5. Separar recusa real de CloseHandle/argumentos de falhas INJETADAS de API/guardas.
+   Logs de rodadas falhas permanecem evidência, não são aprovados por CI posterior.
+6. Registrar exceções/limites; sem assinatura humana fictícia. Não iniciar Issue30
+   ou migração runtime sem a próxima revisão do responsável.
+
+## Evidência executada
+
+PR31, código518678a7d991e3e26650172ca8557203ae34e15f,
+[CI41959802089](https://github.com/almirfsneto/observador-escritorio/actions/runs/41959802089)
+5/5. Windows3.11/3.12 cada240 executados/2 skips browser; foco17/0. Linux cada191
+executados/51 skips (49 Windows,2 browser); Chromium2/0. Logs conferidos de todos.
+Cinco barreiras reais (três normais, nested pré-verify/pós-resume) passaram em cada
+Windows; nested externo confirmou zero enquanto aberto, antes de seu close.
+Compare enum root_target_job_handles=0, root_resource_cleanup_confirmed=true,
+known_descendants_exit_confirmed=true e outer_zero_confirmed=true no nested.
+Positivo confirmou lista completa dos membros conhecidos, zero do Job e closes.
+Negativos de API e handle protegido REAL recusados; dois casos Windows e sete
+portáveis INJETAM falhas, não são falhas espontâneas nem prova de adversário externo.
+
+Rodada b930aab/41959651181 falhou na CLI nested codificada para pré-verify ao pedir
+pós-resume;518678a corrige barreira, sem relaxar asserts. As duas rodadas iniciais
+de contagem e essa falha permanecem no histórico; não se tornam aprovadas depois.
+Manifesto151, compileall e wheel sem tests/ conferidos. Commit documental final
+não muda fonte/testes/workflow; conferir seus próprios checks no PR31.

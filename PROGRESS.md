@@ -1130,3 +1130,66 @@ Erro do harness, não filho órfão observado; finally limpou os recursos. Corri
 encaminhamento explícito nested_after_resume antes de novo aceite. A/B confirmou
 membros3/4 com ambos conhecidos presentes e zero após cleanup; origem adicional
 não identificada. Não chamar esse run de aprovado, nem ampliar timeouts.
+
+### Issue29 — evidência integrada por SHA e limites de revisão
+
+PR31 em rascunho sobre PR28 exato; código518678a7d991e3e26650172ca8557203ae34e15f.
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/41959802089
+CINCO jobs aprovados; logs dos cinco consultados. Não transferir essa evidência
+para integração runtime nem aceite humano. Último commit apenas documental terá
+CI própria conferida no PR31.
+
+| Job | Descobertos | Executados | Skips |
+| --- | --- | --- | --- |
+| Windows Python3.11 |242|240|2 browser dedicado|
+| Windows Python3.12 |242|240|2 browser dedicado|
+| Linux Python3.11 |242|191|51:49 Windows +2 browser|
+| Linux Python3.12 |242|191|51:49 Windows +2 browser|
+| Chromium dedicado |2|2|0|
+
+Foco Job List17/0 skips por Windows; foco suspenso anterior11/0 por Windows.
+São reexecuções de casos presentes na suíte, não testes únicos adicionais. Os17
+novos casos únicos executaram em cada Windows: sete portáveis e dez dependentes
+de Windows; dois destes últimos injetam guardas/cleanup em recursos reais. Oito
+casos Windows reais incluem cinco barreiras de crash em três métodos/subcasos,
+positivo completo, argumentos inválidos, A/B de console e close protegido.
+Skips não são aprovações; nenhum foreground ignorado nesta rodada.
+
+REAL em ambos Windows: CreateProcess com Job List, IsProcessInJob antes de resume,
+sem herança de Job/decoys, descendant membership; processo suspenso não escreve
+marker. Launcher morto abruptamente pré-verify/pré-resume/pós-resume: capacidades
+retidas pela raiz sinalizadas, sem Job alvo retido. Nested pré-verify E pós-resume:
+Job externo permanece aberto; filhos conhecidos saem e consulta de TODO Job
+externo confirma zero antes de seu fechamento. Handles duplicados/launcher Popen
+foram fechados explicitamente, reader/IO encerrados. Parâmetros inválidos recusados
+por API real; handle protegido recusado realmente sem cleanup confirmado/retry.
+
+A/B REAL e lista do Job registraram membros adicionais aos dois conhecidos,
+com ambos presentes e ZERO após cleanup. Origem adicional NÃO identificada;
+nenhum PID reaberto/imagem de processo extra inspecionada. Não prometer exatamente
+um descendant total nem atribuir a conhost/redirector. Crash sem Job externo prova
+diretamente só processos conhecidos; nested/positivo provam zero de todos os
+membros por consulta kernel. Não manter Job alvo para consultar depois do último
+close, pois invalidaria causalidade. Isso permanece ponto de revisão explícito.
+
+INJETADO: sete contratos de tamanho/lifetime/erros/ordem/sanitização em Linux e
+Windows, mais guardas membership/resume e recusa terminate/query/close sobre
+recursos Win32. Exceção de Delete VOID conserva storage e status não confirmado;
+retorno normal cumpre contrato da API, não é verificação independente de heap.
+
+Local242:191 executados/51 skips, compileall, wheel sem experimento no pacote e
+manifesto151 arquivos verificados. Diff de src/, ferramentas, extensão, v1/CMD
+idêntico à base. Vinte PRs anteriores conferidos sem alteração de HEAD/base/draft,
+inclusive PR6. Adapter OFF; sem merge/rebase/deploy/instalação/dados reais/piloto.
+
+Rodadas falhas2839ab8/41958864997 e4130c29/41959187379 preservadas: premissa de
+cardinalidade exata incorreta, hipótese console insuficiente. b930aab/41959651181
+falhou na barreira nested pós-resume; corrigido encaminhamento em518678a. Não foram
+skips, falhas do produto em campo ou razões para ampliar timeout. Em nenhuma delas
+a prova de sucesso foi satisfeita por emergency cleanup da raiz.
+
+Próximo gate: revisão independente do SHA final conforme JOB_AT_CREATION_STUDY.md.
+Experimento permanece só tests/, sem corrigir ainda Popen→assign dos launchers.
+Runner Server x64 não prova Win10/11 humano, ARM64/x86, mesmo token/admin, todos
+nested Jobs ou criadores/brokers. Issue30 NÃO iniciada; liveness/AI04 e demais
+gates continuam abertos. Aguardar revisão do responsável antes da próxima issue.

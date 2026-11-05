@@ -272,3 +272,13 @@ reter lista/lpValue até retorno normal e falhar fechado em exceção de wrapper
 Negativos reais de parâmetros/close distintos de retornos injetados. Não extrapolar
 para IPC herdado, mesmo token/admin ou Windows10/11 humanos. Não migrar launchers,
 não iniciar Issue30 nem considerar CI autorização de integração/piloto.
+
+D-038 / evidência:518678a/CI41959802089 cinco jobs aprovados, Windows240/2 skips,
+Linux191/51 por Python, Chromium2/0; foco novo17/0 nos dois Windows. Lista própria
+completa e zero de Job substituem premissa inválida de exatamente2 membros; origem
+de membros adicionais não identificada, hipótese de console isoladamente refutada.
+Não abrir PIDs extras para inventar identidade. Nested externo aberto comprova
+zero de todos membros após crash pós-resume; caso sem externo observa somente
+capacidades de processos conhecidos. API/handle protegidos realmente recusados;
+retornos de guardas/cleanup e Delete que lança são injetados. Nenhum timeout
+ampliado, fallback antigo ou claim de integração. Issue30 aguarda revisão29.
