@@ -510,8 +510,8 @@
     },
     {
       "path": "tests/isolated_process_supervision.py",
-      "size_bytes": 24651,
-      "sha256": "cbc89b06084f9b27b5b66e949a19c0befe71de69ca167b27d90db3f155414315"
+      "size_bytes": 24653,
+      "sha256": "7dc8ec664943334c4598a43e2e64f6d14490884963cd3c5c14194408b8d15be2"
     },
     {
       "path": "tests/isolated_suspended_spawn.py",

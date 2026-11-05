@@ -203,7 +203,7 @@ def declare_shared_io(api):
 
 
 def read_shared(path, api):
-    """Permit atomic replacement while reading a synthetic control file on Windows."""
+    """Read a bounded immutable record; shared access does not guarantee replacement."""
     declare_shared_io(api)
     handle = api.CreateFileW(str(path), 0x80000000, 1|2|4, None, 3, 0x80, None)
     if handle in (None, ctypes.c_void_p(-1).value):
