@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 32911,
-      "sha256": "e10a757f612612cbaf9eb487194aaecaac1459fae6c98e66e4e5878f27c5cbc6"
+      "size_bytes": 33452,
+      "sha256": "5bc0beb2c42b2d6187c72a2120633c95d89353498f95c06ccd290e3c4039b266"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 82294,
-      "sha256": "c6b9e1b562e7ffc4fc99df25e15c0cdf7bda7eb969cef75592dee4db150d0fa9"
+      "size_bytes": 83202,
+      "sha256": "66919cf0b2f3eddf1f06f48db26cfcfa89e6eef612c05d94f58f896eadeca33b"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -120,8 +120,8 @@
     },
     {
       "path": "docs/CLEANUP_LIVENESS_DESIGN.md",
-      "size_bytes": 9934,
-      "sha256": "9862cc98bde5da5a0b73ce038bbeb512a0cc5648d1a6e4b774e44e306bdc8fb4"
+      "size_bytes": 10939,
+      "sha256": "998e3b0ace1787c14bc4a823f3475624e609abf69fb68d16afcbf56e6e370238"
     },
     {
       "path": "docs/COMO_INICIAR_EM_10_MINUTOS.md",
@@ -220,8 +220,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 18749,
-      "sha256": "ccc577ff505d4abf75818d28b8ffade8eef53c2e57ef31b4bd7d40398a158609"
+      "size_bytes": 18898,
+      "sha256": "8a659ce3391d484184d92da2cf4947291fe23d6c2a6dae8aad68dcce58a9f490"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -550,8 +550,8 @@
     },
     {
       "path": "tests/test_cleanup_liveness_design.py",
-      "size_bytes": 7035,
-      "sha256": "fffd6527aae3e912490bf483bdcbc5a4315a207b4b336150d0ba68ade13a19c1"
+      "size_bytes": 8360,
+      "sha256": "2155e53f4d54be9f381b2c213c664a00de2ec53ef6192e5cbd6d944e9d99ecbc"
     },
     {
       "path": "tests/test_cleanup_stabilization.py",
