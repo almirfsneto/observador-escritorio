@@ -113,69 +113,7 @@ class LivenessContractTest(unittest.TestCase):
         self.assertEqual(incomplete['cleanup_state'], 'unconfirmed')
 
     def test_cancel_ack_without_request_is_invalid_evidence(self):
-        with self.assertRaisesRegex(ValueError, '^liveness_evidence_rejected
-        d = classify(Evidence(worker_exited=True, children_exited=True,
-                              job_zero=True, handles_closed=True, cleanup_error=True))
-        self.assertEqual(d['worker_state'], 'exited')
-        self.assertEqual(d['cleanup_state'], 'unconfirmed')
-
-    def test_confirmed_requires_all_independent_proofs(self):
-        d = classify(Evidence(worker_exited=True, children_exited=True,
-                              job_zero=True, handles_closed=True))
-        self.assertEqual(d['worker_state'], 'exited')
-        self.assertEqual(d['cleanup_state'], 'confirmed')
-
-    def test_invalid_untrusted_evidence_is_rejected(self):
-        for bad in (object(), Evidence(worker_exited=1),
-                    Evidence(deadline_elapsed='yes'), Evidence(ui_state='yes'),
-                    Evidence(ui_state=1)):
-            with self.subTest(type=type(bad).__name__):
-                with self.assertRaisesRegex(ValueError, '^liveness_evidence_rejected$'):
-                    classify(bad)
-
-    def test_real_isolated_subprocess_with_non_daemon_blocked_lock(self):
-        # REAL process, but the blocked operation and cancellation are synthetic.
-        # A non-daemon worker remains alive after a bounded join; do NOT kill a
-        # thread inside the caller or leave an infinite hang in the CI.
-        script = (
-            'import threading,sys\n'
-            'lock=threading.Lock()\n'
-            'lock.acquire()\n'
-            'def blocked():\n'
-            '    lock.acquire()\n'
-            'worker=threading.Thread(target=blocked,daemon=False)\n'
-            'worker.start()\n'
-            'worker.join(timeout=.05)\n'
-            'print("BLOCKED_AFTER_JOIN" if worker.is_alive() else "UNEXPECTED_EXIT",flush=True)\n'
-            'sys.stdin.readline()\n'
-            'print("CANCEL_NOT_IMPLEMENTED",flush=True)\n'
-            'worker.join()\n'
-        )
-        env = {}
-        if sys.platform == 'win32':
-            env = {'SystemRoot': os.environ['SystemRoot'],
-                   'TEMP': tempfile.gettempdir(), 'TMP': tempfile.gettempdir()}
-        p = subprocess.Popen([sys.executable, '-I', '-S', '-B', '-c', script],
-                             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                             stderr=subprocess.DEVNULL, env=env)
-        try:
-            # A cancellation-looking input cannot release the unrelated lock.
-            with self.assertRaises(subprocess.TimeoutExpired):
-                p.communicate(input=b'cancel\n', timeout=1.5)
-            self.assertIsNone(p.poll())
-        finally:
-            if p.poll() is None:
-                p.kill()  # Only our own isolated synthetic process.
-            out, _ = p.communicate(timeout=5)
-            self.assertIsNotNone(p.returncode)
-        self.assertIn(b'BLOCKED_AFTER_JOIN', out)
-        self.assertIn(b'CANCEL_NOT_IMPLEMENTED', out)
-        self.assertNotIn(b'UNEXPECTED_EXIT', out)
-
-
-if __name__ == '__main__':
-    unittest.main()
-):
+        with self.assertRaisesRegex(ValueError, '^liveness_evidence_rejected$'):
             classify(Evidence(cancel_acknowledged=True))
 
     def test_sticky_cleanup_error_blocks_confirmation_even_after_exit(self):
