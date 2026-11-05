@@ -1,3 +1,23 @@
+# Retomada atual — Issue #30 / contrato de liveness (2026-11-05)
+
+Branch `codex/cleanup-liveness-contract-issue30` criada sobre o SHA exato PR31/8fd16bcd00183eb04d3ac759fa91d57978260b56; PR31
+segue draft, sem merge. Issue29 concluída exclusivamente como experimento isolado.
+Ler Issue30 e `docs/CLEANUP_LIVENESS_DESIGN.md` antes de propor integração.
+
+A etapa atual adiciona 9 testes em `tests/test_cleanup_liveness_design.py`:
+contratos negativos de deadline/cancelamento/owner/handles/UI e um processo real
+sintético que prova que join(timeout) não elimina thread não-daemon bloqueada.
+Teste local Linux Python3.13 9/9; conferir resultados no SHA de CI antes de afirmar
+Windows3.11/3.12 ou conclusão geral. Não houve alteração de src/, launchers,
+WindowsObserver, adapter, IPC, runtime ou dados. Manifesto atualizado.
+
+A arquitetura favorita **para investigação futura** é subprocesso supervisionado,
+Job na criação e protocolo fechado, mas ainda SEM implementação ou deadline global.
+Não iniciar migração nem piloto; originadores de Job adicionais desconhecidos no
+PR31 e os gates Issue22/AI04/revisão humana continuam abertos.
+
+---
+
 # Retomada atual — Issue29 / Job List isolado
 
 Base obrigatória PR28/508c38ad0996e7854c788cf08f655c8b65225707.
