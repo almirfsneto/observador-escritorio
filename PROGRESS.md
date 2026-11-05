@@ -1151,7 +1151,8 @@ Foco Job List17/0 skips por Windows; foco suspenso anterior11/0 por Windows.
 São reexecuções de casos presentes na suíte, não testes únicos adicionais. Os17
 novos casos únicos executaram em cada Windows: sete portáveis e dez dependentes
 de Windows; dois destes últimos injetam guardas/cleanup em recursos reais. Oito
-casos Windows reais incluem cinco barreiras de crash em três métodos/subcasos,
+casos Windows reais incluem cinco barreiras de crash (três normais e dois subcasos
+aninhados),
 positivo completo, argumentos inválidos, A/B de console e close protegido.
 Skips não são aprovações; nenhum foreground ignorado nesta rodada.
 
