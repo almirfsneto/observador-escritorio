@@ -188,7 +188,7 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
             with path.open('rb'):
                 with self.assertRaises(OSError) as error:
                     replacement.replace(path)
-                self.assertEqual(error.exception.winerror,32)
+                self.assertEqual(error.exception.winerror,5)  # MoveFileEx replacement denied while the reader denies delete sharing.
             api = extended_api();declare_shared_io(api)
             raw = api.CreateFileW(str(path),0x80000000,7,None,3,0x80,None)
             self.assertNotIn(raw,(None,ctypes.c_void_p(-1).value))
@@ -201,7 +201,7 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
                 self.assertEqual(read_shared(path,api),b'new')
             finally:
                 close_handle_once(owner,api)
-        print('REAL_CONTROL_FILE_SHARING_REFUSAL delete_sharing_allows_atomic_replace file_handles_closed')
+        print('REAL_CONTROL_FILE_SHARING_REFUSAL access_denied delete_sharing_allows_atomic_replace file_handles_closed')
 
     def test_real_protected_handle_refuses_close_without_retry_and_other_resources_finish(self):
         with tempfile.TemporaryDirectory() as tmp:

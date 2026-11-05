@@ -1295,10 +1295,18 @@ não atribuir código específico ao run antigo. Fixar finally no estimulador ta
 para sempre executar teardown e classificar erro de comunicação corretamente.
 
 Há corrida verificável no desenho de arquivo: replace atômico Windows concorre
-com leitores Python sem FILE_SHARE_DELETE. Novo negativo REAL reproduz recusa32
+com leitores Python sem FILE_SHARE_DELETE. Novo negativo REAL prepara reprodução de recusa
 em arquivo sintético próprio e compara leitor Win32 com sharing7, que permite
 replace. Raiz e worker passam a ler com esse sharing e CloseHandle verificado;
 fechamento de arquivo falho retém dono failed e impede confirmação. Não aumentar
 timeout/repetir replace cegamente. Novo teste portável cobre close de arquivo.
 Agora16 portáveis +11 Windows=27 focados novos; futura suíte280. Os runs anteriores
 cancelados ao publicar revisões não são aprovações. Aguardar CI deste código.
+
+cd18fd9/CI42012749672: ambos Windows falharam apenas na expectativa de WinError32
+no negativo de arquivo (27 focados,26 passaram/zero skips). O retorno REAL foi
+AccessDenied5 nos dois Pythons. Ajustar o código esperado para5, mantendo recusa
+obrigatória e sucesso da MESMA substituição com leitor share7. Não confundir com
+identificação do WinError do run antigo f502, que não foi capturado. Os demais
+casos, incluindo LateWorker com finally e sharing, passaram no foco; matriz total
+ainda depende de CI verde deste próximo SHA.

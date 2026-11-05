@@ -158,7 +158,7 @@ sanitizado, portanto não alegar identificação do código no run antigo. O nov
 finally do estimulador chama teardown mesmo após falhar release/write/espera.
 
 Replace atômico pode ser recusado se o outro processo segura leitor sem sharing
-de delete. Regressão REAL compara arquivo próprio aberto pelo Python (recusa32)
+de delete. Regressão REAL compara arquivo próprio aberto pelo Python (AccessDenied5 observado no runner)
 com CreateFileW(GENERIC_READ, FILE_SHARE_READ|WRITE|DELETE, OPEN_EXISTING), que
 permite a mesma substituição enquanto aberto. Leitura da raiz e do subordinado
 agora usa esse contrato, limite257 para rejeitar acima256 e CloseHandle verificado.
@@ -169,3 +169,9 @@ nem ampliar timeout para obter passe. Não tocar em arquivos fora da fixture.
 Total atual:16 portáveis e11 Windows=27 focados novos; resultados só valem por SHA.
 CI Windows é prova desse mecanismo de arquivo/lock sintético, não driver/kernel
 arbitrário nem liveness das APIs de cleanup da própria raiz.
+
+A regressão cd18fd9/CI42012749672 encontrou AccessDenied5 (em vez da expectativa
+32) ao tentar substituir arquivo com leitor Python aberto nos DOIS Windows. A
+expectativa passou a exigir esse5 real, sem aceitar erro arbitrário nem dispensar
+o sucesso do braço com delete sharing. Isso não atribui retroativamente WinError
+ao run f502. Esse ajuste ainda precisa da CI completa por SHA.
