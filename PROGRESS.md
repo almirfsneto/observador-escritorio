@@ -1097,3 +1097,15 @@ positivo/descendente/decoy, três crash points, nested externo aberto, argumento
 inválidos reais, guardas injetados e close protegido. Windows exigido sem skip;
 novo step focado antecede suíte geral. Não alegar execução nativa antes da CI.
 Nenhum arquivo src/, launcher ou aceite modificado. Issue30 não iniciada.
+
+### Issue29 — primeira CI e investigação de contagem
+
+2839ab8/CI41958864997: Linux/Chromium aprovados; ambos Windows FALHARAM no
+positivo, ActiveProcesses=3 contra2 esperado. Os três crashes e nested/negativos
+executaram e passaram, mas isso não aprova o job. Não reduzido assert nem timeout.
+Hipótese testável: descendant Popen sem CREATE_NO_WINDOW solicita console novo.
+Revisão acrescenta A/B real mudando somente esse flag, contagem antes/depois e
+zero após cleanup. Fixture padrão passa a não solicitar console para descendant,
+mantendo assert exato2. Aguardar comparação nativa antes de afirmar causa.
+Root agora transfere/fecha explicitamente o handle Popen retido com BOOL checado,
+além dos handles duplicados, IO e reader; não depende do GC para essa prova.

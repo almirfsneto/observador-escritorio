@@ -169,11 +169,11 @@ class WindowsJobAtCreationTest(unittest.TestCase):
                 if outer is not None:
                     outer._confirm_empty()  # Outer remains open throughout inner kill-on-close proof.
                     self.assertTrue(outer.processes_confirmed)
-                print('REAL_JOB_CREATION_LAUNCHER_CRASH ' + json.dumps(dict(
+                evidence = dict(
                     stage=stage, origin='win32', root_target_job_handles=0,
                     controlled_outer_job=nested, outer_zero_confirmed=bool(outer and outer.processes_confirmed),
                     child_exit_confirmed=True, known_descendants=1 if descendant else 0,
-                    known_descendants_exit_confirmed=True, launcher_finally_executed=False), sort_keys=True))
+                    known_descendants_exit_confirmed=True, launcher_finally_executed=False)
             finally:
                 status = CleanupStatus()
                 def stop_launcher():
@@ -209,8 +209,13 @@ class WindowsJobAtCreationTest(unittest.TestCase):
                     status.attempt('provider', outer.close)
                 status.attempt('provider', launcher.stdin.close)
                 status.attempt('provider', launcher.stdout.close)
+                # Transfer the Popen handle once; prevent its finalizer closing an uncertain slot.
+                launcher_owner = SimpleNamespace(handle=launcher._handle.Detach(), close_state='open')
+                status.attempt('provider', lambda: close_handle_once(launcher_owner, kernel.api))
                 status.finish()
                 self.assertTrue(status.confirmed, 'creation_crash_test_cleanup_unconfirmed')
+            evidence['root_resource_cleanup_confirmed'] = True
+            print('REAL_JOB_CREATION_LAUNCHER_CRASH ' + json.dumps(evidence, sort_keys=True))
 
     def test_real_launcher_death_before_membership_verification(self):
         self.crash_case('before_verify')
@@ -264,6 +269,35 @@ class WindowsJobAtCreationTest(unittest.TestCase):
                 self.assertTrue(probe.status.confirmed)
                 self.emit(probe)
         print('INJECTED_JOB_CREATION_GUARDS real_children_closed no_resume')
+
+    def test_real_console_flag_comparison_accounts_for_additional_job_members(self):
+        # Controlled A/B: only the descendant console creation flag differs.
+        observations = {}
+        for console in (True, False):
+            with tempfile.TemporaryDirectory() as tmp:
+                probe = CreationProbe(Path(tmp) / 'synthetic.started', descendant_console=console)
+                try:
+                    probe.create()
+                    before = ctypes.create_string_buffer(48)
+                    self.assertTrue(probe.job.api.QueryInformationJobObject(probe.job.handle, 1, before, 48, None))
+                    self.assertEqual(W.DWORD.from_buffer(before, 40).value, 1)
+                    probe.verify()
+                    probe.resume()
+                    wait_marker(probe.marker)
+                    value = ctypes.create_string_buffer(48)
+                    self.assertTrue(probe.job.api.QueryInformationJobObject(probe.job.handle, 1, value, 48, None))
+                    active = W.DWORD.from_buffer(value, 40).value
+                    observations['allocate_console' if console else 'no_window'] = active
+                    if not console:
+                        self.assertEqual(active, 2)
+                    else:
+                        self.assertGreaterEqual(active, 2)  # Observe helper count, never assume helper identity.
+                finally:
+                    probe.close()
+                self.assertTrue(probe.status.confirmed)
+                self.assertTrue(probe.job.processes_confirmed)
+        print('REAL_JOB_CREATION_CONSOLE_COMPARISON ' + json.dumps(dict(
+            origin='win32', active_members=observations, all_jobs_zero_after_cleanup=True), sort_keys=True))
 
     def test_real_protected_close_keeps_cleanup_unconfirmed_and_closes_attributes(self):
         with tempfile.TemporaryDirectory() as tmp:

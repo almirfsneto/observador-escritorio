@@ -27,7 +27,7 @@ ERRORS = {5: 'access_denied', 6: 'invalid_handle', 87: 'invalid_parameter',
 # Exactly one inert descendant; only its retained handle slot is written privately.
 SCRIPT = ('import subprocess,sys,time;'
           'p=subprocess.Popen([sys.executable,"-I","-S","-B","-c",'
-          '"import time;time.sleep(40)"],close_fds=True);'
+          '"import time;time.sleep(40)"],close_fds=True,creationflags=int(sys.argv[2]));'
           'f=open(sys.argv[1],"xb");f.write(str(int(p._handle)).encode("ascii"));'
           'f.close();time.sleep(40)')
 
@@ -58,11 +58,14 @@ def extended_api():
 
 class CreationProbe(SuspendedProbe):
     """Retain attribute storage and lpValue through Delete, even on failure."""
-    def __init__(self, marker, *, api=None, job_factory=OwnedJob):
+    def __init__(self, marker, *, api=None, job_factory=OwnedJob, descendant_console=False):
         try:
             self.api = api if api is not None else extended_api()
         except Exception:
             raise OSError('job_at_creation_unavailable') from None
+        if type(descendant_console) is not bool:
+            raise ValueError('creation_console_mode_rejected')
+        self.descendant_console = descendant_console
         self.marker = Path(marker).absolute()
         self.status = CleanupStatus()
         self.process = SimpleNamespace(handle=None, close_state='open')
@@ -176,7 +179,8 @@ class CreationProbe(SuspendedProbe):
             startup.attributes = ctypes.cast(self.attribute_buffer, ctypes.c_void_p)
             info = ProcessInfo()
             command = ctypes.create_unicode_buffer(subprocess.list2cmdline(
-                [sys.executable, '-I', '-S', '-B', '-c', SCRIPT, str(self.marker)]))
+                [sys.executable, '-I', '-S', '-B', '-c', SCRIPT, str(self.marker),
+                 '0' if self.descendant_console else str(0x8000000)]))
             env = minimal_environment(self.marker.parent)
             block = ctypes.create_unicode_buffer('\0'.join(k + '=' + env[k] for k in sorted(env)) + '\0\0')
             executable = str(self.marker.parent / 'absent-synthetic.exe') if negative == 'missing_image' else sys.executable
