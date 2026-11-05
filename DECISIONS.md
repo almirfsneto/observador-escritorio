@@ -282,3 +282,22 @@ zero de todos membros após crash pós-resume; caso sem externo observa somente
 capacidades de processos conhecidos. API/handle protegidos realmente recusados;
 retornos de guardas/cleanup e Delete que lança são injetados. Nenhum timeout
 ampliado, fallback antigo ou claim de integração. Issue30 aguarda revisão29.
+
+## D-039 — Liveness não equivale a cleanup confirmado (Issue #30)
+
+`threading.Thread(daemon=False)` mais `join(timeout=20)` evita abandono silencioso
+mas não fixa deadline global: API bloqueada pode manter o processo Python vivo.
+`CancelSynchronousIo` é tentativa de cancelamento de I/O síncrona, não interrupção
+universal. Preservar `cleanup_unconfirmed` para falha anterior mesmo que recursos
+independentes terminem depois; UI, worker, recursos/Job e tempo têm estados separados.
+
+Decisão de engenharia **somente para estudo**: priorizar o desenho de um processo
+sintético supervisionado com Job associado na criação, condicionado à propriedade
+dos handles, membership verificável e fechamento do último Job; não integrar
+antes de provas adicionais de IPC/herança e de segurança. Não usar `TerminateThread`,
+`os._exit`, thread daemon nem timeout como atalho para declarar encerramento.
+
+O teste do processo isolado com lock é uma demonstração real da limitação de join,
+não simulação de API Win32 não cancelável. Os demais negativos são contratos
+simulados. Nenhuma garantia global ou watchdog de runtime foi implementado.
+Revisão humana e Issue22/AI04 continuam abertas.
