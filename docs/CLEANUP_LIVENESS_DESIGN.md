@@ -21,7 +21,9 @@ Não misturar **liveness** (progresso do supervisor/worker), **teardown** (recur
 | UI | responsiva, indisponível ou desconhecida; fato separado da limpeza | janela fechada = backend encerrado |
 | Prazo | deadline vencido com status `deadline_expired`, sem promoção a concluído | timeout do controlador ou da CI |
 
-A modelagem em `tests/test_cleanup_liveness_design.py` é **somente de contrato e injeções**. O campo `cleanup_error` é sticky; mesmo havendo provas posteriores de recursos, não apagar a falha já registrada. Uma expiração pode coexistir com término posterior; não reescrever a história de liveness.
+A modelagem em `tests/test_cleanup_liveness_design.py` é **somente de contrato e injeções**. O campo `cleanup_error` deve ser sticky: mesmo havendo provas posteriores de recursos, não apagar a falha já registrada. Uma expiração pode coexistir com término posterior; `deadline_elapsed=True` prevalece no estado de liveness (`deadline_expired`), enquanto `worker_exit_confirmed=True` registra a saída tardia. O encerramento comprovado dos recursos pode ser classificado separadamente como `cleanup_state=confirmed`, sem apagar a violação do prazo. Um ACK de cancelamento sem solicitação é evidência inválida.
+
+**Limite adicional do classificador:** `Evidence` é um snapshot imutável, não um histórico/ledger. Não impede que uma origem não confiável envie outro snapshot com `deadline_elapsed=False` ou `cleanup_error=False`. Uma implementação futura precisará manter flags monotônicas de prazo/falha e atestar a proveniência dos handles/Job; os testes atuais **não** demonstram essa persistência nem autenticidade.
 
 ## 3. Alternativas técnicas comparadas
 
@@ -48,6 +50,8 @@ A modelagem em `tests/test_cleanup_liveness_design.py` é **somente de contrato 
 | --- | --- | --- |
 | `join(timeout)` com lock retido e thread não-daemon | **processo real sintético**, em `tests/test_cleanup_liveness_design.py` | timeout não encerra thread; processo **de teste** é morto e reaproveitado com handle próprio; não valida produção |
 | cancelamento requisitado e não atendido | injeção/controle sintético | não declarar worker encerrado nem limpeza confirmada |
+| ACK sem solicitação prévia | contrato sintético | rejeitar o snapshot, não inventar cancelamento |
+| worker termina após deadline | contrato sintético | `deadline_expired` permanece, com saída tardia reportada separadamente; cleanup requer prova independente |
 | UI indisponível enquanto recursos fecham | modelo sintético | relatar UI separadamente; não inferir falha/sucesso de backend por UI |
 | morte da raiz sem prova sobre filhos | modelo sintético | `unconfirmed`, nunca declarar kill-on-close sem Job próprio comprovado |
 | worker sai mas Job/handles ainda não confirmados | modelo sintético | cleanup fica `pending` ou `unconfirmed`, nunca `confirmed` |
