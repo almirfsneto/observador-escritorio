@@ -301,3 +301,12 @@ O teste do processo isolado com lock é uma demonstração real da limitação d
 não simulação de API Win32 não cancelável. Os demais negativos são contratos
 simulados. Nenhuma garantia global ou watchdog de runtime foi implementado.
 Revisão humana e Issue22/AI04 continuam abertas.
+
+### D-039A — expiração monotônica e ACK somente após pedido
+
+Num snapshot de estudo, `deadline_elapsed` deve prevalecer na classificação
+do prazo mesmo quando `worker_exited` depois. Registrar separadamente o término
+tardio do worker e o estado de limpeza comprovada; prazo expirado não vira
+cumprido retroativamente. Rejeitar `cancel_acknowledged=True` sem
+`cancel_requested=True`. A classificação é stateless: reter histórico monotônico
+e autenticar/provar os fatos nativos exigem um mecanismo separado, **não** entregue.
