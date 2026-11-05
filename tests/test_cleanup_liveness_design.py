@@ -22,13 +22,16 @@ class Evidence:
     job_zero: bool = False
     handles_closed: bool = False
     cleanup_error: bool = False
-    ui_responsive: bool = False
+    ui_state: str = 'unknown'
 
 
 def classify(e):
     """Test-only classification: neither timeout nor cancel is proof of exit."""
-    if type(e) is not Evidence or any(type(getattr(e, name)) is not bool
-                                      for name in Evidence.__dataclass_fields__):
+    if (type(e) is not Evidence
+            or any(type(getattr(e, name)) is not bool
+                   for name in Evidence.__dataclass_fields__ if name != 'ui_state')
+            or type(e.ui_state) is not str
+            or e.ui_state not in ('responsive', 'unavailable', 'unknown')):
         raise ValueError('liveness_evidence_rejected')
     # Distinguish completed, overdue and still-active workers. UI is orthogonal.
     if e.worker_exited:
@@ -51,7 +54,7 @@ def classify(e):
         'kind': 'synthetic_liveness_contract',
         'worker_state': worker,
         'cleanup_state': cleanup,
-        'ui_state': 'responsive' if e.ui_responsive else 'unknown',
+        'ui_state': e.ui_state,
         'owner_exited': e.owner_exited,
         'cancel_state': 'acknowledged' if e.cancel_acknowledged else
                         'requested' if e.cancel_requested else 'not_requested',
@@ -87,10 +90,10 @@ class LivenessContractTest(unittest.TestCase):
     def test_ui_timeout_is_independent_of_cleanup(self):
         proof = dict(worker_exited=True, children_exited=True,
                      job_zero=True, handles_closed=True)
-        for responsive in (False, True):
-            d = classify(Evidence(**proof, ui_responsive=responsive))
+        for state in ('responsive', 'unavailable', 'unknown'):
+            d = classify(Evidence(**proof, ui_state=state))
             self.assertEqual(d['cleanup_state'], 'confirmed')
-            self.assertEqual(d['ui_state'], 'responsive' if responsive else 'unknown')
+            self.assertEqual(d['ui_state'], state)
 
     def test_sticky_cleanup_error_blocks_confirmation_even_after_exit(self):
         d = classify(Evidence(worker_exited=True, children_exited=True,
@@ -106,7 +109,8 @@ class LivenessContractTest(unittest.TestCase):
 
     def test_invalid_untrusted_evidence_is_rejected(self):
         for bad in (object(), Evidence(worker_exited=1),
-                    Evidence(deadline_elapsed='yes')):
+                    Evidence(deadline_elapsed='yes'), Evidence(ui_state='yes'),
+                    Evidence(ui_state=1)):
             with self.subTest(type=type(bad).__name__):
                 with self.assertRaisesRegex(ValueError, '^liveness_evidence_rejected$'):
                     classify(bad)
