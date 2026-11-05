@@ -119,6 +119,11 @@
       "sha256": "c57af98d56c2bc5e620011f0b7a875095b40ab133924d3d8237e0aedfde1c733"
     },
     {
+      "path": "docs/CLEANUP_LIVENESS_DESIGN.md",
+      "size_bytes": 9934,
+      "sha256": "9862cc98bde5da5a0b73ce038bbeb512a0cc5648d1a6e4b774e44e306bdc8fb4"
+    },
+    {
       "path": "docs/COMO_INICIAR_EM_10_MINUTOS.md",
       "size_bytes": 1185,
       "sha256": "5bcbb86d3bbd70374fce3547b5688cef3fb02b3ad3be26fd5272018a62058b0a"
@@ -542,6 +547,11 @@
       "path": "tests/test_cleanup_lifetime.py",
       "size_bytes": 1623,
       "sha256": "2a73d07314be1906feee8136f8571fb302d0acb9464d6a44274933a3eb49b846"
+    },
+    {
+      "path": "tests/test_cleanup_liveness_design.py",
+      "size_bytes": 6895,
+      "sha256": "320369019bf14967b0960d81f9980e6e092825a85acf3b05f67ab2cea5a9400e"
     },
     {
       "path": "tests/test_cleanup_stabilization.py",
