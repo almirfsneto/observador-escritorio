@@ -1284,3 +1284,21 @@ recusa observada de mera falta de resposta. Expiração global local continua200
 sem aumento. Corrida de exit após pedido não apaga falta de ACK; ping não sobrescreve
 pedido cancel pendente. Novo negativo portável realça os dois invariantes (15
 portáveis novos,25 focados somando10 Windows). Não é CancelSynchronousIo nativo.
+
+### Issue33 — falha real de comunicação pré-teardown e regressão de sharing
+
+f502c9f/push CI42011080743: Windows3.11 passou; Windows3.12 FALHOU na suíte
+completa (foco24 havia passado), em saída tardia. Snapshot: atributos/Job/handles
+não tentados e só process_wait marcado; a exceção ocorreu antes de NativeWorker.close,
+na escrita do comando release. Classe WinError da ocorrência NÃO foi capturada;
+não atribuir código específico ao run antigo. Fixar finally no estimulador tardio
+para sempre executar teardown e classificar erro de comunicação corretamente.
+
+Há corrida verificável no desenho de arquivo: replace atômico Windows concorre
+com leitores Python sem FILE_SHARE_DELETE. Novo negativo REAL reproduz recusa32
+em arquivo sintético próprio e compara leitor Win32 com sharing7, que permite
+replace. Raiz e worker passam a ler com esse sharing e CloseHandle verificado;
+fechamento de arquivo falho retém dono failed e impede confirmação. Não aumentar
+timeout/repetir replace cegamente. Novo teste portável cobre close de arquivo.
+Agora16 portáveis +11 Windows=27 focados novos; futura suíte280. Os runs anteriores
+cancelados ao publicar revisões não são aprovações. Aguardar CI deste código.

@@ -5,11 +5,11 @@ import json
 import os
 from pathlib import Path
 import tempfile
-from unittest.mock import patch
+from unittest.mock import patch,Mock
 from types import SimpleNamespace
 import unittest
 
-from isolated_process_supervision import Ledger, Supervisor, NativeWorker, NONCE, decode_record, job_members, PHASES
+from isolated_process_supervision import Ledger, Supervisor, NativeWorker, NONCE, decode_record, job_members, read_shared, PHASES
 from test_job_at_creation_contract import FakeApi, FakeJob
 
 
@@ -171,6 +171,23 @@ class SupervisionContractTest(unittest.TestCase):
         api.QueryInformationJobObject = lambda *a: False
         with self.assertRaises(OSError):
             job_members(api, SimpleNamespace(handle=1), [1])
+
+    def test_file_close_failure_retains_owner_and_never_retries_numeric_slot(self):
+        def read(handle,buffer,size,count,overlapped):
+            ctypes.memmove(buffer,b'{}',2)
+            ctypes.cast(count,ctypes.POINTER(W.DWORD))[0]=2
+            return True
+        api=SimpleNamespace(CreateFileW=Mock(return_value=101),ReadFile=Mock(side_effect=read),
+                            CloseHandle=Mock(return_value=False))
+        with self.assertRaisesRegex(OSError,'^supervision_file_close_unconfirmed$') as error:
+            read_shared('synthetic_control',api)
+        owner=error.exception.resource
+        self.assertEqual(owner.close_state,'failed')
+        self.assertEqual(owner.handle,101)
+        api.CloseHandle.assert_called_once_with(101)
+        from observador.win32_handles import close_handle_once
+        with self.assertRaises(OSError):close_handle_once(owner,api)
+        api.CloseHandle.assert_called_once()
 
     def test_diagnostic_has_fixed_phases_and_sticky_errors(self):
         l = Ledger('injected')

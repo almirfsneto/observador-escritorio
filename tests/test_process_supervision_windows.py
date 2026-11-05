@@ -13,7 +13,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from isolated_process_supervision import NativeWorker, Supervisor, job_members, disarm_job
+from isolated_process_supervision import NativeWorker, Supervisor, job_members, disarm_job, declare_shared_io, read_shared
 from isolated_suspended_spawn import minimal_environment
 from test_job_at_creation_windows import duplicate_process
 from observador.cleanup import CleanupStatus
@@ -93,11 +93,15 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
     def test_real_late_exit_does_not_erase_expiration(self):
         class LateWorker(NativeWorker):
             def close(self):
-                if self.created and not self.ledger.finished and self.ledger.expired:
-                    self.write('release')
-                    if self.api.WaitForSingleObject(self.process.handle, 2000) != 0:
-                        self.ledger.fail('process_wait')
-                super().close()
+                try:
+                    if self.created and not self.ledger.finished and self.ledger.expired:
+                        self.write('release')
+                        if self.api.WaitForSingleObject(self.process.handle, 2000) != 0:
+                            self.ledger.fail('process_wait')
+                except Exception:
+                    self.ledger.fail('communication')
+                finally:
+                    super().close()
         with tempfile.TemporaryDirectory() as tmp:
             worker = LateWorker(Path(tmp)/'status')
             snapshot = Supervisor(worker).run()
@@ -175,6 +179,29 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
                 self.assertEqual(snapshot['cleanup_state'], 'cleanup_unconfirmed')
                 self.assertTrue(worker.thread.close_state == worker.process.close_state == 'closed')
                 self.assertNotIn('SYNTHETIC_SECRET', json.dumps(snapshot))
+
+    def test_real_control_file_sharing_refusal_and_delete_sharing_regression(self):
+        from isolated_job_creation import extended_api
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'control';replacement = Path(tmp)/'replacement'
+            path.write_bytes(b'old');replacement.write_bytes(b'new')
+            with path.open('rb'):
+                with self.assertRaises(OSError) as error:
+                    replacement.replace(path)
+                self.assertEqual(error.exception.winerror,32)
+            api = extended_api();declare_shared_io(api)
+            raw = api.CreateFileW(str(path),0x80000000,7,None,3,0x80,None)
+            self.assertNotIn(raw,(None,ctypes.c_void_p(-1).value))
+            owner = SimpleNamespace(handle=raw,close_state='open')
+            try:
+                flags = W.DWORD()
+                self.assertTrue(api.GetHandleInformation(raw,ctypes.byref(flags)))
+                self.assertFalse(flags.value & 1)
+                replacement.replace(path)  # Same atomic replace, held reader now permits delete sharing.
+                self.assertEqual(read_shared(path,api),b'new')
+            finally:
+                close_handle_once(owner,api)
+        print('REAL_CONTROL_FILE_SHARING_REFUSAL delete_sharing_allows_atomic_replace file_handles_closed')
 
     def test_real_protected_handle_refuses_close_without_retry_and_other_resources_finish(self):
         with tempfile.TemporaryDirectory() as tmp:

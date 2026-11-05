@@ -22,7 +22,8 @@ STATES = ('normal_done', 'blocked_after_join', 'pong_blocked', 'cancel_without_a
 COMMANDS = ('ping', 'cancel', 'release')
 
 WORKER_SCRIPT = r'''
-import json,os,sys,threading,time
+import ctypes,json,os,sys,threading,time
+from ctypes import wintypes as W
 from pathlib import Path
 path=Path(sys.argv[1]); command=path.with_suffix('.command')
 mode=path.with_suffix('.mode').read_text(encoding='ascii')
@@ -39,9 +40,24 @@ worker.join(timeout=.05)
 emit('blocked_after_join' if worker.is_alive() else 'normal_done',0)
 if not worker.is_alive():raise SystemExit(0)
 previous=0
+api=ctypes.WinDLL('kernel32',use_last_error=True)
+api.CreateFileW.argtypes=[W.LPCWSTR,W.DWORD,W.DWORD,ctypes.c_void_p,W.DWORD,W.DWORD,W.HANDLE]
+api.CreateFileW.restype=W.HANDLE
+api.ReadFile.argtypes=[W.HANDLE,ctypes.c_void_p,W.DWORD,ctypes.POINTER(W.DWORD),ctypes.c_void_p]
+api.ReadFile.restype=W.BOOL
+api.CloseHandle.argtypes=[W.HANDLE];api.CloseHandle.restype=W.BOOL
+def read_command():
+    handle=api.CreateFileW(str(command),0x80000000,7,None,3,0x80,None)
+    if handle in (None,ctypes.c_void_p(-1).value):raise SystemExit(5)
+    try:
+        raw=ctypes.create_string_buffer(257);count=W.DWORD()
+        if not api.ReadFile(handle,raw,257,ctypes.byref(count),None):raise SystemExit(5)
+        return raw.raw[:count.value]
+    finally:
+        if not api.CloseHandle(handle):raise SystemExit(6)
 while True:
     if command.exists():
-        with command.open('rb') as stream:raw=stream.read(257)
+        raw=read_command()
         if len(raw)>256:raise SystemExit(3)
         packet=json.loads(raw)
         if type(packet) is not dict or set(packet)!={'v','nonce','seq','command'} or type(packet['v']) is not int or packet['v']!=1 or packet['nonce']!=nonce:raise SystemExit(3)
@@ -175,12 +191,43 @@ def disarm_job(job):
         raise OSError('supervision_disarm_unconfirmed')
 
 
+def declare_shared_io(api):
+    api.CreateFileW.argtypes = [W.LPCWSTR, W.DWORD, W.DWORD, ctypes.c_void_p,
+                               W.DWORD, W.DWORD, W.HANDLE]
+    api.CreateFileW.restype = W.HANDLE
+    api.ReadFile.argtypes = [W.HANDLE, ctypes.c_void_p, W.DWORD, ctypes.POINTER(W.DWORD), ctypes.c_void_p]
+    api.ReadFile.restype = W.BOOL
+
+
+def read_shared(path, api):
+    """Permit atomic replacement while reading a synthetic control file on Windows."""
+    declare_shared_io(api)
+    handle = api.CreateFileW(str(path), 0x80000000, 1|2|4, None, 3, 0x80, None)
+    if handle in (None, ctypes.c_void_p(-1).value):
+        raise OSError('supervision_file_open_unconfirmed')
+    owner = SimpleNamespace(handle=handle, close_state='open')
+    try:
+        raw = ctypes.create_string_buffer(257)
+        count = W.DWORD()
+        if not api.ReadFile(owner.handle, raw, 257, ctypes.byref(count), None):
+            raise OSError('supervision_file_read_unconfirmed')
+        return raw.raw[:count.value]
+    finally:
+        try:
+            close_handle_once(owner, api)
+        except Exception:
+            error = OSError('supervision_file_close_unconfirmed')
+            error.resource = owner  # Never retry a failed slot; retain ownership diagnostic.
+            raise error from None
+
+
 class NativeWorker(CreationProbe):
     fixture_script = WORKER_SCRIPT
 
     def __init__(self, marker, mode='blocked', **kwargs):
         self.ledger = Ledger('injected' if kwargs.get('api') is not None else 'win32')
         self.last_record = None
+        self.failed_file_owners = []
         self.request_seq = 0
         self.mode = mode
         if mode not in ('normal', 'blocked'):
@@ -212,8 +259,12 @@ class NativeWorker(CreationProbe):
     def read(self):
         if not self.marker.exists():
             return None
-        with self.marker.open('rb') as stream:
-            value = decode_record(stream.read(257))
+        try:
+            value = decode_record(read_shared(self.marker, self.api))
+        except OSError as error:
+            if getattr(error, 'resource', None) is not None:
+                self.failed_file_owners.append(error.resource)
+            raise OSError('supervision_communication_rejected') from None
         if value == self.last_record:
             return None  # Atomic file delivery may be observed repeatedly.
         if value['seq'] != self.request_seq:
@@ -305,7 +356,7 @@ class NativeWorker(CreationProbe):
                 continue
             attempt(phase, lambda o=owner: close_handle_once(o, self.api))
         l.handles_closed = (self.thread.close_state == self.process.close_state == 'closed'
-                            and (job is None or job.close_state == 'closed'))
+                            and (job is None or job.close_state == 'closed') and not self.failed_file_owners)
         def artifacts():
             for path in (self.marker, *(self.marker.with_suffix(s) for s in ('.mode', '.command', '.writing', '.sending'))):
                 path.unlink(missing_ok=True)

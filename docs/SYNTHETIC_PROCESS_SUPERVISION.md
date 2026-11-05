@@ -149,3 +149,23 @@ não apaga pedido sem confirmação; não enviar ping depois de cancel para evit
 sobrescrever o único comando pendente. Um novo negativo portável cobre essa
 corrida:15 portáveis +10 Windows=25 novos focados, sem soma dupla na suíte.
 A janela não amplia deadline local200ms nem afirma cancelamento de I/O/driver.
+
+## Sharing de arquivos Windows e continuidade de teardown
+
+f502c9f/push42011080743 falhou em LateWorker antes de chamar NativeWorker.close;
+atributos/Job/handles ficaram sem prova. A exceção original não trouxe WinError
+sanitizado, portanto não alegar identificação do código no run antigo. O novo
+finally do estimulador chama teardown mesmo após falhar release/write/espera.
+
+Replace atômico pode ser recusado se o outro processo segura leitor sem sharing
+de delete. Regressão REAL compara arquivo próprio aberto pelo Python (recusa32)
+com CreateFileW(GENERIC_READ, FILE_SHARE_READ|WRITE|DELETE, OPEN_EXISTING), que
+permite a mesma substituição enquanto aberto. Leitura da raiz e do subordinado
+agora usa esse contrato, limite257 para rejeitar acima256 e CloseHandle verificado.
+Fechamento de arquivo falho mantém referência failed e impede prova de handles;
+negativo portável exige uma tentativa só, sem retry de slot. Não repetir replace
+nem ampliar timeout para obter passe. Não tocar em arquivos fora da fixture.
+
+Total atual:16 portáveis e11 Windows=27 focados novos; resultados só valem por SHA.
+CI Windows é prova desse mecanismo de arquivo/lock sintético, não driver/kernel
+arbitrário nem liveness das APIs de cleanup da própria raiz.
