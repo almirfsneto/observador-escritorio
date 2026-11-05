@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 31703,
-      "sha256": "8a17bc95701b57b18defe0d5a88fd88386981909a5bd50656b7300ac51f6edca"
+      "size_bytes": 32911,
+      "sha256": "e10a757f612612cbaf9eb487194aaecaac1459fae6c98e66e4e5878f27c5cbc6"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 80712,
-      "sha256": "f8d74c7b55a5557bcd67ac98df4358033bea19fddbf5382f4286921f41467a17"
+      "size_bytes": 82294,
+      "sha256": "c6b9e1b562e7ffc4fc99df25e15c0cdf7bda7eb969cef75592dee4db150d0fa9"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -220,8 +220,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 17589,
-      "sha256": "f0fbe8c2d81cff45f44cb9c108fddbab2e695951e77f9b2f2a838c8c386a89f3"
+      "size_bytes": 18749,
+      "sha256": "ccc577ff505d4abf75818d28b8ffade8eef53c2e57ef31b4bd7d40398a158609"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
