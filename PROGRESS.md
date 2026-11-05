@@ -1269,3 +1269,11 @@ do launcher, raiz tenta terminar worker por esse handle e exige saída; não ale
 kill-on-last-close para Job desarmado. Nested externo também é desarmado se houver
 membros incertos, mantido aberto até consulta zero. Origem extra não inferida.
 Os novos testes são julgados pela próxima CI; nenhum timeout aumentado/skip novo.
+
+Autorrevisão adicional do caminho de espera falha: reter a capacidade de processo
+quando saída não é confirmada, em vez de fechar a última referência a um worker
+possivelmente vivo. Thread e demais recursos continuam tentados. Negativo portável
+exige ausência de close do processo e referência retida; negativo Win32 usa cópia
+retida independente, confirma saída com API real e só então faz PRIMEIRO close da
+referência original (sem retry de slot failed). Erro da primeira limpeza continua
+sticky. Não há garantia de recuperação se o SO negar todas as provas de saída.

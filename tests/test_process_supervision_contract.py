@@ -48,7 +48,7 @@ class Backend:
         self.expired_at_stop = self.ledger.expired
         self.stopped = True
         l = self.ledger
-        l.worker_exit = self.fault != 'wait'
+        l.worker_exit = self.fault not in ('wait', 'process_wait')
         l.job_zero = self.fault != 'job_zero'
         l.handles_closed = self.fault not in ('job_close', 'thread_close', 'process_close')
         l.attributes_deleted = self.fault != 'attribute_delete'
@@ -266,7 +266,12 @@ class NativeBackendInjectionTest(unittest.TestCase):
                     worker.close()
                 d = worker.ledger.snapshot()
                 self.assertEqual(d['cleanup_state'],'cleanup_unconfirmed')
-                self.assertIn('close_11',api.calls)
+                if fault == 'process_wait':
+                    self.assertNotIn('close_11',api.calls)
+                    self.assertTrue(d['process_capability_retained_after_shutdown'])
+                    self.assertEqual(worker.process.close_state,'open')
+                else:
+                    self.assertIn('close_11',api.calls)
                 self.assertIn('close_12',api.calls)
                 self.assertTrue(d['attributes_deleted'])
                 before = list(api.calls)

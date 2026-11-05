@@ -165,6 +165,10 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
                         snapshot = worker.ledger.snapshot()
                         self.assertEqual(kernel.api.WaitForSingleObject(retained.handle, 5000), 0)
                     finally:
+                        # Wait failure retains the original capability; this is its FIRST close, after external proof.
+                        if fault == 'wait' and worker.process.close_state == 'open':
+                            self.assertEqual(kernel.api.WaitForSingleObject(retained.handle, 5000), 0)
+                            close_handle_once(worker.process, worker.api)
                         close_handle_once(retained, kernel.api)
                 self.emit(snapshot)
                 self.assertEqual(snapshot['cleanup_state'], 'cleanup_unconfirmed')

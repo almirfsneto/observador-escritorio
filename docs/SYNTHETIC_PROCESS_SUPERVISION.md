@@ -133,3 +133,11 @@ armado, termination_mode=kill_on_last_close é provado por saída sem kill da ra
 Nested pode desarmar seu próprio Job externo incerto antes do crash; mantém aberto
 para observar zero, sem bulk stop de desconhecidos. Snapshot preserva as duas
 incertezas de ownership. Nenhum teste abre ou mata processo extra por PID.
+
+Se Wait não confirma saída, conservar o handle de processo conhecido aberto, mesmo
+após tentar os demais recursos: não descartar a última capacidade de emergency
+cleanup de worker possivelmente vivo. Snapshot marca retenção após a tentativa e
+permanece unconfirmed. Negativo Windows conserva duplicata independente e usa
+Wait real para comprovar fim antes do PRIMEIRO close da referência retida; isso é
+recuperação explícita de teste, não retry de CloseHandle falho nem apagamento de
+erro. Ausência de prova/autoridade do SO continua impedindo confirmação.

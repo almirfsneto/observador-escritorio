@@ -75,6 +75,7 @@ class Ledger:
         self.expiry_before_stop = False
         self.unknown_members = self.bulk_refused = self.job_quarantined = False
         self.job_disarmed_verified = False
+        self.process_capability_retained_after_shutdown = False
         self.finished = False
 
     def fail(self, phase):
@@ -108,6 +109,7 @@ class Ledger:
                     cleanup_state='confirmed' if physical and not any(self.errors.values()) else 'cleanup_unconfirmed',
                     unknown_members=self.unknown_members, bulk_termination_refused=self.bulk_refused,
                     job_quarantined=self.job_quarantined, job_disarmed_verified=self.job_disarmed_verified,
+                    process_capability_retained_after_shutdown=self.process_capability_retained_after_shutdown,
                     errors=dict(self.errors))
 
 
@@ -295,6 +297,10 @@ class NativeWorker(CreationProbe):
         else:
             l.job_zero = True  # No Job allocated.
         for phase, owner in (('thread_close', self.thread), ('process_close', self.process)):
+            if phase == 'process_close' and owner.handle is not None and not l.worker_exit:
+                # Retain the last known capability for emergency cleanup; never abandon a possibly live worker.
+                l.process_capability_retained_after_shutdown = True
+                continue
             attempt(phase, lambda o=owner: close_handle_once(o, self.api))
         l.handles_closed = (self.thread.close_state == self.process.close_state == 'closed'
                             and (job is None or job.close_state == 'closed'))
