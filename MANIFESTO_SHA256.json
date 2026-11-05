@@ -550,8 +550,8 @@
     },
     {
       "path": "tests/test_cleanup_liveness_design.py",
-      "size_bytes": 6895,
-      "sha256": "320369019bf14967b0960d81f9980e6e092825a85acf3b05f67ab2cea5a9400e"
+      "size_bytes": 7035,
+      "sha256": "fffd6527aae3e912490bf483bdcbc5a4315a207b4b336150d0ba68ade13a19c1"
     },
     {
       "path": "tests/test_cleanup_stabilization.py",
