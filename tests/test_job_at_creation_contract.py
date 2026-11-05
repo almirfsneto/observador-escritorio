@@ -168,6 +168,8 @@ class JobCreationContractTest(unittest.TestCase):
                 p.verify()
                 p.resume()
             self.assertFalse(p.resumed)
+            if fault.endswith('_exception'):
+                self.assertEqual(p.errors[p.first_failure], 'exception')
             p.close()
             self.assertTrue(p.status.confirmed)
 

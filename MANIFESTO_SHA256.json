@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 75158,
-      "sha256": "4c494b8999715150defcd14705471b20a6f1f5b89cb499c2ac52756adbf5c552"
+      "size_bytes": 76133,
+      "sha256": "92f6ff8b0c1bf3381fbb64f5ce52af6c50d3b629168301e76503f0493a8e69f3"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -165,8 +165,8 @@
     },
     {
       "path": "docs/JOB_AT_CREATION_STUDY.md",
-      "size_bytes": 6483,
-      "sha256": "bcb621dca8de382cb9f0b80932aa9b0a94115a52ec242837fdc71a67c1eff46a"
+      "size_bytes": 7945,
+      "sha256": "fab086ce74bf223726411bbdfecd3b0b66872a54de5fc5357071b0b5964aaa79"
     },
     {
       "path": "docs/LAB_ENTREGA_2.md",
@@ -215,8 +215,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 17101,
-      "sha256": "4e2b29268bf5170546a844b8db1045f509fa086e108c68fe2b01f78efc6a035b"
+      "size_bytes": 17258,
+      "sha256": "023a3d7f4d81086d0bcf29048d087b8db39c4729a8a45b0aeafb83d7ed4bdf13"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -495,8 +495,8 @@
     },
     {
       "path": "tests/isolated_job_creation.py",
-      "size_bytes": 13667,
-      "sha256": "a7127a12a43c029e591534123ee90b27256857b8071471ea15e49d9e1ef8d10d"
+      "size_bytes": 14169,
+      "sha256": "ace6bd07fbe98adab855d542a380be0bda156cdd2048dc82d299e8fb40077d7b"
     },
     {
       "path": "tests/isolated_suspended_spawn.py",
@@ -590,13 +590,13 @@
     },
     {
       "path": "tests/test_job_at_creation_contract.py",
-      "size_bytes": 9426,
-      "sha256": "c8f85b1fb03dd81748ac76bc444984bba57f9923e7b35c963c64a179976ea45c"
+      "size_bytes": 9544,
+      "sha256": "91188f4543eaa95e1aeb90eab16470120e7d34a15de1260df57a4cb6fd863ce7"
     },
     {
       "path": "tests/test_job_at_creation_windows.py",
-      "size_bytes": 18251,
-      "sha256": "039dd0edefa609b9ff6d01d80d1fc7ba0a3d964a13eff75e6b6e4771a7ae5638"
+      "size_bytes": 21494,
+      "sha256": "74e3a561ce9ad5d663c174c6a555a5f4338f55a92fa3f840f27d24c65977824a"
     },
     {
       "path": "tests/test_lab_queue.py",

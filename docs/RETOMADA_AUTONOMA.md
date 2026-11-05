@@ -5,7 +5,9 @@ Branch filha codex/job-at-creation-study; ler Issue29, Issue22/atualizações,
 parecer28 e docs/JOB_AT_CREATION_STUDY.md. Somente harness em tests/: não migrar
 launchers/canais/NativeSession/C# nem habilitar adapter. Issue30 NÃO iniciada;
 esperar revisão independente da Issue29 antes de discutir outra etapa.
-Sete negativos/contratos portáveis passaram; oito Windows aguardam CI por SHA.
+Sete negativos/contratos portáveis passaram; dez Windows aguardam CI verde por
+SHA. Duas primeiras rodadas falharam na premissa de exatamente2 membros. Ver
+JOB_AT_CREATION_STUDY para origem adicional desconhecida e lista completa/zero.
 Conferir resultados reais, skips, crash com raiz sem Job alvo e prova nested
 externo aberto. Não inferir suporte humano10/11 de runner Server. PR6/anteriores
 preservados; sem merge/rebase/instalação/coleta/piloto. Histórico abaixo.

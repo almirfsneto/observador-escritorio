@@ -51,6 +51,25 @@ def duplicate_process(kernel, source, slot):
     return owner
 
 
+def own_job_members(probe, known_handles):
+    # Query ONLY our anonymous Job; never reopen a PID or inspect unknown processes.
+    class Members(ctypes.Structure):
+        _fields_ = [('assigned', W.DWORD), ('listed', W.DWORD),
+                    ('ids', ctypes.c_size_t * 16)]
+    value = Members()
+    if not probe.job.api.QueryInformationJobObject(probe.job.handle, 3, ctypes.byref(value),
+                                                    ctypes.sizeof(value), None):
+        raise OSError('creation_members_unconfirmed')
+    if not 0 < value.listed <= 16 or value.listed != value.assigned:
+        raise OSError('creation_members_unconfirmed')
+    identities = set(value.ids[:value.listed])
+    known = {probe.api.GetProcessId(handle) for handle in known_handles}
+    if 0 in known or len(known) != len(known_handles) or not known <= identities:
+        raise OSError('creation_known_members_unconfirmed')
+    return dict(members=value.listed, known_members=len(known),
+                additional_members=value.listed - len(known), known_members_present=True)
+
+
 @unittest.skipUnless(sys.platform == 'win32', 'Requires real Windows kernel process/handle execution')
 class WindowsJobAtCreationTest(unittest.TestCase):
     def emit(self, probe):
@@ -88,7 +107,9 @@ class WindowsJobAtCreationTest(unittest.TestCase):
                         self.assertTrue(member.value)
                         accounting = ctypes.create_string_buffer(48)
                         self.assertTrue(probe.job.api.QueryInformationJobObject(probe.job.handle, 1, accounting, 48, None))
-                        self.assertEqual(W.DWORD.from_buffer(accounting, 40).value, 2)
+                        self.assertGreaterEqual(W.DWORD.from_buffer(accounting, 40).value, 2)
+                        members = own_job_members(probe, [probe.process.handle, descendant.handle])
+                        print('REAL_JOB_CREATION_MEMBERS ' + json.dumps(members, sort_keys=True))
                         probe.close()
                         self.assertEqual(kernel.api.WaitForSingleObject(descendant.handle, 2000), 0)
                     finally:
@@ -227,7 +248,9 @@ class WindowsJobAtCreationTest(unittest.TestCase):
         self.crash_case('after_resume')
 
     def test_real_nested_job_launcher_death_before_verification_with_outer_still_open(self):
-        self.crash_case('before_verify', nested=True)
+        for stage in ('before_verify', 'after_resume'):
+            with self.subTest(stage=stage):
+                self.crash_case(stage, nested=True)
 
     def test_real_invalid_attribute_job_and_image_fail_closed(self):
         for negative, phase in (('invalid_attribute_size', 'attribute_update'),
@@ -270,6 +293,31 @@ class WindowsJobAtCreationTest(unittest.TestCase):
                 self.emit(probe)
         print('INJECTED_JOB_CREATION_GUARDS real_children_closed no_resume')
 
+    def test_injected_job_cleanup_failures_stay_unconfirmed_and_attempt_all_resources(self):
+        for fault, function in (('terminate', 'TerminateJobObject'), ('query', 'QueryInformationJobObject'),
+                                ('close', 'CloseHandle')):
+            with self.subTest(fault=fault), tempfile.TemporaryDirectory() as tmp:
+                probe = CreationProbe(Path(tmp) / 'synthetic.started')
+                probe.create()
+                raw_job = probe.job.handle
+                probe.diagnostic_origin = 'injected'
+                try:
+                    with patch.object(probe.job.api, function, return_value=False):
+                        with self.assertRaisesRegex(OSError, '^isolated_cleanup_unconfirmed$'):
+                            probe.close()
+                    self.assertFalse(probe.status.confirmed)
+                    self.assertEqual(probe.attribute_state, 'deleted')
+                    self.assertEqual(probe.process.close_state, 'closed')
+                    self.assertEqual(probe.thread.close_state, 'closed')
+                    with self.assertRaises(OSError):
+                        probe.close()
+                    self.emit(probe)
+                finally:
+                    if fault == 'close':
+                        # False was injected: retained handle is definitely ours and still open.
+                        self.assertTrue(probe.job.api.CloseHandle(raw_job))
+        print('INJECTED_JOB_CREATION_CLEANUP_REFUSED all_resource_attempts no_false_confirmation')
+
     def test_real_console_flag_comparison_accounts_for_additional_job_members(self):
         # Controlled A/B: only the descendant console creation flag differs.
         observations = {}
@@ -288,10 +336,14 @@ class WindowsJobAtCreationTest(unittest.TestCase):
                     self.assertTrue(probe.job.api.QueryInformationJobObject(probe.job.handle, 1, value, 48, None))
                     active = W.DWORD.from_buffer(value, 40).value
                     observations['allocate_console' if console else 'no_window'] = active
-                    if not console:
-                        self.assertEqual(active, 2)
-                    else:
-                        self.assertGreaterEqual(active, 2)  # Observe helper count, never assume helper identity.
+                    self.assertGreaterEqual(active, 2)
+                    descendant = duplicate_process(Kernel(), probe.process.handle, wait_marker(probe.marker))
+                    try:
+                        observations['members_console' if console else 'members_no_window'] = own_job_members(
+                            probe, [probe.process.handle, descendant.handle])
+                    finally:
+                        close_handle_once(descendant, probe.api)
+                    # Kernel may create additional Job members. No PID reopen or image guess.
                 finally:
                     probe.close()
                 self.assertTrue(probe.status.confirmed)

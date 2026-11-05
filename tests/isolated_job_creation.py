@@ -23,7 +23,7 @@ PHASES = ('job_setup', 'attribute_size', 'attribute_init', 'attribute_update',
           'create', 'membership', 'resume', 'attribute_delete')
 STATES = ('not_attempted', 'passed', 'failed')
 ERRORS = {5: 'access_denied', 6: 'invalid_handle', 87: 'invalid_parameter',
-          50: 'not_supported', 122: 'insufficient_buffer', 2: 'missing_image'}
+          24: 'bad_length', 50: 'not_supported', 122: 'insufficient_buffer', 2: 'missing_image'}
 # Exactly one inert descendant; only its retained handle slot is written privately.
 SCRIPT = ('import subprocess,sys,time;'
           'p=subprocess.Popen([sys.executable,"-I","-S","-B","-c",'
@@ -117,7 +117,7 @@ class CreationProbe(SuspendedProbe):
             self.note('job_setup', False)
             self.abort()
 
-    def note(self, phase, success):
+    def note(self, phase, success, *, native=True, exception=False):
         if phase not in PHASES:
             raise ValueError('creation_diagnostic_rejected')
         self.phases[phase] = 'passed' if success else 'failed'
@@ -126,13 +126,14 @@ class CreationProbe(SuspendedProbe):
                 self.first_failure = phase
             getter = getattr(ctypes, 'get_last_error', lambda: None)
             code = getter()
-            self.errors[phase] = ERRORS.get(code, 'other' if code is not None else 'unavailable')
+            self.errors[phase] = ('exception' if exception else 'contract_rejected' if not native else
+                                  ERRORS.get(code, 'other' if code is not None else 'unavailable'))
 
     def checked(self, phase, action):
         try:
             result = action()
         except Exception:
-            self.note(phase, False)
+            self.note(phase, False, exception=True)
             raise OSError('job_at_creation_unavailable') from None
         self.note(phase, bool(result))
         if not result:
@@ -159,7 +160,7 @@ class CreationProbe(SuspendedProbe):
             try:
                 result = self.api.InitializeProcThreadAttributeList(None, 1, 0, ctypes.byref(size))
             except Exception:
-                self.note('attribute_size', False)
+                self.note('attribute_size', False, exception=True)
                 raise OSError('job_at_creation_unavailable') from None
             code = getattr(ctypes, 'get_last_error', lambda: None)()
             self.note('attribute_size', not result and code == 122 and 0 < size.value <= 65536)
@@ -200,14 +201,21 @@ class CreationProbe(SuspendedProbe):
         self.checked('membership', lambda: self.api.IsProcessInJob(
             self.process.handle, self.job.handle, ctypes.byref(member)))
         if not member.value:
-            self.note('membership', False)
+            self.note('membership', False, native=False)
             raise OSError('job_at_creation_unavailable')
         self.assigned = True
 
     def resume(self):
         if not self.assigned or self.resumed or self.status.finished:
             raise OSError('creation_resume_refused')
-        self.checked('resume', lambda: self.api.ResumeThread(self.thread.handle) == 1)
+        try:
+            count = self.api.ResumeThread(self.thread.handle)
+        except Exception:
+            self.note('resume', False, exception=True)
+            raise OSError('job_at_creation_unavailable') from None
+        self.note('resume', count == 1, native=count == 0xffffffff)
+        if count != 1:
+            raise OSError('job_at_creation_unavailable')
         self.resumed = True
 
     def delete_attributes(self):
@@ -219,7 +227,7 @@ class CreationProbe(SuspendedProbe):
                 # Win32 VOID: normal return is the API contract, not a BOOL proof.
                 self.api.DeleteProcThreadAttributeList(self.attribute_buffer)
             except Exception:
-                self.note('attribute_delete', False)
+                self.note('attribute_delete', False, exception=True)
                 raise OSError('isolated_cleanup_unconfirmed') from None
             self.note('attribute_delete', True)
         self.attribute_state = 'deleted'

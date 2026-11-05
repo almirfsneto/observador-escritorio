@@ -1109,3 +1109,16 @@ zero após cleanup. Fixture padrão passa a não solicitar console para descenda
 mantendo assert exato2. Aguardar comparação nativa antes de afirmar causa.
 Root agora transfere/fecha explicitamente o handle Popen retido com BOOL checado,
 além dos handles duplicados, IO e reader; não depende do GC para essa prova.
+
+A hipótese de console isoladamente NÃO se confirmou:4130c29/CI41959187379
+teve3 membros mesmo com NO_WINDOW e4 no positivo posterior; Windows falharam,
+Linux/Chromium passaram. Não atribuir identidade ao membro adicional nem dizer
+que o flag corrigiu a contagem. Substituir a premissa incorreta de cardinalidade
+exata2 por verificação MAIS ESPECÍFICA: QueryInformationJobObject(ProcessIdList)
+do Job próprio deve conter os dois IDs obtidos de handles retidos, lista completa
+limitada16, contagem agregada>=2 e zero obrigatório após término. Nenhum PID
+reaberto/processo adicional inspecionado. A/B fica diagnóstico, não causa inferida.
+Nested agora cobre também pós-resume, com Job externo aberto e zero consultado
+após morte do launcher: inclui todos os membros, não somente os dois conhecidos.
+Negativas injetadas de terminate/query/close usam recursos Windows reais e mantêm
+cleanup não confirmado, tentando atributos/ambos handles. Não alterado src/.

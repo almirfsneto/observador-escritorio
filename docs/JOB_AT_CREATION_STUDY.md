@@ -38,7 +38,7 @@ de testes e arquivo sintético temporário, nunca são encaminhados a logs.
 
 - Positivo: filho suspenso sem marker; recusa resume antecipado; membership sem
   assign; decoy/Job não herdados por comparação de objetos; descendant membership
-  e ActiveProcesses=2; cleanup com zero membros/saída e todos closes.
+  e lista completa limitada de membros contendo ambos os handles próprios; cleanup com zero membros/saída e todos closes.
 - Crash real do launcher após criação ANTES de verify, após verify ANTES de resume
   e após resume. Handshake para raiz duplicar só capacidade de processo é barreira
   controlada nesse ponto: não é fault espontâneo no interior do kernel.
@@ -65,9 +65,30 @@ saída de todos os processos conhecidos da fixture; positivo e nested externo
 comprovam contagem zero por consulta real. Emergency cleanup no finally da raiz
 é somente contenção de teste falho; não satisfaz a prova de sucesso.
 
+## Falhas de teste preservadas e contagem de membros
+
+CI41958864997/2839ab8 falhou em ambos Windows por esperar exatamente2 e observar3.
+CI41959187379/4130c29 descartou a explicação de console isoladamente: observou3
+mesmo com NO_WINDOW e4 no positivo. NÃO identificada a origem dos membros extras.
+Não chamar de conhost/redirector sem prova. O flag NO_WINDOW limita a fixture,
+mas não fundamenta suposição sobre quantidade total de membros do Job.
+
+A verificação exige QueryInformationJobObject(ProcessIdList) do próprio Job com
+lista completa (cap16, sem truncamento), ambos os IDs correspondentes aos handles
+retidos presentes, contagem agregada>=2 e ZERO obrigatório após teardown. Nenhum
+PID adicional é aberto ou inspecionado. Crash pós-resume aninhado também exige
+zero de todo Job externo, mantido aberto até a prova; isso cobre os membros extras
+sem presumir identidade. Crash sem Job externo só comprova diretamente saída de
+todos os processos conhecidos retidos, não consulta Job alvo depois do último close.
+
+Um teste Windows adicional injeta recusa de terminate/query/close, conserva false e
+tenta todos os recursos. Erro de CloseHandle injetado é distinto do handle realmente
+protegido. Exceções de wrapper e rejeição semântica não recebem GetLastError velho.
+
 ## Limites e retomada
 
-Até CI por SHA, oito casos Windows apenas preparados. Skips Linux/plataforma não
+Até CI verde por SHA, dez casos Windows preparados; rodadas iniciais falharam
+na premissa de cardinalidade. Não transferir os passes parciais para aprovação. Skips Linux/plataforma não
 são passe; job Chromium mantém duas provas dedicadas. Windows-latest é runner
 Server, não aceite Windows10/11 interativo. Suporte documentado Windows10+/Server
 2016+ não garante qualquer hierarquia/direitos: restrição deve falhar fechado,
