@@ -68,10 +68,13 @@ class Ledger:
         self.errors = dict.fromkeys(PHASES, 0)
         self.expired = self.cancel_requested = self.cancel_ack = False
         self.started = self.join_insufficient = self.worker_exit = self.job_zero = False
+        self.creation_membership_verified = False
+        self.observed_job_members = 0
         self.handles_closed = self.attributes_deleted = False
         self.ticks = self.pongs = 0
         self.expiry_before_stop = False
         self.unknown_members = self.bulk_refused = self.job_quarantined = False
+        self.job_disarmed_verified = False
         self.finished = False
 
     def fail(self, phase):
@@ -89,11 +92,14 @@ class Ledger:
         self.cancel_ack = True
 
     def snapshot(self):
-        physical = self.finished and self.worker_exit and self.job_zero and self.handles_closed and self.attributes_deleted
+        physical = (self.finished and self.worker_exit and self.job_zero and self.handles_closed
+                    and self.attributes_deleted and (not self.unknown_members or self.job_disarmed_verified))
         return dict(kind='synthetic_process_supervision', origin=self.origin,
                     worker_state='deadline_expired' if self.expired else 'exited' if self.worker_exit else 'running',
                     deadline_expired=self.expired, expiry_before_stop=self.expiry_before_stop,
                     worker_started=self.started, join_insufficient=self.join_insufficient,
+                    creation_membership_verified=self.creation_membership_verified,
+                    observed_job_members=self.observed_job_members,
                     root_ticks=self.ticks, root_pongs=self.pongs, root_responsive=self.ticks >= 3,
                     ui_state='unknown', cancel_requested=self.cancel_requested, cancel_acknowledged=self.cancel_ack,
                     process_exit_confirmed=self.worker_exit, job_zero_confirmed=self.job_zero,
@@ -101,7 +107,8 @@ class Ledger:
                     physical_cleanup_confirmed=bool(physical),
                     cleanup_state='confirmed' if physical and not any(self.errors.values()) else 'cleanup_unconfirmed',
                     unknown_members=self.unknown_members, bulk_termination_refused=self.bulk_refused,
-                    job_quarantined=self.job_quarantined, errors=dict(self.errors))
+                    job_quarantined=self.job_quarantined, job_disarmed_verified=self.job_disarmed_verified,
+                    errors=dict(self.errors))
 
 
 def decode_record(raw):
@@ -185,6 +192,7 @@ class NativeWorker(CreationProbe):
             self.marker.with_suffix('.mode').write_text(self.mode, encoding='ascii')
             self.create()
             self.verify()
+            self.ledger.creation_membership_verified = True
             self.delete_attributes()
             self.resume()
         except Exception:
@@ -242,6 +250,7 @@ class NativeWorker(CreationProbe):
             try:
                 count, unknown = job_members(self.api_with_job(), job,
                                              [self.process.handle] if self.process.handle is not None else [])
+                l.observed_job_members = count
                 if unknown:
                     l.unknown_members = True
                     raise OSError('supervision_ownership_unconfirmed')
@@ -263,6 +272,7 @@ class NativeWorker(CreationProbe):
                 attempt('job_terminate', terminate_job)
             else:
                 disarmed = attempt('disarm', lambda: disarm_job(job))
+                l.job_disarmed_verified = disarmed
                 l.job_quarantined = not disarmed
         if self.process.handle is not None:
             if not safe or l.errors['job_terminate']:
@@ -389,6 +399,7 @@ def crash_fixture(stage, marker):
             worker.marker.with_suffix('.mode').write_text('blocked', encoding='ascii')
             worker.create()
             worker.verify()
+            worker.ledger.creation_membership_verified = True
             worker.delete_attributes()
         else:
             worker.start()
@@ -401,11 +412,18 @@ def crash_fixture(stage, marker):
                     raise OSError('supervision_start_unconfirmed')
                 time.sleep(.005)
         count, unknown = job_members(worker.api_with_job(), worker.job, [worker.process.handle])
-        if unknown or count != 1:
+        disarmed = False
+        if unknown:
+            worker.ledger.unknown_members = worker.ledger.bulk_refused = True
+            worker.ledger.fail('ownership')
+            disarm_job(worker.job)  # Never crash the launcher with a known-uncertain armed Job.
+            disarmed = True
+        elif count != 1:
             raise OSError('supervision_ownership_unconfirmed')
         # Private capability transfer, consumed only by root; never forwarded to logs.
         print(json.dumps(dict(slot=int(worker.process.handle), stage=stage,
-                              blocked=stage!='before_start', ownership_checked=True)), flush=True)
+                              blocked=stage!='before_start', ownership_checked=True,
+                              unknown_members=unknown, job_disarmed=disarmed)), flush=True)
         if sys.stdin.readline().strip() != 'cleanup':
             raise OSError('supervision_control_rejected')
     finally:

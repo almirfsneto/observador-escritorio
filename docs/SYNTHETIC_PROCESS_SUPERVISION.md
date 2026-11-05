@@ -113,3 +113,23 @@ Comandos (PowerShell: definir $env:PYTHONPATH='src'):
 Fontes: contrato e referências Python/Microsoft em CLEANUP_LIVENESS_DESIGN.md;
 contratos STARTUPINFOEX/Job List/Delete em JOB_AT_CREATION_STUDY.md. Não foram
 importados componentes externos nem dependências runtime.
+
+## Primeira observação Windows e ajuste do ensaio de crash
+
+470cc6a/CI42010080293 falhou com quatro expectativas erradas por Windows. A origem
+adicional continuou desconhecida mesmo sem descendant explícito. Root teve ticks,
+pong, join insuficiente, deadline_expired e prova física de fim/zero/closes; erro
+ownership continuou sticky, por isso cleanup_unconfirmed era o resultado correto.
+Não converter essa recusa real em aprovação irrestrita. Positivo agora exige fim
+físico, disarm confirmado e NÃO chamada de TerminateJobObject se houver extras;
+classificação continua unconfirmed. Sem extras, permanece confirmação completa.
+
+No crash com Job incerto, launcher primeiro confirma disarm e só então transmite
+capacidade própria para raiz e espera sua morte. Raiz mata somente launcher,
+observa sua saída e tenta terminar worker pelo handle retido; exige sinalização,
+não abandona órfão. termination_mode=root_retained_process_handle é recuperação
+externa real, NÃO prova de kill-on-last-close. Se ownership for conhecido e Job
+armado, termination_mode=kill_on_last_close é provado por saída sem kill da raiz.
+Nested pode desarmar seu próprio Job externo incerto antes do crash; mantém aberto
+para observar zero, sem bulk stop de desconhecidos. Snapshot preserva as duas
+incertezas de ownership. Nenhum teste abre ou mata processo extra por PID.

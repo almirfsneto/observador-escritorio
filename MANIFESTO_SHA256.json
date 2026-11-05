@@ -25,8 +25,8 @@
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 84301,
-      "sha256": "e4f5501edef373050088838fb54815e369a50fd0eeeeef9d19f4a0f9d45ebdc2"
+      "size_bytes": 85606,
+      "sha256": "b03044b62eea1b477b90e47eb5123ad531aeca3af9973121181197cf04cf0a63"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -255,8 +255,8 @@
     },
     {
       "path": "docs/SYNTHETIC_PROCESS_SUPERVISION.md",
-      "size_bytes": 7536,
-      "sha256": "c9f2f26c10a586c2722a2fcf488cea67260e88a311160fa8c3347c0debba6161"
+      "size_bytes": 8915,
+      "sha256": "f9ce35319a0874d26b52172e4adcc5f19050c55cb559411e2ae6140d7e66aaf5"
     },
     {
       "path": "docs/TASK_DISCOVERY.md",
@@ -510,8 +510,8 @@
     },
     {
       "path": "tests/isolated_process_supervision.py",
-      "size_bytes": 19314,
-      "sha256": "57c50cf84f1d0bed262b4224d92524b30194a9ff9a84238b2575823e55717079"
+      "size_bytes": 20331,
+      "sha256": "00f19127dc790e34ba00e6a057e7244b79f626ade6c69e6e418b6af31808a3f3"
     },
     {
       "path": "tests/isolated_suspended_spawn.py",
@@ -660,8 +660,8 @@
     },
     {
       "path": "tests/test_process_supervision_windows.py",
-      "size_bytes": 16532,
-      "sha256": "35d4ef1fcfb74384d3e82f12b531f122bfe7ae6323cbd46244b6018fd62a3169"
+      "size_bytes": 18669,
+      "sha256": "f74e643e472ad4e8c22c03a9299ffd6df36b45a1298c78b2c56f6d81e97fda16"
     },
     {
       "path": "tests/test_queue_faults.py",

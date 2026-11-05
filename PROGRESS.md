@@ -1250,3 +1250,22 @@ somente por handles próprios. Se disarm falha, reter Job, não declarar limpeza
 limite de destruição posterior da raiz/driver permanece. Desenho/evidência em
 SYNTHETIC_PROCESS_SUPERVISION.md. 14 portáveis passaram, dez Windows preparados,
 ainda não executados. Foco Windows e matriz completa mantidos, sem converter skips.
+
+### Issue33 — primeira CI: recusa real de ownership, não relaxar segurança
+
+470cc6a/CI42010080293: Linux/Chromium passaram; ambos Windows FALHARAM no foco24
+(4 falhas cada, zero skips). Snapshots nativos mostraram raiz responsiva, join
+insuficiente e deadline sticky; membros adicionais desconhecidos reais também
+neste worker. Guarda recusou bulk termination, disarm foi confirmado, somente
+processo conhecido terminou por handle e Job zerou/handles fecharam. Estado final
+manteve cleanup_unconfirmed por ownership, corretamente. Expectativa do teste de
+aprovação incondicional era incorreta; não remover guarda nem apagar erro.
+
+Revisão exige TODAS as provas físicas e, em unknown, bulk nunca chamado + disarm
+confirmado + resultado unconfirmed. Crash pós-início recusava barreira e finalmente
+limpava, em vez de provar morte abrupta. Nova barreira desarma Job alvo incerto
+ANTES do crash e entrega somente capacidade própria à raiz. Depois da morte real
+do launcher, raiz tenta terminar worker por esse handle e exige saída; não alega
+kill-on-last-close para Job desarmado. Nested externo também é desarmado se houver
+membros incertos, mantido aberto até consulta zero. Origem extra não inferida.
+Os novos testes são julgados pela próxima CI; nenhum timeout aumentado/skip novo.

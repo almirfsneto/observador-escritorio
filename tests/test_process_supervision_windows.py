@@ -27,13 +27,25 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
     def emit(self, snapshot):
         print('PROCESS_SUPERVISION_DIAGNOSTIC ' + json.dumps(snapshot, sort_keys=True), flush=True)
 
+    def assert_physical_and_classification(self, snapshot):
+        # An observed ownership refusal stays a refusal; do NOT erase it to obtain green.
+        self.assertTrue(snapshot['physical_cleanup_confirmed'])
+        self.assertTrue(all(v == 0 for k,v in snapshot['errors'].items() if k != 'ownership'))
+        if snapshot['unknown_members']:
+            self.assertTrue(snapshot['bulk_termination_refused'])
+            self.assertTrue(snapshot['job_disarmed_verified'])
+            self.assertGreater(snapshot['errors']['ownership'], 0)
+            self.assertEqual(snapshot['cleanup_state'], 'cleanup_unconfirmed')
+        else:
+            self.assertEqual(snapshot['cleanup_state'], 'confirmed')
+
     def test_real_normal_worker_exit_and_verified_resources(self):
         with tempfile.TemporaryDirectory() as tmp:
             worker = NativeWorker(Path(tmp)/'status', mode='normal')
             snapshot = Supervisor(worker).run(duration=2)
             self.emit(snapshot)
             self.assertTrue(snapshot['worker_started'])
-            self.assertEqual(snapshot['cleanup_state'], 'confirmed')
+            self.assert_physical_and_classification(snapshot)
             self.assertTrue(snapshot['process_exit_confirmed'])
             self.assertTrue(snapshot['job_zero_confirmed'])
             self.assertFalse(snapshot['deadline_expired'])
@@ -43,7 +55,12 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             worker = NativeWorker(Path(tmp)/'status')
             observed = []
-            snapshot = Supervisor(worker).run(on_tick=lambda s: observed.append(time.monotonic()))
+            with patch.object(worker.job.api, 'TerminateJobObject', wraps=worker.job.api.TerminateJobObject) as bulk:
+                snapshot = Supervisor(worker).run(on_tick=lambda s: observed.append(time.monotonic()))
+                if snapshot['unknown_members']:
+                    bulk.assert_not_called()
+                else:
+                    bulk.assert_called_once()
             self.emit(snapshot)
             self.assertTrue(snapshot['join_insufficient'])
             self.assertTrue(snapshot['root_responsive'])
@@ -52,11 +69,11 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
             self.assertTrue(snapshot['expiry_before_stop'])
             self.assertTrue(snapshot['process_exit_confirmed'])
             self.assertTrue(snapshot['job_zero_confirmed'])
-            self.assertEqual(snapshot['cleanup_state'], 'confirmed')
+            self.assert_physical_and_classification(snapshot)
             self.assertGreaterEqual(len(observed), 3)
-            self.assertFalse(snapshot['unknown_members'])
+            self.assertTrue(snapshot['creation_membership_verified'])
             self.assertEqual(list(Path(tmp).iterdir()), [])
-        print('REAL_SUPERVISION_BLOCKED_LOCK root_responsive deadline_sticky kernel_exit job_zero handles_closed')
+        print('REAL_SUPERVISION_BLOCKED_LOCK root_responsive deadline_sticky physical_exit_zero_close ownership_separate')
 
     def test_real_cancel_request_without_ack_stays_unconfirmed_after_owned_exit(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -86,8 +103,7 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
             self.emit(snapshot)
             self.assertTrue(snapshot['deadline_expired'])
             self.assertEqual(snapshot['worker_state'], 'deadline_expired')
-            self.assertTrue(snapshot['physical_cleanup_confirmed'])
-            self.assertEqual(snapshot['cleanup_state'], 'confirmed')
+            self.assert_physical_and_classification(snapshot)
 
     def test_injected_unknown_member_refuses_bulk_stop_disarms_job_and_closes_only_known_process(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -204,24 +220,41 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
                     outer.assign(launcher)
                     launcher.stdin.write('create\n');launcher.stdin.flush()
                 value = json.loads(lines.get(timeout=10))
-                self.assertTrue(set(value) == {'slot','stage','blocked','ownership_checked'}, 'supervision_control_rejected')
+                self.assertTrue(set(value) == {'slot','stage','blocked','ownership_checked','unknown_members','job_disarmed'}, 'supervision_control_rejected')
                 self.assertTrue(value['stage'] == stage and value['ownership_checked'], 'supervision_stage_rejected')
                 self.assertIs(value['blocked'], stage != 'before_start')
                 child = duplicate_process(kernel, int(launcher._handle), value['slot'])
                 self.assertTrue(kernel.identity(child.handle)['start_ticks'] > kernel.identity(int(launcher._handle))['start_ticks'])
+                self.assertIs(type(value['unknown_members']), bool)
+                self.assertIs(type(value['job_disarmed']), bool)
+                self.assertEqual(value['unknown_members'], value['job_disarmed'])
+                outer_unknown = False
                 if outer:
                     api = SimpleNamespace(QueryInformationJobObject=outer.api.QueryInformationJobObject,
                                           GetProcessId=kernel.api.GetProcessId)
                     count, unknown = job_members(api, outer, [int(launcher._handle), child.handle])
-                    self.assertFalse(unknown, 'supervision_outer_ownership_unconfirmed')
-                    self.assertEqual(count, 2)
+                    outer_unknown = unknown
+                    if unknown:
+                        disarm_job(outer)  # Keep outer open, but never armed with uncertain members.
+                    elif count != 2:
+                        raise OSError('supervision_outer_members_unconfirmed')
                 launcher.kill();launcher.wait(timeout=5)
+                termination_mode = 'kill_on_last_close'
+                if value['job_disarmed']:
+                    termination_mode = 'root_retained_process_handle'
+                    from isolated_job_creation import extended_api
+                    if kernel.api.WaitForSingleObject(child.handle, 0) != 0:
+                        self.assertTrue(extended_api().TerminateProcess(child.handle, 1))
                 self.assertEqual(kernel.api.WaitForSingleObject(child.handle, 5000), 0)
                 if outer:
                     outer._confirm_empty()
                     self.assertTrue(outer.processes_confirmed)
                 proof = dict(origin='win32', stage=stage, target_job_handles_in_root=0,
-                             child_exit_confirmed=True, outer_zero_confirmed=bool(outer and outer.processes_confirmed))
+                             child_exit_confirmed=True, outer_zero_confirmed=bool(outer and outer.processes_confirmed),
+                             unknown_target_members=value['unknown_members'],
+                             target_job_disarmed=value['job_disarmed'], outer_unknown_members=outer_unknown,
+                             termination_mode=termination_mode,
+                             ownership_state='unconfirmed' if value['unknown_members'] or outer_unknown else 'known')
             finally:
                 cleanup = CleanupStatus()
                 # Guard the outer Job before any failure cleanup. Never issue a bulk termination.
