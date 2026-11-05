@@ -1122,3 +1122,11 @@ Nested agora cobre também pós-resume, com Job externo aberto e zero consultado
 após morte do launcher: inclui todos os membros, não somente os dois conhecidos.
 Negativas injetadas de terminate/query/close usam recursos Windows reais e mantêm
 cleanup não confirmado, tentando atributos/ambos handles. Não alterado src/.
+
+Revisão b930aab/CI41959651181: primeiro Windows executou positivo, lista completa,
+zero, três crashes, nested pré-verify e negativos. Subcaso nested pós-resume FALHOU
+na barreira de controle: CLI ainda codificava nested_before_verify para ambos.
+Erro do harness, não filho órfão observado; finally limpou os recursos. Corrigir
+encaminhamento explícito nested_after_resume antes de novo aceite. A/B confirmou
+membros3/4 com ambos conhecidos presentes e zero após cleanup; origem adicional
+não identificada. Não chamar esse run de aprovado, nem ampliar timeouts.

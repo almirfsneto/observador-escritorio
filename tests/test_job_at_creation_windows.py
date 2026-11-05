@@ -134,7 +134,7 @@ class WindowsJobAtCreationTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             marker = Path(tmp) / 'synthetic.started'
             script = Path(__file__).with_name('isolated_job_creation.py')
-            launcher = subprocess.Popen([sys.executable, '-I', '-S', '-B', str(script), 'nested_before_verify' if nested else stage, str(marker)],
+            launcher = subprocess.Popen([sys.executable, '-I', '-S', '-B', str(script), 'nested_' + stage if nested else stage, str(marker)],
                                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
                                         text=True, close_fds=True, env=minimal_environment(tmp),
                                         creationflags=subprocess.CREATE_NO_WINDOW)
@@ -247,7 +247,7 @@ class WindowsJobAtCreationTest(unittest.TestCase):
     def test_real_launcher_death_after_resume_kills_known_descendant(self):
         self.crash_case('after_resume')
 
-    def test_real_nested_job_launcher_death_before_verification_with_outer_still_open(self):
+    def test_real_nested_job_launcher_death_preverify_and_postresume_with_outer_still_open(self):
         for stage in ('before_verify', 'after_resume'):
             with self.subTest(stage=stage):
                 self.crash_case(stage, nested=True)

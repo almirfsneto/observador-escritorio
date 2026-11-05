@@ -254,11 +254,11 @@ class CreationProbe(SuspendedProbe):
 
 
 def crash_launcher(stage, marker):
-    if stage == 'nested_before_verify':
+    if stage in ('nested_before_verify', 'nested_after_resume'):
         print('prepare', flush=True)
         if sys.stdin.readline().strip() != 'create':
             raise OSError('creation_control_rejected')
-        stage = 'before_verify'
+        stage = stage.removeprefix('nested_')
     probe = CreationProbe(marker)
     try:
         probe.create()
@@ -277,7 +277,7 @@ def crash_launcher(stage, marker):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3 or sys.argv[1] not in ('before_verify', 'after_verify', 'after_resume', 'nested_before_verify'):
+    if len(sys.argv) != 3 or sys.argv[1] not in ('before_verify', 'after_verify', 'after_resume', 'nested_before_verify', 'nested_after_resume'):
         raise SystemExit('creation_arguments_rejected')
     try:
         crash_launcher(sys.argv[1], sys.argv[2])
