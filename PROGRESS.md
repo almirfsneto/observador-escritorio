@@ -1218,3 +1218,18 @@ MANIFESTO_SHA256 inclui os dois arquivos novos e as mudanças de documentação.
 
 Próximo gate: conferir a CI e a revisão do desenho antes de implementar supervisor.
 Nenhum merge/rebase, ativação de adaptador, piloto, instalação ou dado real.
+
+## Issue #30 — segunda leitura adversarial do contrato
+
+Após a CI verde do SHA 457734be/42003106492, dois invariantes estavam sem teste:
+worker que termina **após** deadline perdia o registro de expiração; ACK de
+cancelamento sem pedido era aceito. Foram corrigidos no classificador **somente de
+testes**, acrescidos dois negativos (agora 11 casos novos). O campo
+`worker_exit_confirmed` permite relatar conclusão tardia, sem apagar
+`worker_state=deadline_expired`. Prova física de limpeza e pontualidade são
+dimensões separadas. O classificador não é ledger nem prova origem das flags;
+proveniência e histórico monotônico permanecem requisitos de futura integração.
+
+A CI 42003106492 prova apenas o SHA anterior, não o HEAD corrigido. Reexecutar
+Windows3.11/3.12, Linux3.11/3.12 e Chromium antes de aceitar esta revisão.
+Nenhum runtime, launcher, adapter, IPC ou dado real foi alterado.
