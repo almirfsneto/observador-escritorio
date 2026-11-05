@@ -1081,3 +1081,116 @@ Morte da raiz pré-assign permanece gap, estudo não integrado, adapter OFF e AI
 inalterado. Próxima tarefa é nova revisão técnica por SHA, sem merge/rebase,
 instalação, coleta real ou piloto. Todos os19 PRs anteriores serão conferidos
 novamente com seus HEADs/bases/draft preservados.
+
+## Issue29 — Job na criação, sem integração — 2026-11-04
+
+Base exata508c38ad0996e7854c788cf08f655c8b65225707/PR28, nova
+codex/job-at-creation-study. Issue29, Issue22/atualizações e parecer técnico28
+lidos integralmente, além dos documentos obrigatórios. Experimento em tests/
+usando STARTUPINFOEXW/JOB_LIST no CreateProcessW com filho suspenso, herança zero,
+ambiente mínimo, kill-on-close, membership antes de resume e sem assign/fallback.
+Lista/valor retidos até Delete VOID; falha preserva storage/diagnóstico, tenta
+outros recursos e permanece não confirmada. Contrato em JOB_AT_CREATION_STUDY.md.
+
+Sete testes portáveis aprovados localmente, oito Windows apenas preparados:
+positivo/descendente/decoy, três crash points, nested externo aberto, argumentos
+inválidos reais, guardas injetados e close protegido. Windows exigido sem skip;
+novo step focado antecede suíte geral. Não alegar execução nativa antes da CI.
+Nenhum arquivo src/, launcher ou aceite modificado. Issue30 não iniciada.
+
+### Issue29 — primeira CI e investigação de contagem
+
+2839ab8/CI41958864997: Linux/Chromium aprovados; ambos Windows FALHARAM no
+positivo, ActiveProcesses=3 contra2 esperado. Os três crashes e nested/negativos
+executaram e passaram, mas isso não aprova o job. Não reduzido assert nem timeout.
+Hipótese testável: descendant Popen sem CREATE_NO_WINDOW solicita console novo.
+Revisão acrescenta A/B real mudando somente esse flag, contagem antes/depois e
+zero após cleanup. Fixture padrão passa a não solicitar console para descendant,
+mantendo assert exato2. Aguardar comparação nativa antes de afirmar causa.
+Root agora transfere/fecha explicitamente o handle Popen retido com BOOL checado,
+além dos handles duplicados, IO e reader; não depende do GC para essa prova.
+
+A hipótese de console isoladamente NÃO se confirmou:4130c29/CI41959187379
+teve3 membros mesmo com NO_WINDOW e4 no positivo posterior; Windows falharam,
+Linux/Chromium passaram. Não atribuir identidade ao membro adicional nem dizer
+que o flag corrigiu a contagem. Substituir a premissa incorreta de cardinalidade
+exata2 por verificação MAIS ESPECÍFICA: QueryInformationJobObject(ProcessIdList)
+do Job próprio deve conter os dois IDs obtidos de handles retidos, lista completa
+limitada16, contagem agregada>=2 e zero obrigatório após término. Nenhum PID
+reaberto/processo adicional inspecionado. A/B fica diagnóstico, não causa inferida.
+Nested agora cobre também pós-resume, com Job externo aberto e zero consultado
+após morte do launcher: inclui todos os membros, não somente os dois conhecidos.
+Negativas injetadas de terminate/query/close usam recursos Windows reais e mantêm
+cleanup não confirmado, tentando atributos/ambos handles. Não alterado src/.
+
+Revisão b930aab/CI41959651181: primeiro Windows executou positivo, lista completa,
+zero, três crashes, nested pré-verify e negativos. Subcaso nested pós-resume FALHOU
+na barreira de controle: CLI ainda codificava nested_before_verify para ambos.
+Erro do harness, não filho órfão observado; finally limpou os recursos. Corrigir
+encaminhamento explícito nested_after_resume antes de novo aceite. A/B confirmou
+membros3/4 com ambos conhecidos presentes e zero após cleanup; origem adicional
+não identificada. Não chamar esse run de aprovado, nem ampliar timeouts.
+
+### Issue29 — evidência integrada por SHA e limites de revisão
+
+PR31 em rascunho sobre PR28 exato; código518678a7d991e3e26650172ca8557203ae34e15f.
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/41959802089
+CINCO jobs aprovados; logs dos cinco consultados. Não transferir essa evidência
+para integração runtime nem aceite humano. Último commit apenas documental terá
+CI própria conferida no PR31.
+
+| Job | Descobertos | Executados | Skips |
+| --- | --- | --- | --- |
+| Windows Python3.11 |242|240|2 browser dedicado|
+| Windows Python3.12 |242|240|2 browser dedicado|
+| Linux Python3.11 |242|191|51:49 Windows +2 browser|
+| Linux Python3.12 |242|191|51:49 Windows +2 browser|
+| Chromium dedicado |2|2|0|
+
+Foco Job List17/0 skips por Windows; foco suspenso anterior11/0 por Windows.
+São reexecuções de casos presentes na suíte, não testes únicos adicionais. Os17
+novos casos únicos executaram em cada Windows: sete portáveis e dez dependentes
+de Windows; dois destes últimos injetam guardas/cleanup em recursos reais. Oito
+casos Windows reais incluem cinco barreiras de crash (três normais e dois subcasos
+aninhados),
+positivo completo, argumentos inválidos, A/B de console e close protegido.
+Skips não são aprovações; nenhum foreground ignorado nesta rodada.
+
+REAL em ambos Windows: CreateProcess com Job List, IsProcessInJob antes de resume,
+sem herança de Job/decoys, descendant membership; processo suspenso não escreve
+marker. Launcher morto abruptamente pré-verify/pré-resume/pós-resume: capacidades
+retidas pela raiz sinalizadas, sem Job alvo retido. Nested pré-verify E pós-resume:
+Job externo permanece aberto; filhos conhecidos saem e consulta de TODO Job
+externo confirma zero antes de seu fechamento. Handles duplicados/launcher Popen
+foram fechados explicitamente, reader/IO encerrados. Parâmetros inválidos recusados
+por API real; handle protegido recusado realmente sem cleanup confirmado/retry.
+
+A/B REAL e lista do Job registraram membros adicionais aos dois conhecidos,
+com ambos presentes e ZERO após cleanup. Origem adicional NÃO identificada;
+nenhum PID reaberto/imagem de processo extra inspecionada. Não prometer exatamente
+um descendant total nem atribuir a conhost/redirector. Crash sem Job externo prova
+diretamente só processos conhecidos; nested/positivo provam zero de todos os
+membros por consulta kernel. Não manter Job alvo para consultar depois do último
+close, pois invalidaria causalidade. Isso permanece ponto de revisão explícito.
+
+INJETADO: sete contratos de tamanho/lifetime/erros/ordem/sanitização em Linux e
+Windows, mais guardas membership/resume e recusa terminate/query/close sobre
+recursos Win32. Exceção de Delete VOID conserva storage e status não confirmado;
+retorno normal cumpre contrato da API, não é verificação independente de heap.
+
+Local242:191 executados/51 skips, compileall, wheel sem experimento no pacote e
+manifesto151 arquivos verificados. Diff de src/, ferramentas, extensão, v1/CMD
+idêntico à base. Vinte PRs anteriores conferidos sem alteração de HEAD/base/draft,
+inclusive PR6. Adapter OFF; sem merge/rebase/deploy/instalação/dados reais/piloto.
+
+Rodadas falhas2839ab8/41958864997 e4130c29/41959187379 preservadas: premissa de
+cardinalidade exata incorreta, hipótese console insuficiente. b930aab/41959651181
+falhou na barreira nested pós-resume; corrigido encaminhamento em518678a. Não foram
+skips, falhas do produto em campo ou razões para ampliar timeout. Em nenhuma delas
+a prova de sucesso foi satisfeita por emergency cleanup da raiz.
+
+Próximo gate: revisão independente do SHA final conforme JOB_AT_CREATION_STUDY.md.
+Experimento permanece só tests/, sem corrigir ainda Popen→assign dos launchers.
+Runner Server x64 não prova Win10/11 humano, ARM64/x86, mesmo token/admin, todos
+nested Jobs ou criadores/brokers. Issue30 NÃO iniciada; liveness/AI04 e demais
+gates continuam abertos. Aguardar revisão do responsável antes da próxima issue.
