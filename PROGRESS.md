@@ -1233,3 +1233,20 @@ proveniência e histórico monotônico permanecem requisitos de futura integraç
 A CI 42003106492 prova apenas o SHA anterior, não o HEAD corrigido. Reexecutar
 Windows3.11/3.12, Linux3.11/3.12 e Chromium antes de aceitar esta revisão.
 Nenhum runtime, launcher, adapter, IPC ou dado real foi alterado.
+
+## Issue33 — supervisão sintética isolada — 2026-11-05
+
+Base exata PR32/f1fb334bc4b9048c6a604610923e028ecd3ef658, nova branch
+codex/synthetic-process-supervision. Issue33/contrato30/parecer32 e documentos
+obrigatórios lidos; CI42006356534 do SHA base success5/5 conferida. Nenhum runtime,
+launcher, C#, extensão, IPC ativo ou adapter alterado. Costura de fixture somente
+no harness de testes31 preserva default. Novo experimento usa Job List na criação,
+lock indefinido no subordinado e raiz independente, flags sticky de prazo/erro,
+protocolo fechado e APIs de saída/zero/close como prova física.
+
+Guarda recusa Job com extras desconhecidos e não faz bulk kill. Desarmar
+kill-on-close com verificação antes de liberar Job incerto; término emergencial
+somente por handles próprios. Se disarm falha, reter Job, não declarar limpeza;
+limite de destruição posterior da raiz/driver permanece. Desenho/evidência em
+SYNTHETIC_PROCESS_SUPERVISION.md. 14 portáveis passaram, dez Windows preparados,
+ainda não executados. Foco Windows e matriz completa mantidos, sem converter skips.

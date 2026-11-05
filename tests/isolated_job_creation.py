@@ -180,7 +180,7 @@ class CreationProbe(SuspendedProbe):
             startup.attributes = ctypes.cast(self.attribute_buffer, ctypes.c_void_p)
             info = ProcessInfo()
             command = ctypes.create_unicode_buffer(subprocess.list2cmdline(
-                [sys.executable, '-I', '-S', '-B', '-c', SCRIPT, str(self.marker),
+                [sys.executable, '-I', '-S', '-B', '-c', getattr(self, 'fixture_script', SCRIPT), str(self.marker),
                  '0' if self.descendant_console else str(0x8000000)]))
             env = minimal_environment(self.marker.parent)
             block = ctypes.create_unicode_buffer('\0'.join(k + '=' + env[k] for k in sorted(env)) + '\0\0')

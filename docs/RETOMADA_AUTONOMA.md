@@ -1,3 +1,17 @@
+# Retomada atual — Issue33 / experimento de supervisão sintética
+
+Base exata PR32/f1fb334bc4b9048c6a604610923e028ecd3ef658, branch filha
+codex/synthetic-process-supervision. Issue33 e SYNTHETIC_PROCESS_SUPERVISION.md
+são obrigatórios. CI base42006356534 verde e revisão do contrato registradas.
+14 portáveis passaram; dez Windows aguardam CI deste SHA. Não usar esses skips
+como prova. Job próprio na criação, worker em lock, root independente; deadline
+sticky e fechamento por evidência kernel. Extras desconhecidos proíbem bulk kill;
+disarm verificado ou Job em quarentena, sem declaração falsa de limpeza.
+Raiz também pode bloquear em API/driver; nenhuma garantia global ou UI Tk.
+Não alterar runtime/launchers/canais/adapter, PRs anteriores ou PR6; sem merge,
+rebase, instalação, dados reais, coleta ou piloto. Próximo gate é revisão por SHA
+com CI completa. Histórico anterior abaixo, não o estado atual da entrega.
+
 # Retomada atual — Issue #30 / contrato de liveness (2026-11-05)
 
 Branch `codex/cleanup-liveness-contract-issue30` criada sobre o SHA exato PR31/8fd16bcd00183eb04d3ac759fa91d57978260b56; PR31

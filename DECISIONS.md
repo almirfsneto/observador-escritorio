@@ -310,3 +310,18 @@ tardio do worker e o estado de limpeza comprovada; prazo expirado não vira
 cumprido retroativamente. Rejeitar `cancel_acknowledged=True` sem
 `cancel_requested=True`. A classificação é stateless: reter histórico monotônico
 e autenticar/provar os fatos nativos exigem um mecanismo separado, **não** entregue.
+
+## D-040 — Supervisão sintética por processo e ownership antes de término coletivo
+
+Issue33 sobre PR32/f1fb334b, após CI verde e revisão registrada. Só tests/:
+CreateProcessW com Job List, thread sintética em lock, raiz com progresso observado.
+Prazo e erros monotônicos, física de recursos separada de protocolo/UI e resultado
+final; ACK não prova término. Não integrar runtime nem prometer prazo de driver.
+
+Membro desconhecido/lista incompleta/membership negada proíbem término coletivo.
+Desativar kill-on-close com consulta/set/reconsulta antes de liberar Job incerto;
+encerrar só capacidades de processo próprias. Falha ao desarmar retém Job e
+unconfirmed. Destruição posterior da raiz ainda pode fechar último handle armado:
+risco explícito, não isolamento de mesmo token/admin nem saída global garantida.
+Origem dos membros extras PR31 não inferida. Todos os handles têm uma tentativa
+verificada, sem retry de slot incerto; erro não vira passe por fim físico posterior.

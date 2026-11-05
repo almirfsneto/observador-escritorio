@@ -5,8 +5,8 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 2479,
-      "sha256": "f5719f50d4e5e1ad96745ed0448b2859ab94c6c4e89e1d323f996cb9640d32dd"
+      "size_bytes": 2654,
+      "sha256": "96fdaa08c341637e3f00b862a6356552d0f7de4d551cf5bf4fa56f421f2ad30e"
     },
     {
       "path": ".gitignore",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 33452,
-      "sha256": "5bc0beb2c42b2d6187c72a2120633c95d89353498f95c06ccd290e3c4039b266"
+      "size_bytes": 34459,
+      "sha256": "1109927791a07fc5a7b3387d8344cf30f1f825802fb9e692ee5310b0ed4ea472"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 83202,
-      "sha256": "66919cf0b2f3eddf1f06f48db26cfcfa89e6eef612c05d94f58f896eadeca33b"
+      "size_bytes": 84301,
+      "sha256": "e4f5501edef373050088838fb54815e369a50fd0eeeeef9d19f4a0f9d45ebdc2"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -220,8 +220,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 18898,
-      "sha256": "8a659ce3391d484184d92da2cf4947291fe23d6c2a6dae8aad68dcce58a9f490"
+      "size_bytes": 19845,
+      "sha256": "08b03e806cf54760c06173a61a28371585a4b903e7783492e99f2ff68a579128"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -252,6 +252,11 @@
       "path": "docs/SUSPENDED_LAUNCH_STUDY.md",
       "size_bytes": 4445,
       "sha256": "d6aa67a398067c7e3e6e0eda3f60018c8a7c00966e467dec669bed7701589a14"
+    },
+    {
+      "path": "docs/SYNTHETIC_PROCESS_SUPERVISION.md",
+      "size_bytes": 7536,
+      "sha256": "c9f2f26c10a586c2722a2fcf488cea67260e88a311160fa8c3347c0debba6161"
     },
     {
       "path": "docs/TASK_DISCOVERY.md",
@@ -500,8 +505,13 @@
     },
     {
       "path": "tests/isolated_job_creation.py",
-      "size_bytes": 14231,
-      "sha256": "4b8005abb2c182055abb2e51757678b713eff4e347014a20c7716af97c3eb5b3"
+      "size_bytes": 14264,
+      "sha256": "29f0511bbd5870d3eb80efcec502a31d4ae2029495ddd300f8887131877efc39"
+    },
+    {
+      "path": "tests/isolated_process_supervision.py",
+      "size_bytes": 19314,
+      "sha256": "57c50cf84f1d0bed262b4224d92524b30194a9ff9a84238b2575823e55717079"
     },
     {
       "path": "tests/isolated_suspended_spawn.py",
@@ -642,6 +652,16 @@
       "path": "tests/test_owned_channel.py",
       "size_bytes": 21620,
       "sha256": "f8319e4de7400c307625d7ed94ef020fcf02f600828087312d63064cd9647151"
+    },
+    {
+      "path": "tests/test_process_supervision_contract.py",
+      "size_bytes": 13360,
+      "sha256": "f2aae1250068ecef91bdeb0389658b69d920eb02c6641ea19cd54df2f040ea10"
+    },
+    {
+      "path": "tests/test_process_supervision_windows.py",
+      "size_bytes": 16532,
+      "sha256": "35d4ef1fcfb74384d3e82f12b531f122bfe7ae6323cbd46244b6018fd62a3169"
     },
     {
       "path": "tests/test_queue_faults.py",
