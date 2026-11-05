@@ -1318,3 +1318,70 @@ imutáveis por sequência: não substituir arquivo aberto. Regressão conserva a
 recusas reais e exige publicar nome novo mantendo leitor antigo aberto e dados
 antigos intactos. Mesmo limite256/seq64, sem retry/timeout ampliado. Histórico das
 hipóteses falhas permanece, sem claim causal retroativo ao primeiro run.
+
+### Issue33 — evidência integrada da publicação imutável — 2026-11-05
+
+PR34 em rascunho, base EXATA f1fb334bc4b9048c6a604610923e028ecd3ef658/PR32.
+Código e2a865543126abeb6b3eb960e0b91b0e81a4f7e4:
+https://github.com/almirfsneto/observador-escritorio/actions/runs/42014095213
+CINCO jobs aprovados; logs de todos consultados.
+
+| Ambiente | Descobertos | Executados | Skips |
+| --- | --- | --- | --- |
+| Windows Python3.11 |280|278|2 browser dedicado|
+| Windows Python3.12 |280|278|2 browser dedicado|
+| Linux Python3.11 |280|218|62:60 Windows +2 browser|
+| Linux Python3.12 |280|218|62:60 Windows +2 browser|
+| Chromium dedicado |2|2|0|
+
+Foco novo27/0 em cada Windows; foco anterior17/0 e11/0 preservados. São os mesmos
+casos da suíte, não somar duas vezes. Novos27 únicos:16 portáveis +11 Windows,
+sendo nove de operações Win32 reais e dois com falhas de API/ownership injetadas
+em recursos reais. Nenhum skip de foreground nesta rodada; skips não são aprovação.
+
+REAL nos dois Windows: worker normal e lock indefinido após join; raiz com ticks/
+pong, deadline_expired antes de stop; processo sinalizado, Job zero e recursos
+fechados. Extras desconhecidos reapareceram; bulk foi recusado, disarm confirmado
+e somente handle próprio usado. physical_cleanup_confirmed=true NÃO apagou
+cleanup_unconfirmed por ownership. Cancel recebeu resposta explícita de recusa
+sem ACK e permaneceu unconfirmed; saída tardia preservou expiração. Erro de close
+protegido foi real e nunca aprovado. File replace aberto recusou AccessDenied5
+COM e SEM share de delete; publicar nome imutável novo funcionou com leitor
+antigo ainda aberto e conteúdo antigo intacto. Esses dois fatos são distintos;
+sharing sozinho não foi solução. Nenhum retry/timeout ampliado para verde.
+
+Crash REAL pré-start: Job conhecido armado, kill-on-last-close confirmou saída.
+Pós-start e nested: Job alvo com extras foi desarmado ANTES de matar launcher;
+raiz externa encerrou worker por handle próprio e confirmou saída. Isso é
+root_retained_process_handle, NÃO término automático por último Job. Nested
+também observou extras no externo, desarmou-o e manteve-o aberto até zero de todos
+os membros. Raiz não manteve Job alvo; IO/readers/capacidades próprios fechados.
+Se raiz externa também morrer após disarm, essa prova não garante contenção.
+
+INJETADOS: criação/atributos/membership, terminate/query/wait/closes, cancelamento
+sem resposta/ACK indevido/corrida de exit, erros de comunicação e file close,
+unknown members e disarm negado. Wait sem prova retém capacidade de processo;
+negativo real usa cópia própria para provar fim antes do PRIMEIRO close da
+referência retida. Disarm negado conserva Job, sem bulk/close, e não confirma.
+Não é driver real bloqueado nem garantia global de liveness/cleanup da própria raiz.
+
+Histórico preservado:470cc6a/42010080293 falhou em quatro expectativas por Win;
+f502c9f/push42011080743 falhou na saída tardia Win3.12 antes de teardown;
+b882cce/42011761928 falhou em comunicação/expiração no ensaio tardio Win3.12;
+cd18fd9/42012749672 falhou na expectativa de código32 (real5);
+1e7ba5c/42013116584 refutou replace aberto mesmo com share7. Runs cancelados de
+78860e9 e PR/f502 não são aprovados. Erro original de f502 não teve WinError
+capturado; não lhe atribuir5 retroativamente. Arquitetura imutável foi validada
+APENAS no novo SHA. Último commit documental terá seus próprios checks conferidos.
+
+Local280:218 executados/62 skips; compileall, wheel sem experimento no pacote,
+manifesto157 e diff de runtime/ferramentas/extensão/v1/CMD congelados verificados.
+22 PRs anteriores mantêm HEAD/base/draft, inclusive32 e6. Sem merge/rebase,
+instalação, dados reais, coleta, adapter ou piloto. Evidência é CI Server x64,
+não humano10/11, outro token/admin, isolamento de extras ou deadline de driver.
+
+Retomada: revisão independente do SHA final e guards, conforme
+SYNTHETIC_PROCESS_SUPERVISION.md; não migrar funções/handles/IPC para runtime.
+Flags são monotônicas somente em memória nesta tentativa; sem ledger durável.
+API/FS do supervisor ainda pode bloquear. Quarentena armada e dupla morte após
+disarm são riscos distintos e não resolvidos. Aguardar revisão do responsável.

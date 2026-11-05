@@ -325,3 +325,18 @@ unconfirmed. Destruição posterior da raiz ainda pode fechar último handle arm
 risco explícito, não isolamento de mesmo token/admin nem saída global garantida.
 Origem dos membros extras PR31 não inferida. Todos os handles têm uma tentativa
 verificada, sem retry de slot incerto; erro não vira passe por fim físico posterior.
+
+D-040 / evidência final de código:e2a8655/CI42014095213 cinco jobs aprovados.
+Windows3.11/3.12 cada278 executados/2 skips, foco27/0; Linux218/62 por Python,
+Chromium2/0. Extras REAIS levaram à recusa de bulk e disarm com prova de fim físico,
+sem apagar unconfirmed por ownership. Crash pós-start depende da raiz externa
+com capacidade retida; não é kill-on-last-close automático se Job desarmado.
+Quarentena se disarm negado preserva erro, mas destruição da raiz ainda tem
+semântica de último close; dupla morte após disarm também não está contida.
+
+Transporte sintético usa arquivos imutáveis por sequência, em vez de substituir
+destino aberto. Hipótese de que share7 bastava foi REFUTADA por API real; negativo
+recusa AccessDenied5 e positivo publica nome novo. Finally sempre tenta teardown
+mesmo se release/write falhar. Snapshot da primeira falha não permitiu capturar
+WinError; nenhuma causalidade retroativa fabricada. Sem timeout maior/retry cego.
+Não migrar esse desenho para runtime antes de revisão distinta/novas provas.

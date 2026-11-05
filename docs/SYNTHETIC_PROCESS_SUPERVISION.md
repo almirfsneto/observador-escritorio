@@ -213,3 +213,33 @@ física. Cleanup remove somente esses nomes da fixture após saída do processo.
 Se release/write falha, finally ainda tenta todos recursos e mantém erro. Sharing7
 continua útil para contrato de leitura/fechamento, mas NÃO é alegado como solução
 de substituição aberta. Resultados exigem nova CI do SHA desta arquitetura.
+
+## Evidência executada e critérios para revisão do candidato
+
+Código e2a865543126abeb6b3eb960e0b91b0e81a4f7e4 / PR34,
+[CI42014095213](https://github.com/almirfsneto/observador-escritorio/actions/runs/42014095213)
+5/5. Windows3.11/3.12 cada278 executados/2 skips browser, foco27/0; Linux218/62
+por versão (60 Windows+2 browser); Chromium2/0. Todos27 novos únicos passaram
+Windows;16 portáveis também Linux. Logs dos cinco jobs examinados. Skips não são
+aprovação; foco é reexecução, não contagem extra. Manifesto157/wheel/sintaxe e
+fonte operacional idêntica à base conferidos. HEAD documental terá CI própria.
+
+No bloqueio: join_insufficient=true, root_ticks/pongs positivos, deadline_expired e
+expiry_before_stop=true; processo/Job/handles/atributos fisicamente confirmados.
+Extras reais mantiveram unknown_members/bulk_termination_refused/job_disarmed_verified
+true e cleanup_unconfirmed; não apagar esse risco no parecer. Cancelamento teve
+recusa explícita e não ganhou ACK fictício. Close protegido realmente recusado.
+
+No crash pré-start: termination_mode=kill_on_last_close. Pós-start/nested:
+termination_mode=root_retained_process_handle e target_job_disarmed=true; só
+capacidade própria usada pela raiz sobrevivente. Nested desarmou externo incerto,
+manteve aberto, consultou zero e só depois fechou. Nunca chamar isso de contenção
+automática após morte de AMBAS as raízes. Sem garantia global para kernel/driver.
+
+Revisor deve conferir ancestral exato f1fb334b, diff somente testes/docs/workflow/
+manifesto, casos focados e suíte geral nos dois Windows; auditar fluxo de disarm,
+retenção de processo após Wait falho, uma tentativa de close por slot e protocolo
+imutável limitado. Membership é observação, não congelamento atômico do conjunto
+contra outro código do mesmo token/admin; os extras continuam não identificados.
+Assinatura humana/Win10/11/AI04 pendentes. Próximo passo é revisão por SHA, não
+integração, instalação ou piloto.

@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 34459,
-      "sha256": "1109927791a07fc5a7b3387d8344cf30f1f825802fb9e692ee5310b0ed4ea472"
+      "size_bytes": 35516,
+      "sha256": "8fdc3d8f62076ae995e7f5233567f24a53d7dbff55464420ff0c02cdf4a33451"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 89051,
-      "sha256": "14453268c229f69c8cc3191d2fa084783cf123ce56aa34154ee85e77965f265f"
+      "size_bytes": 93324,
+      "sha256": "919590f5996256a9579b8697d3378a7a51aa64593da57fc757ae79485aa4dc08"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -220,8 +220,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 19845,
-      "sha256": "08b03e806cf54760c06173a61a28371585a4b903e7783492e99f2ff68a579128"
+      "size_bytes": 20408,
+      "sha256": "f0489d3702bfff55d35fb5f005b430ffbde5054e50625f724fd70166ef707c82"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -255,8 +255,8 @@
     },
     {
       "path": "docs/SYNTHETIC_PROCESS_SUPERVISION.md",
-      "size_bytes": 14178,
-      "sha256": "b12502f4d5ff31b45aa01b7621de1e196bbb04d1ab5ce113141c9d95f9b53ea3"
+      "size_bytes": 16179,
+      "sha256": "b16df3834531487f834e78206d449e6f234504ea9809a66d1f965da771e220ad"
     },
     {
       "path": "docs/TASK_DISCOVERY.md",
