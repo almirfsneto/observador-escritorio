@@ -51,6 +51,9 @@ jobs:
       - name: Isolated Job-at-creation regressions
         if: runner.os == 'Windows'
         run: python -m unittest discover -s tests -p "test_job_at_creation*.py" -v
+      - name: Isolated synthetic process supervision
+        if: runner.os == 'Windows'
+        run: python -m unittest discover -s tests -p "test_process_supervision*.py" -v
       - run: python -m unittest discover -s tests -v
       - name: Parse Windows laboratory scripts without collection
         if: runner.os == 'Windows'

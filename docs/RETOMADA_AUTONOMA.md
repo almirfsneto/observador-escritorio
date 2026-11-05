@@ -1,3 +1,24 @@
+# Retomada atual — Issue33 / experimento de supervisão sintética
+
+Base exata PR32/f1fb334bc4b9048c6a604610923e028ecd3ef658, branch filha
+codex/synthetic-process-supervision. Issue33 e SYNTHETIC_PROCESS_SUPERVISION.md
+são obrigatórios. CI base42006356534 verde e revisão do contrato registradas.
+PR34/códigoe2a8655/CI42014095213 passou5/5. Windows3.11/3.12:280 descobertos,
+278 executados/2 skips browser por Python; foco novo27/0 sem contagem dupla.
+Linux218/62 por Python; Chromium2/0.16 novos portáveis +11 Windows executados.
+Root responsivo/deadline sticky/fim físico provados, mas extras desconhecidos
+mantêm cleanup_unconfirmed: bulk recusado e Job desarmado. Crash pós-start usa
+recuperação por handle da raiz externa, NÃO automático do Job desarmado; nested
+externo aberto confirmou zero. Pré-start conhecido provou kill-on-last-close.
+Publicação imutável corrigiu desenho que substituía arquivos abertos; sharing
+sozinho foi refutado. Ver logs/histórico falho e matriz em PROGRESS.
+Último commit somente documental: conferir CI própria do HEAD final no PR34.
+Root pode bloquear em API/FS/driver; dupla morte após disarm e Job armado retido
+continuam limites. Flags só em memória, sem ledger durável/UI ou isolamento de extras.
+Não alterar runtime/launchers/canais/adapter, PRs anteriores ou PR6; sem merge,
+rebase, instalação, dados reais, coleta ou piloto. Próximo gate é revisão por SHA
+com CI completa. Histórico anterior abaixo, não o estado atual da entrega.
+
 # Retomada atual — Issue #30 / contrato de liveness (2026-11-05)
 
 Branch `codex/cleanup-liveness-contract-issue30` criada sobre o SHA exato PR31/8fd16bcd00183eb04d3ac759fa91d57978260b56; PR31

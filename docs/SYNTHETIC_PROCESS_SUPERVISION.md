@@ -1,0 +1,245 @@
+# Issue33 / AI02L2 — supervisão isolada de processo sintético
+
+Base exata PR32/f1fb334bc4b9048c6a604610923e028ecd3ef658, branch filha
+codex/synthetic-process-supervision. Pré-requisitos conferidos: CI42006356534
+success5/5 no SHA base, parecer do contrato32 registrado como COMMENT, sem
+assinatura humana/independência de autoria. Ler Issue33 e CLEANUP_LIVENESS_DESIGN.
+
+## Fronteira do experimento
+
+Somente tests/: raiz supervisora + Python próprio -I -S -B com thread não-daemon
+bloqueada indefinidamente em Lock. Worker join(.05) retorna e is_alive prova
+insuficiência. Seu main atende comandos sintéticos; raiz continua ticks e observa
+pong. Isso prova progresso dessa raiz, NÃO UI Tk, API/driver arbitrário ou SLA.
+Worker normal libera lock e termina; atraso pós-deadline é dimensão independente.
+Nenhum runtime, launcher operacional, C#, IPC ativo, extensão ou coleta alterado.
+Uma costura de SCRIPT exclusivamente na classe de testes PR31 permite fixture
+fixa por subclass, preservando seu default e todos os testes anteriores.
+
+NativeWorker reaproveita apenas CreateProcess de testes: STARTUPINFOEXW/JOB_LIST,
+Job anônimo próprio não herdável/KILL_ON_JOB_CLOSE, filho suspenso, herança FALSE,
+ambiente mínimo e stdio NULL. Membership no handle retido antes de resume, sem
+assign/breakaway/fallback. Não cria descendant adicional. Atributos/lpValue vivos
+até Delete VOID; retorno normal cumpre contrato de API, não prova externa de heap.
+
+## Comunicação, fatos e proveniência
+
+Arquivos temporários exclusivos publicados atomicamente em nomes NOVOS por sequência,
+tamanho256, não pipes nem
+IPC operacional. Campos v/nonce/seq/state ou command; comandos ping/cancel/release,
+seq limitada64, estados enumerados, nonce PÚBLICO synthetic-supervision-v1. Não é
+autenticação/isolamento de outro código do mesmo token. Nenhum payload profissional,
+PID, handle, caminho pessoal, argumento ou exceção livre no snapshot. Slot de
+capacidade só no controle privado launcher→raiz para DuplicateHandle, nunca no log.
+Arquivos sintéticos são apagados após saída observada, antes de declarar limpeza.
+
+Ledger mantém expiração e erros sticky. deadline_expired é registrado ANTES da
+tentativa de teardown; saída tardia nunca apaga o fato. ACK de cancelamento sem
+pedido é erro; pedido sem ACK não vira prova de saída e mantém unconfirmed mesmo
+se recursos depois fecharem. physical_cleanup_confirmed distingue fatos físicos
+do estado final com erro histórico. Nenhum estado enviado pelo worker confirma
+exit/job_zero/handles: esses fatos provêm das APIs da raiz. UI é sempre unknown.
+
+Raiz espera startup8s, observa deadline local200ms após sinal de início e faz
+polls5ms; são budgets DE TESTE. Wait de término2s e confirmação de zero2s são
+esperas distintas; não são promessa de término global. Teste positivo normal usa
+budget2s. Cancelamento explícito registra pedido sem inventar ACK. Caso de saída
+tardia libera o lock da própria fixture após expiração, exige sinal nativo e
+mantém worker_state=deadline_expired. Não invoca CancelSynchronousIo/TerminateThread
+nem os._exit como mecanismo operacional; não alega testar driver travado.
+
+## Ownership e membros desconhecidos: regra nova deste experimento
+
+QueryInformationJobObject(ProcessIdList), lista completa limitada16, compara IDs
+somente com GetProcessId dos handles já retidos. Nenhum OpenProcess/PID recebido
+como autoridade. Não exige cardinalidade global fixa nem atribui identidade a
+membros extras. Confere membership do subordinado vivo e recusa lista ausente,
+truncada, duplicada ou contendo membro desconhecido ANTES de TerminateJobObject.
+
+Se ownership é inequívoco, tentar término do Job, exigir sinal do processo e zero
+por QueryInformationJobObject; TRUE no término não prova saída. Recusa de API é
+erro sticky e fallback usa SOMENTE TerminateProcess no handle próprio conhecido.
+Se ownership é incerto, NÃO invocar término coletivo. Consultar limites do Job,
+remover APENAS KILL_ON_JOB_CLOSE, SetInformationJobObject e consultar novamente
+para confirmar desativação. Só então pode liberar Job sem matar extras ao fechar.
+Limpeza emergencial termina apenas processo próprio retido. Job não zerado mantém
+unconfirmed. Disarm negado preserva Job em quarentena, sem retry/close; teste
+portável prova essa política. Se o SO depois destruir a raiz, o fechamento de
+handles pelo SO pode ainda aplicar kill-on-close. Essa limitação NÃO está resolvida
+nem autoriza Job operacional compartilhado/saída segura nessa situação.
+
+Cleanup tenta independentemente atributos, processo, zero do Job e todos os
+handles. Recusa de CloseHandle mantém failed e não repete slot. Estado incerto não
+recebe confirmação, ainda que outros recursos fechem. Quarentena é diagnóstico,
+não promessa de recuperação sem autoridade adicional. Membros adicionais do PR31
+continuam de origem desconhecida; o novo harness interrompe a prova se os observar.
+Não altera o comportamento nem as evidências históricas dos outros experimentos.
+
+## Matriz de testes e revisão
+
+16 testes portáveis: ledger/controlador, expiração/saída tardia, ACK, cancelamento,
+comunicação, bounds de protocolo/lista, criação/atributos/membership, erros de
+teardown/handles e quarentena quando disarm negado. APIs são INJETADAS.
+
+Onze testes Windows preparados: normal; lock/deadline/responsividade; cancelamento
+sem ACK; saída tardia; ownership extra INJETADO com disarm e fim conhecido reais;
+falhas de membership/terminate/query/wait/comunicação/Delete INJETADAS em recursos
+reais; CloseHandle protegido REAL; morte REAL do launcher antes/depois do início
+do worker; nested com Job externo mantido aberto e zero. Nenhum caso obrigatório
+Windows pode ser promovido de skip a aprovado. Foco separado precede suíte geral;
+são os mesmos casos, não somar duas vezes. CI completa inclui ambos Linux e Chromium.
+Até consultar a CI desta revisão, negativos portáveis não são prova de Win32.
+
+No crash, raiz duplica apenas handle do processo próprio de launcher retido,
+confere imagem/tempo/sessão, sem guardar Job alvo. Launcher checa ownership antes
+da barreira e morte; raiz mata somente esse launcher sintético e exige sinal do
+worker ANTES de emergency cleanup. Nested mantém Job externo aberto, verifica
+seus membros conhecidos antes do crash e confirma zero após saída, antes do close.
+Finally tenta IO/reader/handles independentemente. Emergency cleanup não satisfaz
+asserções de sucesso; falha sempre fica explícita.
+
+Próxima revisão: conferir SHA/base/diff, logs reais Win3.11/3.12, ausência de bulk
+termination no negativo de unknown members, disarm verificado/quarentena, deadline
+sticky e provas físicas distintas. Win Server CI x64 não é humano Win10/11, ARM64,
+x86, outras contas, admin, injeção ou garantia global de API/driver. Raiz também
+pode bloquear em suas próprias APIs/FS. Nada de watchdog operacional, piloto,
+merge/rebase, instalação ou dados reais. Próximo passo depende de nova revisão,
+não migração automática de cleanup ou canais para processos.
+
+Comandos (PowerShell: definir $env:PYTHONPATH='src'):
+
+    PYTHONPATH=src python -m unittest discover -s tests -p 'test_process_supervision*.py' -v
+    PYTHONPATH=src python -m unittest discover -s tests -v
+
+Fontes: contrato e referências Python/Microsoft em CLEANUP_LIVENESS_DESIGN.md;
+contratos STARTUPINFOEX/Job List/Delete em JOB_AT_CREATION_STUDY.md. Não foram
+importados componentes externos nem dependências runtime.
+
+## Primeira observação Windows e ajuste do ensaio de crash
+
+470cc6a/CI42010080293 falhou com quatro expectativas erradas por Windows. A origem
+adicional continuou desconhecida mesmo sem descendant explícito. Root teve ticks,
+pong, join insuficiente, deadline_expired e prova física de fim/zero/closes; erro
+ownership continuou sticky, por isso cleanup_unconfirmed era o resultado correto.
+Não converter essa recusa real em aprovação irrestrita. Positivo agora exige fim
+físico, disarm confirmado e NÃO chamada de TerminateJobObject se houver extras;
+classificação continua unconfirmed. Sem extras, permanece confirmação completa.
+
+No crash com Job incerto, launcher primeiro confirma disarm e só então transmite
+capacidade própria para raiz e espera sua morte. Raiz mata somente launcher,
+observa sua saída e tenta terminar worker pelo handle retido; exige sinalização,
+não abandona órfão. termination_mode=root_retained_process_handle é recuperação
+externa real, NÃO prova de kill-on-last-close. Se ownership for conhecido e Job
+armado, termination_mode=kill_on_last_close é provado por saída sem kill da raiz.
+Nested pode desarmar seu próprio Job externo incerto antes do crash; mantém aberto
+para observar zero, sem bulk stop de desconhecidos. Snapshot preserva as duas
+incertezas de ownership. Nenhum teste abre ou mata processo extra por PID.
+
+Se Wait não confirma saída, conservar o handle de processo conhecido aberto, mesmo
+após tentar os demais recursos: não descartar a última capacidade de emergency
+cleanup de worker possivelmente vivo. Snapshot marca retenção após a tentativa e
+permanece unconfirmed. Negativo Windows conserva duplicata independente e usa
+Wait real para comprovar fim antes do PRIMEIRO close da referência retida; isso é
+recuperação explícita de teste, não retry de CloseHandle falho nem apagamento de
+erro. Ausência de prova/autoridade do SO continua impedindo confirmação.
+
+O pedido cancel tem janela cooperativa local50ms com polls da raiz, sem join/lock
+compartilhado. cancel_refusal_observed exige resposta explícita da fixture;
+ausência de resposta é caso distinto, também unconfirmed. Exit anterior ao ACK
+não apaga pedido sem confirmação; não enviar ping depois de cancel para evitar
+sobrescrever o único comando pendente. Um novo negativo portável cobre essa
+corrida:15 portáveis +10 Windows=25 novos focados, sem soma dupla na suíte.
+A janela não amplia deadline local200ms nem afirma cancelamento de I/O/driver.
+
+## Sharing de arquivos Windows e continuidade de teardown
+
+f502c9f/push42011080743 falhou em LateWorker antes de chamar NativeWorker.close;
+atributos/Job/handles ficaram sem prova. A exceção original não trouxe WinError
+sanitizado, portanto não alegar identificação do código no run antigo. O novo
+finally do estimulador chama teardown mesmo após falhar release/write/espera.
+
+Replace atômico pode ser recusado se o outro processo segura leitor sem sharing
+de delete. Regressão REAL compara arquivo próprio aberto pelo Python (AccessDenied5 observado no runner)
+com CreateFileW(GENERIC_READ, FILE_SHARE_READ|WRITE|DELETE, OPEN_EXISTING), que
+permite a mesma substituição enquanto aberto. Leitura da raiz e do subordinado
+agora usa esse contrato, limite257 para rejeitar acima256 e CloseHandle verificado.
+Fechamento de arquivo falho mantém referência failed e impede prova de handles;
+negativo portável exige uma tentativa só, sem retry de slot. Não repetir replace
+nem ampliar timeout para obter passe. Não tocar em arquivos fora da fixture.
+
+Total atual:16 portáveis e11 Windows=27 focados novos; resultados só valem por SHA.
+CI Windows é prova desse mecanismo de arquivo/lock sintético, não driver/kernel
+arbitrário nem liveness das APIs de cleanup da própria raiz.
+
+A regressão cd18fd9/CI42012749672 encontrou AccessDenied5 (em vez da expectativa
+32) ao tentar substituir arquivo com leitor Python aberto nos DOIS Windows. A
+expectativa passou a exigir esse5 real, sem aceitar erro arbitrário nem dispensar
+o sucesso do braço com delete sharing. Isso não atribui retroativamente WinError
+ao run f502. Esse ajuste ainda precisa da CI completa por SHA.
+
+## Limites do ciclo de vida a reexaminar
+
+Flags monotônicas duram somente esta tentativa em memória; não são ledger durável
+ou retomada autenticada após restart. Com Job desarmado, a recuperação pós-crash
+depende de a raiz externa sobreviver com a capacidade de processo. Se ambas as
+raízes morrerem depois do disarm, não há prova de contenção automática; não
+transplantar a experiência para runtime nem a apresentar como watchdog resiliente
+a falhas em cascata. Se Job continua armado em quarentena por disarm negado, a
+destruição da raiz pelo SO pode aplicar kill-on-close sobre membros incertos.
+Esses dois riscos são diferentes e permanecem abertos.
+
+Referências de sharing consultadas para esta correção:
+- https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
+- https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw
+
+## Publicação imutável após refutação de replace com destino aberto
+
+1e7ba5c/CI42013116584 refutou sharing como solução suficiente: substituir o destino
+ABERTO continuou AccessDenied5 mesmo com share7, nos dois Windows. Um caso de
+cancelamento também não recebeu a resposta esperada; não aprovar o run. Não
+promover a hipótese anterior a prova nem alegar que o WinError antigo foi capturado.
+
+O protocolo agora publica cada comando/resposta em nome NOVO e imutável, por seq
+0..64, após escrever/fechar arquivo temporário; rename nunca substitui destino
+aberto. Consumidor busca sequência esperada, recusa reutilização e verifica schema.
+Ambos mantêm limites e CloseHandle; o fluxo não depende de retry ou timeout maior.
+A regressão exige as duas recusas de replace (leitor Python e leitor share7), depois
+sucesso ao publicar em OUTRO nome enquanto o leitor antigo continua aberto; verifica
+conteúdo antigo intacto e novo conteúdo correto, fechando todos handles. Portanto
+não é a MESMA substituição bem-sucedida, é uma arquitetura que evita essa operação.
+
+Até65 respostas/64 comandos +mode e dois temporários; lógica limitada, não quota
+física. Cleanup remove somente esses nomes da fixture após saída do processo.
+Se release/write falha, finally ainda tenta todos recursos e mantém erro. Sharing7
+continua útil para contrato de leitura/fechamento, mas NÃO é alegado como solução
+de substituição aberta. Resultados exigem nova CI do SHA desta arquitetura.
+
+## Evidência executada e critérios para revisão do candidato
+
+Código e2a865543126abeb6b3eb960e0b91b0e81a4f7e4 / PR34,
+[CI42014095213](https://github.com/almirfsneto/observador-escritorio/actions/runs/42014095213)
+5/5. Windows3.11/3.12 cada278 executados/2 skips browser, foco27/0; Linux218/62
+por versão (60 Windows+2 browser); Chromium2/0. Todos27 novos únicos passaram
+Windows;16 portáveis também Linux. Logs dos cinco jobs examinados. Skips não são
+aprovação; foco é reexecução, não contagem extra. Manifesto157/wheel/sintaxe e
+fonte operacional idêntica à base conferidos. HEAD documental terá CI própria.
+
+No bloqueio: join_insufficient=true, root_ticks/pongs positivos, deadline_expired e
+expiry_before_stop=true; processo/Job/handles/atributos fisicamente confirmados.
+Extras reais mantiveram unknown_members/bulk_termination_refused/job_disarmed_verified
+true e cleanup_unconfirmed; não apagar esse risco no parecer. Cancelamento teve
+recusa explícita e não ganhou ACK fictício. Close protegido realmente recusado.
+
+No crash pré-start: termination_mode=kill_on_last_close. Pós-start/nested:
+termination_mode=root_retained_process_handle e target_job_disarmed=true; só
+capacidade própria usada pela raiz sobrevivente. Nested desarmou externo incerto,
+manteve aberto, consultou zero e só depois fechou. Nunca chamar isso de contenção
+automática após morte de AMBAS as raízes. Sem garantia global para kernel/driver.
+
+Revisor deve conferir ancestral exato f1fb334b, diff somente testes/docs/workflow/
+manifesto, casos focados e suíte geral nos dois Windows; auditar fluxo de disarm,
+retenção de processo após Wait falho, uma tentativa de close por slot e protocolo
+imutável limitado. Membership é observação, não congelamento atômico do conjunto
+contra outro código do mesmo token/admin; os extras continuam não identificados.
+Assinatura humana/Win10/11/AI04 pendentes. Próximo passo é revisão por SHA, não
+integração, instalação ou piloto.
