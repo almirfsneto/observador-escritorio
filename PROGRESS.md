@@ -1277,3 +1277,10 @@ exige ausência de close do processo e referência retida; negativo Win32 usa c�
 retida independente, confirma saída com API real e só então faz PRIMEIRO close da
 referência original (sem retry de slot failed). Erro da primeira limpeza continua
 sticky. Não há garantia de recuperação se o SO negar todas as provas de saída.
+
+Complemento de cancelamento: janela cooperativa local50ms sem bloquear raiz,
+com leitura de cancel_without_ack da fixture antes de encerrar. Snapshot distingue
+recusa observada de mera falta de resposta. Expiração global local continua200ms,
+sem aumento. Corrida de exit após pedido não apaga falta de ACK; ping não sobrescreve
+pedido cancel pendente. Novo negativo portável realça os dois invariantes (15
+portáveis novos,25 focados somando10 Windows). Não é CancelSynchronousIo nativo.

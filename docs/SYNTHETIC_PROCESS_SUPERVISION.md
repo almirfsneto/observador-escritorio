@@ -141,3 +141,11 @@ permanece unconfirmed. Negativo Windows conserva duplicata independente e usa
 Wait real para comprovar fim antes do PRIMEIRO close da referência retida; isso é
 recuperação explícita de teste, não retry de CloseHandle falho nem apagamento de
 erro. Ausência de prova/autoridade do SO continua impedindo confirmação.
+
+O pedido cancel tem janela cooperativa local50ms com polls da raiz, sem join/lock
+compartilhado. cancel_refusal_observed exige resposta explícita da fixture;
+ausência de resposta é caso distinto, também unconfirmed. Exit anterior ao ACK
+não apaga pedido sem confirmação; não enviar ping depois de cancel para evitar
+sobrescrever o único comando pendente. Um novo negativo portável cobre essa
+corrida:15 portáveis +10 Windows=25 novos focados, sem soma dupla na suíte.
+A janela não amplia deadline local200ms nem afirma cancelamento de I/O/driver.

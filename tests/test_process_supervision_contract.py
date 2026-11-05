@@ -112,6 +112,19 @@ class SupervisionContractTest(unittest.TestCase):
         self.assertTrue(d['physical_cleanup_confirmed'])
         self.assertEqual(d['cleanup_state'], 'cleanup_unconfirmed')
 
+    def test_exit_after_cancel_without_ack_preserves_error_and_no_ping_overwrites_request(self):
+        class ExitAfterCancel(Backend):
+            def alive(self):return 'cancel' not in self.commands
+        b = ExitAfterCancel(states=('blocked_after_join',None))
+        event = SimpleNamespace(is_set=lambda: b.ledger.started)
+        d = self.run_backend(b,cancel_event=event)
+        self.assertEqual(b.commands,['cancel'])
+        self.assertTrue(d['cancel_requested'])
+        self.assertFalse(d['cancel_acknowledged'])
+        self.assertTrue(d['physical_cleanup_confirmed'])
+        self.assertGreater(d['errors']['cancel'],0)
+        self.assertEqual(d['cleanup_state'],'cleanup_unconfirmed')
+
     def test_ack_without_request_is_rejected_and_does_not_prove_exit(self):
         b = Backend(states=('cancel_ack',))
         d = self.run_backend(b)

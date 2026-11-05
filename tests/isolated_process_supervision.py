@@ -67,6 +67,7 @@ class Ledger:
         self.origin = origin
         self.errors = dict.fromkeys(PHASES, 0)
         self.expired = self.cancel_requested = self.cancel_ack = False
+        self.cancel_refusal_observed = False
         self.started = self.join_insufficient = self.worker_exit = self.job_zero = False
         self.creation_membership_verified = False
         self.observed_job_members = 0
@@ -103,6 +104,7 @@ class Ledger:
                     observed_job_members=self.observed_job_members,
                     root_ticks=self.ticks, root_pongs=self.pongs, root_responsive=self.ticks >= 3,
                     ui_state='unknown', cancel_requested=self.cancel_requested, cancel_acknowledged=self.cancel_ack,
+                    cancel_refusal_observed=self.cancel_refusal_observed,
                     process_exit_confirmed=self.worker_exit, job_zero_confirmed=self.job_zero,
                     handles_closed=self.handles_closed, attributes_deleted=self.attributes_deleted,
                     physical_cleanup_confirmed=bool(physical),
@@ -332,6 +334,7 @@ class Supervisor:
             startup_end = self.clock() + startup_budget
             deadline = None
             ping_sent = False
+            cancel_deadline = None
             while True:
                 l.ticks = min(100000, l.ticks + 1)
                 if on_tick:
@@ -341,6 +344,9 @@ class Supervisor:
                     if state == 'cancel_ack':
                         l.acknowledge_cancel()
                     elif state == 'cancel_without_ack':
+                        if not l.cancel_requested:
+                            raise OSError('supervision_cancel_reply_rejected')
+                        l.cancel_refusal_observed = True
                         l.fail('cancel')
                         break
                     elif state == 'pong_blocked':
@@ -356,6 +362,8 @@ class Supervisor:
                 if deadline is not None and self.clock() >= deadline:
                     l.expire()  # Monotone; happens BEFORE cancellation or teardown.
                     l.expiry_before_stop = True
+                    if l.cancel_requested and not l.cancel_ack:
+                        l.fail('cancel')
                     break
                 if not self.backend.alive():
                     if not l.started:
@@ -365,13 +373,15 @@ class Supervisor:
                         l.started = True
                         l.join_insufficient = final_state == 'blocked_after_join'
                     break
-                if cancel_event is not None and cancel_event.is_set():
+                if (cancel_event is not None and cancel_event.is_set() and not l.cancel_requested):
                     l.cancel_requested = True
                     self.backend.write('cancel')
-                    # Request alone is not cancellation/exit; backend stays blocked.
-                    l.fail('cancel')
+                    cancel_deadline = self.clock() + .05
+                if cancel_deadline is not None and self.clock() >= cancel_deadline:
+                    if not l.cancel_ack:
+                        l.fail('cancel')
                     break
-                if l.started and l.join_insufficient and not ping_sent:
+                if l.started and l.join_insufficient and not ping_sent and not l.cancel_requested:
                     self.backend.write('ping')
                     ping_sent = True
                 if not l.started and self.clock() >= startup_end:
@@ -384,6 +394,8 @@ class Supervisor:
         except Exception:
             l.fail(reason)
         finally:
+            if l.cancel_requested and not l.cancel_ack and not l.errors['cancel']:
+                l.fail('cancel')  # Exit racing the ACK does not erase the missing acknowledgement.
             try:
                 self.backend.close()
             except Exception:

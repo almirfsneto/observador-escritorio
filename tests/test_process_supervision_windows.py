@@ -85,6 +85,7 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
             snapshot = Supervisor(worker).run(cancel_event=event, on_tick=cancel)
             self.emit(snapshot)
             self.assertTrue(snapshot['cancel_requested'])
+            self.assertTrue(snapshot['cancel_refusal_observed'])
             self.assertFalse(snapshot['cancel_acknowledged'])
             self.assertTrue(snapshot['physical_cleanup_confirmed'])
             self.assertEqual(snapshot['cleanup_state'], 'cleanup_unconfirmed')
