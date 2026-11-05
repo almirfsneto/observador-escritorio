@@ -24,7 +24,8 @@ até Delete VOID; retorno normal cumpre contrato de API, não prova externa de h
 
 ## Comunicação, fatos e proveniência
 
-Arquivos temporários exclusivos com replace atômico e tamanho256, não pipes nem
+Arquivos temporários exclusivos publicados atomicamente em nomes NOVOS por sequência,
+tamanho256, não pipes nem
 IPC operacional. Campos v/nonce/seq/state ou command; comandos ping/cancel/release,
 seq limitada64, estados enumerados, nonce PÚBLICO synthetic-supervision-v1. Não é
 autenticação/isolamento de outro código do mesmo token. Nenhum payload profissional,
@@ -76,11 +77,11 @@ Não altera o comportamento nem as evidências históricas dos outros experiment
 
 ## Matriz de testes e revisão
 
-14 testes portáveis: ledger/controlador, expiração/saída tardia, ACK, cancelamento,
+16 testes portáveis: ledger/controlador, expiração/saída tardia, ACK, cancelamento,
 comunicação, bounds de protocolo/lista, criação/atributos/membership, erros de
 teardown/handles e quarentena quando disarm negado. APIs são INJETADAS.
 
-Dez testes Windows preparados: normal; lock/deadline/responsividade; cancelamento
+Onze testes Windows preparados: normal; lock/deadline/responsividade; cancelamento
 sem ACK; saída tardia; ownership extra INJETADO com disarm e fim conhecido reais;
 falhas de membership/terminate/query/wait/comunicação/Delete INJETADAS em recursos
 reais; CloseHandle protegido REAL; morte REAL do launcher antes/depois do início
@@ -175,3 +176,40 @@ A regressão cd18fd9/CI42012749672 encontrou AccessDenied5 (em vez da expectativ
 expectativa passou a exigir esse5 real, sem aceitar erro arbitrário nem dispensar
 o sucesso do braço com delete sharing. Isso não atribui retroativamente WinError
 ao run f502. Esse ajuste ainda precisa da CI completa por SHA.
+
+## Limites do ciclo de vida a reexaminar
+
+Flags monotônicas duram somente esta tentativa em memória; não são ledger durável
+ou retomada autenticada após restart. Com Job desarmado, a recuperação pós-crash
+depende de a raiz externa sobreviver com a capacidade de processo. Se ambas as
+raízes morrerem depois do disarm, não há prova de contenção automática; não
+transplantar a experiência para runtime nem a apresentar como watchdog resiliente
+a falhas em cascata. Se Job continua armado em quarentena por disarm negado, a
+destruição da raiz pelo SO pode aplicar kill-on-close sobre membros incertos.
+Esses dois riscos são diferentes e permanecem abertos.
+
+Referências de sharing consultadas para esta correção:
+- https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew
+- https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw
+
+## Publicação imutável após refutação de replace com destino aberto
+
+1e7ba5c/CI42013116584 refutou sharing como solução suficiente: substituir o destino
+ABERTO continuou AccessDenied5 mesmo com share7, nos dois Windows. Um caso de
+cancelamento também não recebeu a resposta esperada; não aprovar o run. Não
+promover a hipótese anterior a prova nem alegar que o WinError antigo foi capturado.
+
+O protocolo agora publica cada comando/resposta em nome NOVO e imutável, por seq
+0..64, após escrever/fechar arquivo temporário; rename nunca substitui destino
+aberto. Consumidor busca sequência esperada, recusa reutilização e verifica schema.
+Ambos mantêm limites e CloseHandle; o fluxo não depende de retry ou timeout maior.
+A regressão exige as duas recusas de replace (leitor Python e leitor share7), depois
+sucesso ao publicar em OUTRO nome enquanto o leitor antigo continua aberto; verifica
+conteúdo antigo intacto e novo conteúdo correto, fechando todos handles. Portanto
+não é a MESMA substituição bem-sucedida, é uma arquitetura que evita essa operação.
+
+Até65 respostas/64 comandos +mode e dois temporários; lógica limitada, não quota
+física. Cleanup remove somente esses nomes da fixture após saída do processo.
+Se release/write falha, finally ainda tenta todos recursos e mantém erro. Sharing7
+continua útil para contrato de leitura/fechamento, mas NÃO é alegado como solução
+de substituição aberta. Resultados exigem nova CI do SHA desta arquitetura.

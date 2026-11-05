@@ -1310,3 +1310,11 @@ obrigatória e sucesso da MESMA substituição com leitor share7. Não confundir
 identificação do WinError do run antigo f502, que não foi capturado. Os demais
 casos, incluindo LateWorker com finally e sharing, passaram no foco; matriz total
 ainda depende de CI verde deste próximo SHA.
+
+1e7ba5c/CI42013116584: ambos Windows falharam no sucesso de replace mesmo com
+share7; Win3.12 também não observou a recusa de cancelamento no fluxo antigo.
+Hipótese sharing suficiente REFUTADA. Redesenhar transporte só de testes com nomes
+imutáveis por sequência: não substituir arquivo aberto. Regressão conserva ambas
+recusas reais e exige publicar nome novo mantendo leitor antigo aberto e dados
+antigos intactos. Mesmo limite256/seq64, sem retry/timeout ampliado. Histórico das
+hipóteses falhas permanece, sem claim causal retroativo ao primeiro run.

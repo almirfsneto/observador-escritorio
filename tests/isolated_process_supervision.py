@@ -25,13 +25,15 @@ WORKER_SCRIPT = r'''
 import ctypes,json,os,sys,threading,time
 from ctypes import wintypes as W
 from pathlib import Path
-path=Path(sys.argv[1]); command=path.with_suffix('.command')
+path=Path(sys.argv[1])
 mode=path.with_suffix('.mode').read_text(encoding='ascii')
 if mode not in ('normal','blocked'):raise SystemExit(2)
 nonce='synthetic-supervision-v1'
 def emit(state,seq):
     data=json.dumps(dict(v=1,nonce=nonce,seq=seq,state=state),sort_keys=True).encode('ascii')
-    tmp=path.with_suffix('.writing');tmp.write_bytes(data);os.replace(tmp,path)
+    target=path.with_suffix('.state.'+str(seq).zfill(2))
+    if target.exists():raise SystemExit(7)
+    tmp=path.with_suffix('.writing');tmp.write_bytes(data);tmp.rename(target)
 lock=threading.Lock();lock.acquire()
 worker=threading.Thread(target=lambda: (lock.acquire(),lock.release()),daemon=False)
 worker.start()
@@ -46,7 +48,7 @@ api.CreateFileW.restype=W.HANDLE
 api.ReadFile.argtypes=[W.HANDLE,ctypes.c_void_p,W.DWORD,ctypes.POINTER(W.DWORD),ctypes.c_void_p]
 api.ReadFile.restype=W.BOOL
 api.CloseHandle.argtypes=[W.HANDLE];api.CloseHandle.restype=W.BOOL
-def read_command():
+def read_command(command):
     handle=api.CreateFileW(str(command),0x80000000,7,None,3,0x80,None)
     if handle in (None,ctypes.c_void_p(-1).value):raise SystemExit(5)
     try:
@@ -56,13 +58,14 @@ def read_command():
     finally:
         if not api.CloseHandle(handle):raise SystemExit(6)
 while True:
+    command=path.with_suffix('.command.'+str(previous+1).zfill(2))
     if command.exists():
-        raw=read_command()
+        raw=read_command(command)
         if len(raw)>256:raise SystemExit(3)
         packet=json.loads(raw)
         if type(packet) is not dict or set(packet)!={'v','nonce','seq','command'} or type(packet['v']) is not int or packet['v']!=1 or packet['nonce']!=nonce:raise SystemExit(3)
         seq=packet['seq'];op=packet['command']
-        if type(seq) is not int or not 1<=seq<=64 or op not in ('ping','cancel','release'):raise SystemExit(3)
+        if type(seq) is not int or seq!=previous+1 or not 1<=seq<=64 or op not in ('ping','cancel','release'):raise SystemExit(3)
         if seq>previous:
             previous=seq
             if op=='ping':emit('pong_blocked',seq)
@@ -257,10 +260,11 @@ class NativeWorker(CreationProbe):
         return result == 258
 
     def read(self):
-        if not self.marker.exists():
+        path = self.marker.with_suffix('.state.' + str(self.request_seq).zfill(2))
+        if not path.exists():
             return None
         try:
-            value = decode_record(read_shared(self.marker, self.api))
+            value = decode_record(read_shared(path, self.api))
         except OSError as error:
             if getattr(error, 'resource', None) is not None:
                 self.failed_file_owners.append(error.resource)
@@ -279,10 +283,12 @@ class NativeWorker(CreationProbe):
             raise OSError('supervision_command_rejected')
         self.request_seq += 1
         value = dict(v=1, nonce=NONCE, seq=self.request_seq, command=command)
-        path = self.marker.with_suffix('.command')
+        path = self.marker.with_suffix('.command.' + str(self.request_seq).zfill(2))
+        if path.exists():
+            raise OSError('supervision_sequence_reused')
         tmp = self.marker.with_suffix('.sending')
         tmp.write_bytes(json.dumps(value, sort_keys=True).encode('ascii'))
-        tmp.replace(path)
+        tmp.rename(path)  # Fresh immutable sequence name; never replace an open destination.
 
     def close(self):
         l = self.ledger
@@ -358,7 +364,12 @@ class NativeWorker(CreationProbe):
         l.handles_closed = (self.thread.close_state == self.process.close_state == 'closed'
                             and (job is None or job.close_state == 'closed') and not self.failed_file_owners)
         def artifacts():
-            for path in (self.marker, *(self.marker.with_suffix(s) for s in ('.mode', '.command', '.writing', '.sending'))):
+            paths = [self.marker, *(self.marker.with_suffix(s) for s in ('.mode', '.writing', '.sending'))]
+            for seq in range(self.request_seq + 1):
+                paths.append(self.marker.with_suffix('.state.' + str(seq).zfill(2)))
+                if seq:
+                    paths.append(self.marker.with_suffix('.command.' + str(seq).zfill(2)))
+            for path in paths:
                 path.unlink(missing_ok=True)
         attempt('artifacts', artifacts)
         l.finished = True

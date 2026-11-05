@@ -180,7 +180,7 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
                 self.assertTrue(worker.thread.close_state == worker.process.close_state == 'closed')
                 self.assertNotIn('SYNTHETIC_SECRET', json.dumps(snapshot))
 
-    def test_real_control_file_sharing_refusal_and_delete_sharing_regression(self):
+    def test_real_open_file_replace_refused_but_immutable_publication_succeeds(self):
         from isolated_job_creation import extended_api
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp)/'control';replacement = Path(tmp)/'replacement'
@@ -197,11 +197,16 @@ class WindowsProcessSupervisionTest(unittest.TestCase):
                 flags = W.DWORD()
                 self.assertTrue(api.GetHandleInformation(raw,ctypes.byref(flags)))
                 self.assertFalse(flags.value & 1)
-                replacement.replace(path)  # Same atomic replace, held reader now permits delete sharing.
-                self.assertEqual(read_shared(path,api),b'new')
+                with self.assertRaises(OSError) as error:
+                    replacement.replace(path)  # Delete sharing alone is insufficient for this replacement.
+                self.assertEqual(error.exception.winerror,5)
+                fresh = Path(tmp)/'control.next'
+                replacement.rename(fresh)  # Publish to a fresh name while the old reader remains open.
+                self.assertEqual(read_shared(fresh,api),b'new')
+                self.assertEqual(read_shared(path,api),b'old')
             finally:
                 close_handle_once(owner,api)
-        print('REAL_CONTROL_FILE_SHARING_REFUSAL access_denied delete_sharing_allows_atomic_replace file_handles_closed')
+        print('REAL_CONTROL_FILE_SHARING_REFUSAL access_denied immutable_publication_avoids_replacement file_handles_closed')
 
     def test_real_protected_handle_refuses_close_without_retry_and_other_resources_finish(self):
         with tempfile.TemporaryDirectory() as tmp:
