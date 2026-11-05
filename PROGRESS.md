@@ -1194,3 +1194,42 @@ Experimento permanece só tests/, sem corrigir ainda Popen→assign dos launcher
 Runner Server x64 não prova Win10/11 humano, ARM64/x86, mesmo token/admin, todos
 nested Jobs ou criadores/brokers. Issue30 NÃO iniciada; liveness/AI04 e demais
 gates continuam abertos. Aguardar revisão do responsável antes da próxima issue.
+
+## Issue #30 — liveness de cleanup, fase de desenho (2026-11-05)
+
+Base congelada PR31/8fd16bcd00183eb04d3ac759fa91d57978260b56, branch `codex/cleanup-liveness-contract-issue30`. O PR31 já havia sido
+revisado tecnicamente como experimento Win32, não liberado para runtime. A Issue29
+está encerrada no escopo de prova isolada; Issue22/AI04 e revisão humana abertos.
+
+Este ciclo não modifica `src/`, os launchers, WindowsObserver, adapter, IPC ou
+coleta. Novo desenho `docs/CLEANUP_LIVENESS_DESIGN.md`: contrato distingue
+liveness de worker, cancelamento, teardown real de filhos/Job/handles e UI.
+Comparadas três opções: thread local/cancelamento limitado; processo supervisionado
+com Job-at-create; watchdog externo. O processo sintético supervisionado é
+hipótese de próxima fase, NÃO mecanismo implementado nem prazo global garantido.
+
+`tests/test_cleanup_liveness_design.py` acrescenta 9 testes: oito contratos
+negativos/positivos fechados e um processo real **sintético** com thread
+não-daemon bloqueada após join limitado; o teste termina apenas seu processo próprio.
+Não é teste de CancelSynchronousIo real nem prova de Job ou coleta operacional.
+Local Linux/Python3.13: 9/9. CI Windows3.11/3.12, Linux3.11/3.12 e Chromium
+precisa ser aferida no SHA desta branch, sem promover skips ou repetição de foco.
+MANIFESTO_SHA256 inclui os dois arquivos novos e as mudanças de documentação.
+
+Próximo gate: conferir a CI e a revisão do desenho antes de implementar supervisor.
+Nenhum merge/rebase, ativação de adaptador, piloto, instalação ou dado real.
+
+## Issue #30 — segunda leitura adversarial do contrato
+
+Após a CI verde do SHA 457734be/42003106492, dois invariantes estavam sem teste:
+worker que termina **após** deadline perdia o registro de expiração; ACK de
+cancelamento sem pedido era aceito. Foram corrigidos no classificador **somente de
+testes**, acrescidos dois negativos (agora 11 casos novos). O campo
+`worker_exit_confirmed` permite relatar conclusão tardia, sem apagar
+`worker_state=deadline_expired`. Prova física de limpeza e pontualidade são
+dimensões separadas. O classificador não é ledger nem prova origem das flags;
+proveniência e histórico monotônico permanecem requisitos de futura integração.
+
+A CI 42003106492 prova apenas o SHA anterior, não o HEAD corrigido. Reexecutar
+Windows3.11/3.12, Linux3.11/3.12 e Chromium antes de aceitar esta revisão.
+Nenhum runtime, launcher, adapter, IPC ou dado real foi alterado.
