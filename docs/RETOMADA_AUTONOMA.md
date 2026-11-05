@@ -1,3 +1,15 @@
+# Retomada atual — Issue29 / Job List isolado
+
+Base obrigatória PR28/508c38ad0996e7854c788cf08f655c8b65225707.
+Branch filha codex/job-at-creation-study; ler Issue29, Issue22/atualizações,
+parecer28 e docs/JOB_AT_CREATION_STUDY.md. Somente harness em tests/: não migrar
+launchers/canais/NativeSession/C# nem habilitar adapter. Issue30 NÃO iniciada;
+esperar revisão independente da Issue29 antes de discutir outra etapa.
+Sete negativos/contratos portáveis passaram; oito Windows aguardam CI por SHA.
+Conferir resultados reais, skips, crash com raiz sem Job alvo e prova nested
+externo aberto. Não inferir suporte humano10/11 de runner Server. PR6/anteriores
+preservados; sem merge/rebase/instalação/coleta/piloto. Histórico abaixo.
+
 # Retomada atual — Issue27 / diagnóstico Windows e stop pré-worker
 
 Branch codex/suspended-cleanup-diagnostics, base exata PR25/d820396. Ler Issue27,

@@ -1081,3 +1081,19 @@ Morte da raiz pré-assign permanece gap, estudo não integrado, adapter OFF e AI
 inalterado. Próxima tarefa é nova revisão técnica por SHA, sem merge/rebase,
 instalação, coleta real ou piloto. Todos os19 PRs anteriores serão conferidos
 novamente com seus HEADs/bases/draft preservados.
+
+## Issue29 — Job na criação, sem integração — 2026-11-04
+
+Base exata508c38ad0996e7854c788cf08f655c8b65225707/PR28, nova
+codex/job-at-creation-study. Issue29, Issue22/atualizações e parecer técnico28
+lidos integralmente, além dos documentos obrigatórios. Experimento em tests/
+usando STARTUPINFOEXW/JOB_LIST no CreateProcessW com filho suspenso, herança zero,
+ambiente mínimo, kill-on-close, membership antes de resume e sem assign/fallback.
+Lista/valor retidos até Delete VOID; falha preserva storage/diagnóstico, tenta
+outros recursos e permanece não confirmada. Contrato em JOB_AT_CREATION_STUDY.md.
+
+Sete testes portáveis aprovados localmente, oito Windows apenas preparados:
+positivo/descendente/decoy, três crash points, nested externo aberto, argumentos
+inválidos reais, guardas injetados e close protegido. Windows exigido sem skip;
+novo step focado antecede suíte geral. Não alegar execução nativa antes da CI.
+Nenhum arquivo src/, launcher ou aceite modificado. Issue30 não iniciada.

@@ -48,6 +48,9 @@ jobs:
       - name: Isolated suspended cleanup regressions
         if: runner.os == 'Windows'
         run: python -m unittest discover -s tests -p "test_suspended*.py" -v
+      - name: Isolated Job-at-creation regressions
+        if: runner.os == 'Windows'
+        run: python -m unittest discover -s tests -p "test_job_at_creation*.py" -v
       - run: python -m unittest discover -s tests -v
       - name: Parse Windows laboratory scripts without collection
         if: runner.os == 'Windows'

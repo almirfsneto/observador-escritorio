@@ -5,8 +5,8 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 2310,
-      "sha256": "736080c15140a28fcdf9dd253a90665d23027434bc08e487a31b63547e342758"
+      "size_bytes": 2479,
+      "sha256": "f5719f50d4e5e1ad96745ed0448b2859ab94c6c4e89e1d323f996cb9640d32dd"
     },
     {
       "path": ".gitignore",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 30061,
-      "sha256": "db697f77cec4dd6c97573a47520fe44a2f9ab92d677a8b200c8ee0338295fc1d"
+      "size_bytes": 30967,
+      "sha256": "31d28d670a00314cd7759501e54771b5d6b67ed19a6c29aeaee7789004e6a742"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 73353,
-      "sha256": "2057228dbdff8eed3d573a8feed2aa18709a01412a486a5b2f1a60a614011034"
+      "size_bytes": 74373,
+      "sha256": "5349a5d3e180b8be352565f81a2e1d17c6dc059cd34f6e216c374da27be7cdc2"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -164,6 +164,11 @@
       "sha256": "c7a320ee0b6bbb899790e7f59ccb842f1f5a9c0d2d9f8c48824718de5ed5d757"
     },
     {
+      "path": "docs/JOB_AT_CREATION_STUDY.md",
+      "size_bytes": 6483,
+      "sha256": "bcb621dca8de382cb9f0b80932aa9b0a94115a52ec242837fdc71a67c1eff46a"
+    },
+    {
       "path": "docs/LAB_ENTREGA_2.md",
       "size_bytes": 2780,
       "sha256": "6aae7191602bc899f61aa6bd3accab2c0550a8ace09b2234b9393f352135dca3"
@@ -210,8 +215,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 16357,
-      "sha256": "26b63bae6ec16046d9463abaf9a44013051af3c8765280992367caba538b55f8"
+      "size_bytes": 17101,
+      "sha256": "4e2b29268bf5170546a844b8db1045f509fa086e108c68fe2b01f78efc6a035b"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -489,6 +494,11 @@
       "sha256": "8bb01b06440bbc31c8928a7bbbf177bcae8473167434b769ff229b0bec97360a"
     },
     {
+      "path": "tests/isolated_job_creation.py",
+      "size_bytes": 13376,
+      "sha256": "d891ca66159494fd8d76acb007d4f276eaa6b0d8e7b4c8d4980fd73b429cd8a8"
+    },
+    {
       "path": "tests/isolated_suspended_spawn.py",
       "size_bytes": 9618,
       "sha256": "1f469bb0673123ab9197b38efe39dded92d382f8173cb8f0ac3e6a57b28182b6"
@@ -577,6 +587,16 @@
       "path": "tests/test_inbox_retention.py",
       "size_bytes": 17615,
       "sha256": "facf4a5a71684d47f6052da3f42e647d530be912ef94468bbc9405d231e9b54d"
+    },
+    {
+      "path": "tests/test_job_at_creation_contract.py",
+      "size_bytes": 9426,
+      "sha256": "c8f85b1fb03dd81748ac76bc444984bba57f9923e7b35c963c64a179976ea45c"
+    },
+    {
+      "path": "tests/test_job_at_creation_windows.py",
+      "size_bytes": 16128,
+      "sha256": "ab0a6dae3f516fbf7b1702b73821f1f5c47457b982e2ede4956db3695516c173"
     },
     {
       "path": "tests/test_lab_queue.py",

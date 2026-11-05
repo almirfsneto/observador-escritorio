@@ -259,3 +259,16 @@ startup/retornos API portáveis são injetados; corrida com primeira espera
 simulada é híbrida. Diagnóstico inicial FALHOU intencionalmente para estabelecer
 causa antes da correção; não apagado nem promovido a passe. Revisão independente
 por SHA e gates humanos permanecem, sem integração do estudo ou adapter.
+
+## D-038 — Job List apenas em experimento reversível antes de migrar runtime
+
+Issue29/AI03B: CreateProcessW suspenso com STARTUPINFOEXW e JOB_LIST próprio, sem
+herança/breakaway, pode remover o intervalo userspace Create→assign no harness.
+Exigir prova Windows por SHA: morte do launcher pré-verify/pré-resume/pós-resume,
+capacidade de processo retida pela raiz sem Job alvo, saída kernel dos filhos.
+Nested externo mantido aberto separa causalidade do Job interno; nunca contornar
+hierarquia do runner. Delete VOID é contrato de API, não BOOL/heap independente;
+reter lista/lpValue até retorno normal e falhar fechado em exceção de wrapper.
+Negativos reais de parâmetros/close distintos de retornos injetados. Não extrapolar
+para IPC herdado, mesmo token/admin ou Windows10/11 humanos. Não migrar launchers,
+não iniciar Issue30 nem considerar CI autorização de integração/piloto.
