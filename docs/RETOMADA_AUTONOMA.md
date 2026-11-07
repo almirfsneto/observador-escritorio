@@ -7,7 +7,12 @@ AsyncLabQueue→SQLite temporária→CLI analyze→JSON. Mesma entrada verificad
 Invoke, writer/conexão fechados antes de analisar, relatório sem canários da
 fixture, recorrências>=3/duração>=0/revisão humana e hash do banco inalterado.
 
-Local219 executados/65 skips; Windows E2E e cinco jobs CI ainda a conferir.
+PR38/códigoc3a6170/CI42420345689:5/5 jobs, logs examinados. Windows3.11/3.12
+cada282 executados/2 skips browser; Linux219/65 cada; Chromium2/0. E2E REAL em
+ambos Windows SEM SKIP:60 eventos/30 Invoke→10 padrões, CLI zero, mesma SQLite
+inalterada, writer parado/conteúdo verificado e filhos encerrados. Falha de
+armazenamento é INJETADA, não falha espontânea. Local219/65; manifesto161
+conferido. Conferir CI própria do HEAD documental final no PR38.
 Não tratar SKIP de desktop como prova de integração. Roteiro humano VM10/11
 separado, arquivos sintéticos locais fora Git. Nenhum runtime/launcher/IPC/
 minerador/adapter/extensão mudou. B1 ENCERRADO; decisão II permanece OFF para

@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 38137,
-      "sha256": "a13f39903c345142f18378e1cfdcdf893986c9401cf0212e6f1d07f4502c63d0"
+      "size_bytes": 38711,
+      "sha256": "f2d859712bc510210555018ea2fabf78852e7ab5bcea920f03b24eda76fcec46"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 98217,
-      "sha256": "88eb38ef2649a8d166f24712f1ea27ad3011816a5385616475eb93e4e7005a35"
+      "size_bytes": 100604,
+      "sha256": "e4ce6f3627d2f00ce763e28cb2e42939ab5f1a8b7c4ad0ec5721ec3303639724"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -200,8 +200,8 @@
     },
     {
       "path": "docs/MVP_SINTETICO_WINDOWS.md",
-      "size_bytes": 6210,
-      "sha256": "ddedeffb7b24688a0b576d6f7091a447dbb8db8e33b5fcbda73da1ef61f0c333"
+      "size_bytes": 7076,
+      "sha256": "b56ad0ef4cea778e40214a3a0d82d9903d230c88bf97237aac2de0283c7ca768"
     },
     {
       "path": "docs/OFFLINE_BRIDGE.md",
@@ -230,8 +230,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 22700,
-      "sha256": "ecac52be1822189796ecc505c39a43d30158e31420e0b877eae91ba12c8c920d"
+      "size_bytes": 23083,
+      "sha256": "a3b4f1a423fae3117b166099a7376855ee106839659196cab18e5258f293bdb8"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",

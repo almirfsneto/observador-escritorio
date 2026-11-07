@@ -380,3 +380,11 @@ registrar causa e proposta mínima separada, sem alterar runtime nesta entrega.
 B1 encerrado, Job coletivo incerto OFF para integração; nenhuma nova hipótese.
 Aceite humano10/11, segurança/IPC C#, SQLite claro/quota e cleanup de crash continuam
 limites. CI Windows não libera piloto/dados reais nem continuidade automática.
+
+D-042 / evidência:c3a6170/CI42420345689 passou5/5, logs examinados. Ambos Windows
+3.11/3.12 executaram E2E real sem skip:60 eventos/30 Invoke→10 padrões pela CLI
+na MESMA SQLite, hash inalterado, writer parado, zero descarte/filhos encerrados.
+Recorrência/duração/nota humana/projeção e canários verificados. Nenhum ajuste de
+runtime necessário; o mínimo permaneceu teste+roteiro. Não somar n-gramas como
+tarefas independentes, nem promover CI sintética/Server a aceite humano10/11.
+Entrega encerra após checks finais documentais; não iniciar outra tarefa.

@@ -99,3 +99,17 @@ CI Windows Server não substitui aceite humano Windows 10/11. SQLite ativo em
 claro, quota lógica, IPC C# não autenticado e limites de cleanup/crash permanecem.
 Nenhum resultado libera dados reais, instalação na equipe ou piloto. Encerrar
 esta tarefa após revisão das evidências; não iniciar outra automaticamente.
+
+## Evidência automatizada desta entrega
+
+[PR38](https://github.com/almirfsneto/observador-escritorio/pull/38), código
+`c3a6170f2572097e7b14f7a8f08d7a11a00e366c`,
+[CI42420345689](https://github.com/almirfsneto/observador-escritorio/actions/runs/42420345689):
+5/5 jobs aprovados. Em AMBOS Windows Python3.11/3.12, sem skip do caso:
+60 eventos/30 Invoke persistidos→10 padrões pelo analyze na MESMA SQLite;
+CLI zero, hash do banco inalterado, writer encerrado, conteúdo verificado,
+zero descartes e processos próprios encerrados. Os10 padrões podem se sobrepor;
+não representam10 tarefas independentes. Testes de núcleo:Windows282 executados/
+2 skips browser por versão; Linux219/65 por versão; Chromium dedicado2/0.
+Confira também os checks do SHA final documental no PR. Aceite humano10/11
+continua pendente e deve registrar o SHA efetivamente testado.

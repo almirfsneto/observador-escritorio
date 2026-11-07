@@ -1459,3 +1459,42 @@ Local Linux:284 descobertos/219 executados/65 skips (63 Windows+2 browser).
 Teste E2E novo NÃO executado localmente: depende da CI Windows a conferir no PR.
 Sintaxe e manifesto serão conferidos; nenhum dado/relatório bruto versionado.
 A tarefa termina após evidência/revisão desta fatia, sem outra tarefa automática.
+
+### MVP sintético — evidência Windows ponta a ponta confirmada
+
+PR38 draft sobre PR37 exato. Código c3a6170f2572097e7b14f7a8f08d7a11a00e366c;
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/42420345689
+CINCO jobs aprovados, logs de todos examinados. Não houve falha de runtime,
+correção operacional, novo componente ou ampliação funcional.
+
+| Ambiente | Descobertos | Executados | Skips |
+| --- | --- | --- | --- |
+| Windows Python3.11 |284|282|2 browser dedicado|
+| Windows Python3.12 |284|282|2 browser dedicado|
+| Linux Python3.11 |284|219|65:63 Windows +2 browser|
+| Linux Python3.12 |284|219|65:63 Windows +2 browser|
+| Chromium dedicado |2|2|0|
+
+REAL em AMBOS Windows: LaboratoryWindow/Tk→NativeSession/UIA da fixture WPF→
+AsyncLabQueue→mesma SQLite temporária→subprocesso da CLI analyze→JSON. Marcador
+SYNTHETIC_CONTROLLER_ANALYSIS:sqlite_events=60,invoke=30,patterns=10,cli_exit=0,
+same_sqlite_unchanged=true,writer_stopped=true,content_checks_passed=true.
+COUNTS:timeline=60,written=60,discarded=0,children_stopped=true. Asserts verificaram
+recorrência>=3/duração>=0/revisão humana e nenhuma canário/legenda de formulário.
+Os10 padrões são n-gramas candidatos sobrepostos, não10 tarefas independentes.
+Não foi banco demonstrativo36, mock de CLI nem cópia de eventos: o caminho de
+entrada é o mesmo arquivo persistido pelo controlador, hash idêntico após análise.
+Relatório e banco temporários foram removidos; nenhum payload anexado/versionado.
+
+Pausa/retomada e encerramento próprios REAIS preservados. Falha de saúde de
+armazenamento INJETADA no teste, não falha espontânea do disco. Nenhum skip de
+foreground nesta rodada; não transfere aceite humano à versão. CI Server Windows
+não comprova ensaio humano Win10/11, outras aplicações ou semântica de negócio.
+
+Manifesto161/sintaxe/diff e runtime/launchers/IPC/extensão/mineradores congelados
+conferidos;24 PRs anteriores preservados em HEAD/base/draft. Último commit apenas
+documenta evidência, com CI do HEAD final vinculada no PR38 após conferência.
+Critério desta entrega comprovado no CI; validação humana continua pendente,
+seguindo docs/MVP_SINTETICO_WINDOWS.md. B1 encerrado/Job incerto OFF, sem merge,
+rebase/squash, dados reais, instalação na equipe ou piloto. PARAR esta tarefa;
+aguardar revisão, sem iniciar outra automaticamente.
