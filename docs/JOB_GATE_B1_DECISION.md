@@ -101,3 +101,50 @@ Não copiar coleta real para esta fatia nem transferir aceite histórico do PR6.
 Até CI do SHA: uma regressão portátil passou, três testes Windows preparados
 (matriz de oito subcasos e duas mortes duplas). Skips Linux não são provas nativas.
 Resultados, SHA e CI finais em PROGRESS e PR da branch codex/job-gate-b1.
+
+## Resultado observado e decisão final — 2026-11-07
+
+Código a577fa94da8b45c6255ec348dfb948ffa7fced13, PR37,
+[CI42368430074](https://github.com/almirfsneto/observador-escritorio/actions/runs/42368430074)
+5/5. Logs dos cinco jobs examinados. Windows3.11/3.12 idênticos nesta matriz;
+as mesmas quatro linhas abaixo ocorreram SEM e COM ancestral controlado (8 células):
+
+| Variante pronta | Membros | Conhecidos por handles | Extras desconhecidos |
+| --- | --- | --- | --- |
+| Primário console, sem descendant |1|1|0|
+| Primário NO_WINDOW, sem descendant |2|1|1|
+| Console, com descendant próprio |2|2|0|
+| NO_WINDOW, com descendant próprio |4|2|2|
+
+Antes da criação:0/0; após criação suspensa/antes do resume:1 conhecido/0 extras;
+logo após resume também1/0 nesta amostra. Extras surgiram na fase pronta apenas
+nas variantes NO_WINDOW; associação estatística NÃO é identificação da origem.
+Ancestral controlado não mudou esse resultado. ambient_job=present nas células:
+isto não compara com um host livre de Jobs. Nenhuma atribuição a conhost/runner.
+Todas as consultas duplas observadas ficaram estáveis e concordaram com Active;
+não se conclui atomicidade ou impossibilidade de corrida. Todos Jobs consultáveis
+zeraram antes do close, após disarm e término somente das capacidades conhecidas.
+Depois do close, contagens NULL/not_consultable, sem reabrir slot.
+
+Dupla morte REAL nos dois Windows: armado/suspenso com1 conhecido/0 extras →
+worker saiu automaticamente. Desarmado/em lock com1 extra desconhecido → worker
+sobreviveu às DUAS raízes por200ms; observador depois terminou por handle próprio,
+confirmou saída e fechou capacidades. Não contar essa recuperação como automática.
+Nenhuma morte real de Job incerto armado foi provocada; recusa de disarm permaneceu
+INJETADA nos testes existentes. Recusa real de CloseHandle protegido e Wait sem
+sinal injetado também executaram na suíte completa, com erro preservado.
+
+**Decisão FINAL: II / manter DESATIVADO o mecanismo coletivo incerto.** B1 fornece
+limite verificável e contraexemplo de contenção, não propriedade dos extras nem
+liberação de B2/B3/B4. A origem permanece desconhecida. Tirar Job compartilhado
+incerto do MVP; não iniciar nova investigação depois desta entrega. Não generalizar
+o sucesso armado pré-resume para runtime ativo. Se outra arquitetura for proposta,
+precisa de decisão nova; não a desenvolver neste PR.
+
+Validação: Windows3.11/3.12 cada284 descobertos/282 executados/2 skips browser;
+Linux3.11/3.12 cada219 executados/65 skips (63 Windows,2 browser); Chromium2/0.
+Foco B1 quatro testes/zero skips Windows; oito células são subcasos, não oito novos
+testes somáveis. Os focos e a suíte reexecutam os mesmos casos, sem dupla contagem.
+Local219/65, sintaxe, manifesto160 e fonte operacional idêntica à base conferidos.
+CI do HEAD documental final será conferida no PR37. Aceite humano Win10/11,
+segurança independente, AI04 e garantia de driver/kernel permanecem não atendidos.

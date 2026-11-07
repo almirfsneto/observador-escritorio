@@ -354,3 +354,14 @@ simples→CLI analyze já existe em partes e testes. Menor entrega futura é tes
 E2E estendido + roteiro de VM, sem runtime novo se comportamento existente passar.
 Não integrar nesta tarefa; não adicionar IPC/autostart/Job como dependência dessa
 fatia. Não confundir viabilidade de ensaio sintético supervisionado com piloto.
+
+D-041 / decisão FINAL após CI42368430074/a577fa9: opção II, Job coletivo incerto
+OFF. Extras se correlacionaram com NO_WINDOW, sem identidade/propriedade provada;
+ancestral controlado não mudou a amostra. Dupla morte após disarm deixou worker
+vivo nos dois Windows, recuperado APENAS pelo observador externo. O caso armado
+suspenso conhecido não autoriza migração geral. CI5/5 valida fatos/recusas, não
+segurança do mecanismo operacional. Encerrar investigação B1 nesta entrega única.
+
+Convergência mínima ao35: teste E2E estendido e roteiro, usando pipeline/CLI já
+existentes sem Job coletivo; alterações runtime propostas: zero se comprovado.
+Não implementar aqui nem apresentar como piloto/garantia de crash ou de driver.

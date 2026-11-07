@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 36421,
-      "sha256": "3091525856d08b2b963362cfeab2167028f9d3359fce816c9abc72450ece7438"
+      "size_bytes": 37167,
+      "sha256": "87360300dd6b1586d67f967236cff9dfc6622ef6a483af77d764d1cdae2984aa"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 94301,
-      "sha256": "7f18e839dca3990cab3c158c54d07509b56eeb7a89b76581904fe9fd218a4c74"
+      "size_bytes": 96552,
+      "sha256": "22f0bb9143f2c228b4f06815022e509bdc34e34f4267d07beca0a7404ede2318"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -175,8 +175,8 @@
     },
     {
       "path": "docs/JOB_GATE_B1_DECISION.md",
-      "size_bytes": 6730,
-      "sha256": "48b72024de5dbc3d49250f86f8edcffd2b44aaa05ae3d81a8c6e69073c1d70ea"
+      "size_bytes": 9760,
+      "sha256": "fb4435ded57dfdf1ba5d75d79f6c952e8ea3fda46461844691cb1d84d55cdb76"
     },
     {
       "path": "docs/LAB_ENTREGA_2.md",
@@ -225,8 +225,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 21132,
-      "sha256": "7a8fbae564771c1ea7fb8239d074789460561f5206b82cbb7b2e62c55789953f"
+      "size_bytes": 21598,
+      "sha256": "c8f63e2b6b3a3f0ed619fa8640d53cef8369e5d67927800d0f9ad31c3089af02"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
