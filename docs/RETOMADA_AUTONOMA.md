@@ -1,3 +1,27 @@
+# Retomada atual — MVP sintético ponta a ponta (2026-11-07)
+
+Base EXATA PR37/283463e54dc2d67738cb21514579447817a64f6f; branch filha
+codex/synthetic-pipeline-e2e. Ler docs/MVP_SINTETICO_WINDOWS.md e os resultados
+por SHA no PROGRESS/PR. Único teste estendido: controlador→NativeSession→
+AsyncLabQueue→SQLite temporária→CLI analyze→JSON. Mesma entrada verificada30
+Invoke, writer/conexão fechados antes de analisar, relatório sem canários da
+fixture, recorrências>=3/duração>=0/revisão humana e hash do banco inalterado.
+
+PR38/códigocfc8fbb/CI42420748971:5/5 jobs, logs examinados. E2E REAL em ambos
+Windows SEM SKIP:60 eventos/30 Invoke→10 padrões,CLI0, SQLite inalterada, writer
+encerrado+health=ready, conteúdo verificado/zero descartes/filhos encerrados.
+Windows3.11:281 executados/3 skips(2 browser+comparativo WPF/WinForms foreground);
+3.12:282/2 browser; Linux219/65 cada; Chromium2/0. Skip comparativo é lacuna,
+não aprovação, e não é o E2E. Falha de armazenamento é INJETADA. Local219/65,
+manifesto161. Atualização final somente documental; resultados/skips da CI própria
+do HEAD no PR38. Não alterar novamente código nem reabrir B1 para essa evidência.
+Não tratar SKIP de desktop como prova de integração. Roteiro humano VM10/11
+separado, arquivos sintéticos locais fora Git. Nenhum runtime/launcher/IPC/
+minerador/adapter/extensão mudou. B1 ENCERRADO; decisão II permanece OFF para
+integração de Job coletivo incerto. Não iniciar outra tarefa automaticamente;
+aguardar revisão desta entrega. Sem merge/rebase/squash/instalação/dados reais/
+captura profissional ou piloto. Histórico abaixo, não autorização de retomada.
+
 # Retomada atual — Issue36 / Gate B1: entrega única e decisão
 
 Base17da1a0fe2ebddb29aca8f2a671a87b3fa814ec6/PR34; branch codex/job-gate-b1.

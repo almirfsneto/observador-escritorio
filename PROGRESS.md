@@ -1434,3 +1434,97 @@ ferramentas/C#, extensão e v1/CMD idênticos à base;23 PRs anteriores preserva
 Nenhum merge/rebase/instalação/captura real/piloto. Última entrega documental terá
 CI própria vinculada ao SHA final. Próximo gate é revisão da decisão e plano,
 não mais exploração do mesmo mecanismo sem decisão expressa.
+
+## MVP sintético ponta a ponta — 2026-11-07
+
+Base EXATA283463e54dc2d67738cb21514579447817a64f6f/PR37, nova
+codex/synthetic-pipeline-e2e. B1 ENCERRADO, decisão II preservada; nenhum novo
+experimento de Job ou alteração operacional. Entrega funcional limitada a DOIS
+arquivos: teste existente do controlador e docs/MVP_SINTETICO_WINDOWS.md.
+
+Após saída dos processos próprios e término do AsyncLabQueue, verificar SQLite
+existente/30 Invoke e fechar conexão de conferência antes de chamar a CLI REAL
+analyze com sys.executable sobre a MESMA SQLite temporária. Validar saída zero,
+JSON não vazio, padrões >=3 ocorrências, duração não negativa, revisão humana,
+passos oriundos dos eventos salvos, schema fechado e exclusão dos canários/
+legendas da fixture. Hash do banco antes/depois confirma entrada inalterada.
+Não criar dados demo36, alterar runtime ou fabricar eventos para satisfazer teste.
+Pausa, falha de armazenamento injetada, perdas e cleanup preexistentes preservados;
+foreground indisponível continua SKIP explícito, não aprovação da integração.
+
+Guia curto de VM10/11: pré-requisitos, comandos existentes/build/teste/controlador,
+opt-in fictício, pausa/retomada/encerramento, CLI/contagens/hashes e JSON local fora
+Git. Diferencia observação humana, falha de armazenamento injetada e CI nativa.
+Local Linux:284 descobertos/219 executados/65 skips (63 Windows+2 browser).
+Teste E2E novo NÃO executado localmente: depende da CI Windows a conferir no PR.
+Sintaxe e manifesto serão conferidos; nenhum dado/relatório bruto versionado.
+A tarefa termina após evidência/revisão desta fatia, sem outra tarefa automática.
+
+### MVP sintético — evidência Windows ponta a ponta confirmada
+
+PR38 draft sobre PR37 exato. Código c3a6170f2572097e7b14f7a8f08d7a11a00e366c;
+CI https://github.com/almirfsneto/observador-escritorio/actions/runs/42420345689
+CINCO jobs aprovados, logs de todos examinados. Não houve falha de runtime,
+correção operacional, novo componente ou ampliação funcional.
+
+| Ambiente | Descobertos | Executados | Skips |
+| --- | --- | --- | --- |
+| Windows Python3.11 |284|282|2 browser dedicado|
+| Windows Python3.12 |284|282|2 browser dedicado|
+| Linux Python3.11 |284|219|65:63 Windows +2 browser|
+| Linux Python3.12 |284|219|65:63 Windows +2 browser|
+| Chromium dedicado |2|2|0|
+
+REAL em AMBOS Windows: LaboratoryWindow/Tk→NativeSession/UIA da fixture WPF→
+AsyncLabQueue→mesma SQLite temporária→subprocesso da CLI analyze→JSON. Marcador
+SYNTHETIC_CONTROLLER_ANALYSIS:sqlite_events=60,invoke=30,patterns=10,cli_exit=0,
+same_sqlite_unchanged=true,writer_stopped=true,content_checks_passed=true.
+COUNTS:timeline=60,written=60,discarded=0,children_stopped=true. Asserts verificaram
+recorrência>=3/duração>=0/revisão humana e nenhuma canário/legenda de formulário.
+Os10 padrões são n-gramas candidatos sobrepostos, não10 tarefas independentes.
+Não foi banco demonstrativo36, mock de CLI nem cópia de eventos: o caminho de
+entrada é o mesmo arquivo persistido pelo controlador, hash idêntico após análise.
+Relatório e banco temporários foram removidos; nenhum payload anexado/versionado.
+
+Pausa/retomada e encerramento próprios REAIS preservados. Falha de saúde de
+armazenamento INJETADA no teste, não falha espontânea do disco. Nenhum skip de
+foreground nesta rodada; não transfere aceite humano à versão. CI Server Windows
+não comprova ensaio humano Win10/11, outras aplicações ou semântica de negócio.
+
+Manifesto161/sintaxe/diff e runtime/launchers/IPC/extensão/mineradores congelados
+conferidos;24 PRs anteriores preservados em HEAD/base/draft. Último commit apenas
+documenta evidência, com CI do HEAD final vinculada no PR38 após conferência.
+Critério desta entrega comprovado no CI; validação humana continua pendente,
+seguindo docs/MVP_SINTETICO_WINDOWS.md. B1 encerrado/Job incerto OFF, sem merge,
+rebase/squash, dados reais, instalação na equipe ou piloto. PARAR esta tarefa;
+aguardar revisão, sem iniciar outra automaticamente.
+
+Revisão final do teste: exigir também sink.health=ready após término do writer.
+AsyncLabQueue sinaliza storage_unavailable se SQLite.close falhar; thread morta
+sozinha não exclui esse erro. Assert adicional somente em teste, antes da análise,
+sem runtime novo. CI do novo SHA substitui a rodada documental intermediária em
+acompanhamento; não atribuir a ela resultados ainda pendentes. As evidências
+c3a6170 permanecem válidas para aquele código, não para este assert adicional.
+
+### MVP sintético — revisão final do escritor confirmada
+
+Código cfc8fbb0bdef86ca11ef21c12f5e88b6a17aeaa4, PR38;
+https://github.com/almirfsneto/observador-escritorio/actions/runs/42420748971
+5/5 jobs aprovados, logs examinados. O assert adicional health=ready passou.
+Ambos Windows repetiram o E2E REAL SEM SKIP:60 eventos/30 Invoke,10 padrões,
+CLI0, hash SQLite inalterado, writer encerrado sem erro de close sinalizado,
+conteúdo verificado, zero descarte e filhos encerrados.
+
+Matriz desta revisão:Windows3.11 281 executados/3 skips (2 browser+1 comparativo
+WPF/WinForms por foreground indisponível);Windows3.12 282/2 browser;Linux3.11/
+3.12 cada219/65 (63 Windows+2 browser);Chromium2/0. O skip comparativo é lacuna
+explícita e NÃO aprovação; não afetou nem substituiu o ensaio E2E do controlador.
+O comparativo executou no3.12 desta rodada e em ambos Windows do código c3a6170;
+não transferir esse passe ao teste ignorado3.11. Rodada intermediária6f656a8 foi
+substituída pela revisão, não usada como evidência de aprovação.
+
+Esta atualização só registra fatos; testes/runtime/workflow continuam idênticos
+a cfc8fbb. CI do HEAD documental final e seus skips serão conferidos/registrados
+no PR38, sem nova alteração funcional. Manifesto161 e24 PRs anteriores preservados.
+Conclusão técnica limitada:fluxo sintético existente demonstrado. Aceite humano
+Win10/11 e revisão por SHA pendentes; seguir roteiro e PARAR, sem próxima tarefa.

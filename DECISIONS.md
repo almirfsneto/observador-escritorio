@@ -365,3 +365,36 @@ segurança do mecanismo operacional. Encerrar investigação B1 nesta entrega ú
 Convergência mínima ao35: teste E2E estendido e roteiro, usando pipeline/CLI já
 existentes sem Job coletivo; alterações runtime propostas: zero se comprovado.
 Não implementar aqui nem apresentar como piloto/garantia de crash ou de driver.
+
+## D-042 — Demonstrar o fluxo existente sem integração adicional
+
+MVP sintético sobre PR37/283463e: estender somente teste do controlador e roteiro
+de VM. Writer encerrado + conexão de conferência fechada precedem subprocesso da
+CLI REAL analyze na mesma SQLite, com hash inalterado. Testar recorrência >=3,
+duração >=0, revisão humana e projeção sem canários/valores da fixture; não exigir
+36 eventos nem gerar amostra CLI. Preservar pausa/falhas/perdas/cleanup e SKIP
+explícito quando não há foreground, sem promovê-lo a prova E2E.
+
+Runtime/launchers/IPC/extensão/adaptadores/mineradores congelados. Se fluxo falhar,
+registrar causa e proposta mínima separada, sem alterar runtime nesta entrega.
+B1 encerrado, Job coletivo incerto OFF para integração; nenhuma nova hipótese.
+Aceite humano10/11, segurança/IPC C#, SQLite claro/quota e cleanup de crash continuam
+limites. CI Windows não libera piloto/dados reais nem continuidade automática.
+
+D-042 / evidência:c3a6170/CI42420345689 passou5/5, logs examinados. Ambos Windows
+3.11/3.12 executaram E2E real sem skip:60 eventos/30 Invoke→10 padrões pela CLI
+na MESMA SQLite, hash inalterado, writer parado, zero descarte/filhos encerrados.
+Recorrência/duração/nota humana/projeção e canários verificados. Nenhum ajuste de
+runtime necessário; o mínimo permaneceu teste+roteiro. Não somar n-gramas como
+tarefas independentes, nem promover CI sintética/Server a aceite humano10/11.
+Entrega encerra após checks finais documentais; não iniciar outra tarefa.
+
+D-042 / revisão final: além de worker encerrado, exigir health=ready para recusar
+falha sinalizada de SQLite.close antes da CLI. Término de thread não basta para
+excluir erro de fechamento. Somente assert, sem corrigir runtime artificialmente.
+
+D-042 / confirmação final:cfc8fbb/CI42420748971 5/5; health=ready e E2E real nos
+dois Windows,60/30/10, sem skip do controlador. Windows3.11 ignorou comparativo
+WPF/WinForms por foreground:281 executados/3 skips, contra3.12 282/2. Registrar
+lacuna, sem repetir para apagar skip. Commit seguinte apenas registra evidência;
+resultado do HEAD documental final no PR38. Sem continuidade automática.
