@@ -365,3 +365,18 @@ segurança do mecanismo operacional. Encerrar investigação B1 nesta entrega ú
 Convergência mínima ao35: teste E2E estendido e roteiro, usando pipeline/CLI já
 existentes sem Job coletivo; alterações runtime propostas: zero se comprovado.
 Não implementar aqui nem apresentar como piloto/garantia de crash ou de driver.
+
+## D-042 — Demonstrar o fluxo existente sem integração adicional
+
+MVP sintético sobre PR37/283463e: estender somente teste do controlador e roteiro
+de VM. Writer encerrado + conexão de conferência fechada precedem subprocesso da
+CLI REAL analyze na mesma SQLite, com hash inalterado. Testar recorrência >=3,
+duração >=0, revisão humana e projeção sem canários/valores da fixture; não exigir
+36 eventos nem gerar amostra CLI. Preservar pausa/falhas/perdas/cleanup e SKIP
+explícito quando não há foreground, sem promovê-lo a prova E2E.
+
+Runtime/launchers/IPC/extensão/adaptadores/mineradores congelados. Se fluxo falhar,
+registrar causa e proposta mínima separada, sem alterar runtime nesta entrega.
+B1 encerrado, Job coletivo incerto OFF para integração; nenhuma nova hipótese.
+Aceite humano10/11, segurança/IPC C#, SQLite claro/quota e cleanup de crash continuam
+limites. CI Windows não libera piloto/dados reais nem continuidade automática.

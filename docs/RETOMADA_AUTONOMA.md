@@ -1,3 +1,20 @@
+# Retomada atual — MVP sintético ponta a ponta (2026-11-07)
+
+Base EXATA PR37/283463e54dc2d67738cb21514579447817a64f6f; branch filha
+codex/synthetic-pipeline-e2e. Ler docs/MVP_SINTETICO_WINDOWS.md e os resultados
+por SHA no PROGRESS/PR. Único teste estendido: controlador→NativeSession→
+AsyncLabQueue→SQLite temporária→CLI analyze→JSON. Mesma entrada verificada30
+Invoke, writer/conexão fechados antes de analisar, relatório sem canários da
+fixture, recorrências>=3/duração>=0/revisão humana e hash do banco inalterado.
+
+Local219 executados/65 skips; Windows E2E e cinco jobs CI ainda a conferir.
+Não tratar SKIP de desktop como prova de integração. Roteiro humano VM10/11
+separado, arquivos sintéticos locais fora Git. Nenhum runtime/launcher/IPC/
+minerador/adapter/extensão mudou. B1 ENCERRADO; decisão II permanece OFF para
+integração de Job coletivo incerto. Não iniciar outra tarefa automaticamente;
+aguardar revisão desta entrega. Sem merge/rebase/squash/instalação/dados reais/
+captura profissional ou piloto. Histórico abaixo, não autorização de retomada.
+
 # Retomada atual — Issue36 / Gate B1: entrega única e decisão
 
 Base17da1a0fe2ebddb29aca8f2a671a87b3fa814ec6/PR34; branch codex/job-gate-b1.

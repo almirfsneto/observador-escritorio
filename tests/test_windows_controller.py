@@ -1,5 +1,6 @@
 """Automated real Tk/native lifecycle on Windows, with synthetic data and a temp DB."""
 import json
+import hashlib
 from collections import deque
 from pathlib import Path
 import subprocess
@@ -111,6 +112,7 @@ class ControllerAutomationTest(unittest.TestCase):
                 self.assertIsNotNone(window.fixture.poll())
                 self.assertFalse(window.sink.worker.is_alive())
                 self.assertEqual(window.sink.discarded, 0)
+                self.assertTrue(database.is_file(), 'Async writer must create the temporary SQLite')
                 from observador.diagnostics import validate_diagnostics
                 diagnostic = validate_diagnostics(window.diagnostics_snapshot())
                 self.assertEqual(diagnostic['writer']['ledger']['written'],window.sink.written)
@@ -123,6 +125,48 @@ class ControllerAutomationTest(unittest.TestCase):
                                      'All thirty actions must survive the visible UI and async writer')
                 finally:
                     store.close()
+                # The writer has exited (including its connection's finally), and
+                # the verification connection is now closed. Analyze these exact
+                # persisted UIA events, never the CLI's unrelated 36-event demo.
+                report = Path(temporary) / 'analysis.json'
+                database_hash = hashlib.sha256(database.read_bytes()).hexdigest()
+                analysis = subprocess.run(
+                    [sys.executable, '-m', 'observador', 'analyze', '--db', str(database),
+                     '--out', str(report)], capture_output=True, text=True, timeout=15)
+                self.assertEqual(analysis.returncode, 0, 'Real analyze CLI failed')
+                self.assertTrue(report.is_file(), 'Analyze must create its temporary JSON')
+                report_text = report.read_text(encoding='utf-8')
+                patterns = json.loads(report_text)
+                self.assertIsInstance(patterns, list)
+                self.assertTrue(patterns, 'Persisted fixture actions must yield recurring patterns')
+                summary = json.loads(analysis.stdout)
+                self.assertEqual(summary['patterns'], len(patterns))
+                self.assertIs(summary['capture_real'], False)
+                observed_steps = {(e.app, e.event_type, e.action, e.target) for e in saved}
+                for pattern in patterns:
+                    self.assertEqual(set(pattern), {'steps', 'occurrences',
+                        'median_duration_seconds', 'confidence_note'})
+                    self.assertGreaterEqual(pattern['occurrences'], 3)
+                    self.assertGreaterEqual(pattern['median_duration_seconds'], 0)
+                    self.assertIn('requer revisao humana', pattern['confidence_note'])
+                    self.assertGreaterEqual(len(pattern['steps']), 2)
+                    for step in pattern['steps']:
+                        self.assertEqual(set(step), {'app', 'event_type', 'action', 'target'})
+                        self.assertIn(tuple(step[key] for key in
+                            ('app', 'event_type', 'action', 'target')), observed_steps)
+                # These are fixed canaries/captions from the synthetic WPF app,
+                # never values read from a user's controls. No payload is logged.
+                for forbidden in ('PROCESSO-FICTICIO-001', 'SENHA-FICTICIA-NAO-COLETAR',
+                                  'Salvar ficticio', 'Revisar ficticio',
+                                  'Operacao ficticia concluida apenas na memoria.'):
+                    self.assertTrue(forbidden.casefold() not in report_text.casefold(),
+                                    'Report must exclude synthetic form values and captions')
+                self.assertEqual(hashlib.sha256(database.read_bytes()).hexdigest(), database_hash,
+                                 'Analysis must leave the exact input SQLite unchanged')
+                print('SYNTHETIC_CONTROLLER_ANALYSIS', json.dumps({
+                    'sqlite_events': len(saved), 'invoke': 30, 'patterns': len(patterns),
+                    'cli_exit': analysis.returncode, 'same_sqlite_unchanged': True,
+                    'writer_stopped': True, 'content_checks_passed': True}))
                 print('SYNTHETIC_CONTROLLER_COUNTS', json.dumps({
                     'timeline': window.event_count, 'written': window.sink.written,
                     'discarded': window.sink.discarded, 'children_stopped': True}))

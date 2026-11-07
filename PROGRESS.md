@@ -1434,3 +1434,28 @@ ferramentas/C#, extensão e v1/CMD idênticos à base;23 PRs anteriores preserva
 Nenhum merge/rebase/instalação/captura real/piloto. Última entrega documental terá
 CI própria vinculada ao SHA final. Próximo gate é revisão da decisão e plano,
 não mais exploração do mesmo mecanismo sem decisão expressa.
+
+## MVP sintético ponta a ponta — 2026-11-07
+
+Base EXATA283463e54dc2d67738cb21514579447817a64f6f/PR37, nova
+codex/synthetic-pipeline-e2e. B1 ENCERRADO, decisão II preservada; nenhum novo
+experimento de Job ou alteração operacional. Entrega funcional limitada a DOIS
+arquivos: teste existente do controlador e docs/MVP_SINTETICO_WINDOWS.md.
+
+Após saída dos processos próprios e término do AsyncLabQueue, verificar SQLite
+existente/30 Invoke e fechar conexão de conferência antes de chamar a CLI REAL
+analyze com sys.executable sobre a MESMA SQLite temporária. Validar saída zero,
+JSON não vazio, padrões >=3 ocorrências, duração não negativa, revisão humana,
+passos oriundos dos eventos salvos, schema fechado e exclusão dos canários/
+legendas da fixture. Hash do banco antes/depois confirma entrada inalterada.
+Não criar dados demo36, alterar runtime ou fabricar eventos para satisfazer teste.
+Pausa, falha de armazenamento injetada, perdas e cleanup preexistentes preservados;
+foreground indisponível continua SKIP explícito, não aprovação da integração.
+
+Guia curto de VM10/11: pré-requisitos, comandos existentes/build/teste/controlador,
+opt-in fictício, pausa/retomada/encerramento, CLI/contagens/hashes e JSON local fora
+Git. Diferencia observação humana, falha de armazenamento injetada e CI nativa.
+Local Linux:284 descobertos/219 executados/65 skips (63 Windows+2 browser).
+Teste E2E novo NÃO executado localmente: depende da CI Windows a conferir no PR.
+Sintaxe e manifesto serão conferidos; nenhum dado/relatório bruto versionado.
+A tarefa termina após evidência/revisão desta fatia, sem outra tarefa automática.
