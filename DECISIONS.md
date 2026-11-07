@@ -340,3 +340,17 @@ recusa AccessDenied5 e positivo publica nome novo. Finally sempre tenta teardown
 mesmo se release/write falhar. Snapshot da primeira falha não permitiu capturar
 WinError; nenhuma causalidade retroativa fabricada. Sem timeout maior/retry cego.
 Não migrar esse desenho para runtime antes de revisão distinta/novas provas.
+
+## D-041 — Encerrar Gate B1 com decisão finita e retirar Job incerto do MVP
+
+Issue36: uma matriz8 células e duas mortes duplas, observador com capacidades
+próprias, sem abrir/terminar PID desconhecido ou matar Job incerto armado.
+Decisão II: manter mecanismo coletivo incerto OFF, salvo propriedade comprovada
+sob premissas explícitas; não inferir origem de extras por correlação/contagem.
+Parar depois desta entrega; nova hipótese exige nova decisão. Nenhuma migração.
+
+KISS para convergência: pipeline WPF/NativeSession→AsyncLabQueue/SQLite→detector
+simples→CLI analyze já existe em partes e testes. Menor entrega futura é teste
+E2E estendido + roteiro de VM, sem runtime novo se comportamento existente passar.
+Não integrar nesta tarefa; não adicionar IPC/autostart/Job como dependência dessa
+fatia. Não confundir viabilidade de ensaio sintético supervisionado com piloto.

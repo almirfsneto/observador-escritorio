@@ -1385,3 +1385,18 @@ SYNTHETIC_PROCESS_SUPERVISION.md; não migrar funções/handles/IPC para runtime
 Flags são monotônicas somente em memória nesta tentativa; sem ledger durável.
 API/FS do supervisor ainda pode bloquear. Quarentena armada e dupla morte após
 disarm são riscos distintos e não resolvidos. Aguardar revisão do responsável.
+
+## Issue36 — Gate B1 finito, KISS — 2026-11-07
+
+Base EXATA17da1a0fe2ebddb29aca8f2a671a87b3fa814ec6/PR34, nova codex/job-gate-b1.
+Issues35/36 e parecer34 lidos. Uma matriz fechada8 células com7 fases, duas mortes
+duplas observadas externamente e uma regressão portátil de consulta/lista/race.
+Reutilizar negativos base de disarm negado, CloseHandle protegido e Wait sem sinal,
+sem reinventar mecanismo. Nenhum src/, launcher, adapter ou integração alterado.
+Decisão conservadora explícita: manter OFF Job coletivo incerto (II), sem bulk
+termination nem último close armado incerto. Não iniciar nova rodada da hipótese.
+
+JOB_GATE_B1_DECISION.md registra limites e menor plano de integração não executado:
+zero runtime novo; estender teste do controlador até CLI analyze/relatório da mesma
+SQLite e escrever roteiro de VM sintética. Funções já existem; não criar novo
+supervisor/IPC/adapter/minerador. Uma regressão portátil passou; Windows aguarda CI.

@@ -5,8 +5,8 @@
   "files": [
     {
       "path": ".github/workflows/tests.yml",
-      "size_bytes": 2654,
-      "sha256": "96fdaa08c341637e3f00b862a6356552d0f7de4d551cf5bf4fa56f421f2ad30e"
+      "size_bytes": 2798,
+      "sha256": "ccdea55cd7114d82571b713e84585bb90fda766e9fc965cc2f41cbc36c2593dc"
     },
     {
       "path": ".gitignore",
@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 35516,
-      "sha256": "8fdc3d8f62076ae995e7f5233567f24a53d7dbff55464420ff0c02cdf4a33451"
+      "size_bytes": 36421,
+      "sha256": "3091525856d08b2b963362cfeab2167028f9d3359fce816c9abc72450ece7438"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 93324,
-      "sha256": "919590f5996256a9579b8697d3378a7a51aa64593da57fc757ae79485aa4dc08"
+      "size_bytes": 94301,
+      "sha256": "7f18e839dca3990cab3c158c54d07509b56eeb7a89b76581904fe9fd218a4c74"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -174,6 +174,11 @@
       "sha256": "68cf23f092dc933ca8969fec29f8225c6c2ed10a1b4d9346f01d6d240bf6aabe"
     },
     {
+      "path": "docs/JOB_GATE_B1_DECISION.md",
+      "size_bytes": 6730,
+      "sha256": "48b72024de5dbc3d49250f86f8edcffd2b44aaa05ae3d81a8c6e69073c1d70ea"
+    },
+    {
       "path": "docs/LAB_ENTREGA_2.md",
       "size_bytes": 2780,
       "sha256": "6aae7191602bc899f61aa6bd3accab2c0550a8ace09b2234b9393f352135dca3"
@@ -220,8 +225,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 20408,
-      "sha256": "f0489d3702bfff55d35fb5f005b430ffbde5054e50625f724fd70166ef707c82"
+      "size_bytes": 21132,
+      "sha256": "7a8fbae564771c1ea7fb8239d074789460561f5206b82cbb7b2e62c55789953f"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -519,6 +524,11 @@
       "sha256": "1f469bb0673123ab9197b38efe39dded92d382f8173cb8f0ac3e6a57b28182b6"
     },
     {
+      "path": "tests/job_gate_b1_fixture.py",
+      "size_bytes": 9812,
+      "sha256": "1fae824af12d544dd909e78af81827d1057711a57675d522b6083e69570a4a0c"
+    },
+    {
       "path": "tests/test_acceptance_launcher.py",
       "size_bytes": 1575,
       "sha256": "f24772f5eb80d89476f844b94a64bcba9a69ff8c367097a3082df88ffdb54168"
@@ -617,6 +627,11 @@
       "path": "tests/test_job_at_creation_windows.py",
       "size_bytes": 21494,
       "sha256": "6cf9eaf7d178c10a4534158b4cfb4c93dc9e313481686e24342fa1228657a2f4"
+    },
+    {
+      "path": "tests/test_job_gate_b1.py",
+      "size_bytes": 8714,
+      "sha256": "a82d7ee525284a9b96fcfaaccfa9db0d6863aa21d7a6ab2bf1a01a35ce77d579"
     },
     {
       "path": "tests/test_lab_queue.py",

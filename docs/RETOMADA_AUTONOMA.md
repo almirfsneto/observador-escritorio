@@ -1,3 +1,14 @@
+# Retomada atual — Issue36 / Gate B1: entrega única e decisão
+
+Base17da1a0fe2ebddb29aca8f2a671a87b3fa814ec6/PR34; branch codex/job-gate-b1.
+Ler Issue36/35 e JOB_GATE_B1_DECISION.md. Escopo fechado:8 células, duas mortes
+duplas, uma regressão portátil; CI Windows3.11/3.12, Linux e Chromium por SHA.
+Decisão II: Job coletivo incerto OFF. Não ampliar investigação depois da decisão,
+não iniciar novas hipóteses nem integrar runtime nesta tarefa. Próxima fatia proposta
+somente teste controlador→mesmaSQLite→analyze→JSON + roteiro de VM; funções já
+existem, zero runtime novo se comprovadas. Plano NÃO implementado. Sem merge,
+rebase, instalação, captura real ou piloto. Histórico anterior abaixo.
+
 # Retomada atual — Issue33 / experimento de supervisão sintética
 
 Base exata PR32/f1fb334bc4b9048c6a604610923e028ecd3ef658, branch filha
