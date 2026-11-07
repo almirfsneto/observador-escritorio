@@ -1498,3 +1498,10 @@ Critério desta entrega comprovado no CI; validação humana continua pendente,
 seguindo docs/MVP_SINTETICO_WINDOWS.md. B1 encerrado/Job incerto OFF, sem merge,
 rebase/squash, dados reais, instalação na equipe ou piloto. PARAR esta tarefa;
 aguardar revisão, sem iniciar outra automaticamente.
+
+Revisão final do teste: exigir também sink.health=ready após término do writer.
+AsyncLabQueue sinaliza storage_unavailable se SQLite.close falhar; thread morta
+sozinha não exclui esse erro. Assert adicional somente em teste, antes da análise,
+sem runtime novo. CI do novo SHA substitui a rodada documental intermediária em
+acompanhamento; não atribuir a ela resultados ainda pendentes. As evidências
+c3a6170 permanecem válidas para aquele código, não para este assert adicional.

@@ -388,3 +388,7 @@ Recorrência/duração/nota humana/projeção e canários verificados. Nenhum aj
 runtime necessário; o mínimo permaneceu teste+roteiro. Não somar n-gramas como
 tarefas independentes, nem promover CI sintética/Server a aceite humano10/11.
 Entrega encerra após checks finais documentais; não iniciar outra tarefa.
+
+D-042 / revisão final: além de worker encerrado, exigir health=ready para recusar
+falha sinalizada de SQLite.close antes da CLI. Término de thread não basta para
+excluir erro de fechamento. Somente assert, sem corrigir runtime artificialmente.

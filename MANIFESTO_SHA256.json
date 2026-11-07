@@ -20,13 +20,13 @@
     },
     {
       "path": "DECISIONS.md",
-      "size_bytes": 38711,
-      "sha256": "f2d859712bc510210555018ea2fabf78852e7ab5bcea920f03b24eda76fcec46"
+      "size_bytes": 38960,
+      "sha256": "b63edfd8e9367ceacef26f4caf758e70ecfeab82a19a62c7733e4f1b7049d99a"
     },
     {
       "path": "PROGRESS.md",
-      "size_bytes": 100604,
-      "sha256": "e4ce6f3627d2f00ce763e28cb2e42939ab5f1a8b7c4ad0ec5721ec3303639724"
+      "size_bytes": 101096,
+      "sha256": "f0c1343cccdc77786837b80977068822e7635655ca541d7d758579f029dd570a"
     },
     {
       "path": "PROMPT_INICIAL_CODEX_OBSERVADOR.txt",
@@ -230,8 +230,8 @@
     },
     {
       "path": "docs/RETOMADA_AUTONOMA.md",
-      "size_bytes": 23083,
-      "sha256": "a3b4f1a423fae3117b166099a7376855ee106839659196cab18e5258f293bdb8"
+      "size_bytes": 23177,
+      "sha256": "cd2b52eedeb93e7f879ddcd0488a71d339d11f8d7cebc4a38be101f3ef46d6cb"
     },
     {
       "path": "docs/REVIEW_PRS_1_2.md",
@@ -735,8 +735,8 @@
     },
     {
       "path": "tests/test_windows_controller.py",
-      "size_bytes": 10954,
-      "sha256": "4d1d04e09443ff2960890752835c04cf3122d589c23893d6ed3d81b3e85601c5"
+      "size_bytes": 11107,
+      "sha256": "e9cd8741482545075acb24474e0c7a47067fc570edf555531c624161a5b80d2a"
     },
     {
       "path": "tests/test_windows_coverage.py",

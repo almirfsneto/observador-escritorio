@@ -111,6 +111,8 @@ class ControllerAutomationTest(unittest.TestCase):
                 self.assertIsNotNone(window.session.process.poll())
                 self.assertIsNotNone(window.fixture.poll())
                 self.assertFalse(window.sink.worker.is_alive())
+                self.assertEqual(window.sink.health, 'ready',
+                                 'Writer shutdown must not report a SQLite close failure')
                 self.assertEqual(window.sink.discarded, 0)
                 self.assertTrue(database.is_file(), 'Async writer must create the temporary SQLite')
                 from observador.diagnostics import validate_diagnostics
