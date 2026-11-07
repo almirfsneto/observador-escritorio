@@ -1505,3 +1505,26 @@ sozinha não exclui esse erro. Assert adicional somente em teste, antes da anál
 sem runtime novo. CI do novo SHA substitui a rodada documental intermediária em
 acompanhamento; não atribuir a ela resultados ainda pendentes. As evidências
 c3a6170 permanecem válidas para aquele código, não para este assert adicional.
+
+### MVP sintético — revisão final do escritor confirmada
+
+Código cfc8fbb0bdef86ca11ef21c12f5e88b6a17aeaa4, PR38;
+https://github.com/almirfsneto/observador-escritorio/actions/runs/42420748971
+5/5 jobs aprovados, logs examinados. O assert adicional health=ready passou.
+Ambos Windows repetiram o E2E REAL SEM SKIP:60 eventos/30 Invoke,10 padrões,
+CLI0, hash SQLite inalterado, writer encerrado sem erro de close sinalizado,
+conteúdo verificado, zero descarte e filhos encerrados.
+
+Matriz desta revisão:Windows3.11 281 executados/3 skips (2 browser+1 comparativo
+WPF/WinForms por foreground indisponível);Windows3.12 282/2 browser;Linux3.11/
+3.12 cada219/65 (63 Windows+2 browser);Chromium2/0. O skip comparativo é lacuna
+explícita e NÃO aprovação; não afetou nem substituiu o ensaio E2E do controlador.
+O comparativo executou no3.12 desta rodada e em ambos Windows do código c3a6170;
+não transferir esse passe ao teste ignorado3.11. Rodada intermediária6f656a8 foi
+substituída pela revisão, não usada como evidência de aprovação.
+
+Esta atualização só registra fatos; testes/runtime/workflow continuam idênticos
+a cfc8fbb. CI do HEAD documental final e seus skips serão conferidos/registrados
+no PR38, sem nova alteração funcional. Manifesto161 e24 PRs anteriores preservados.
+Conclusão técnica limitada:fluxo sintético existente demonstrado. Aceite humano
+Win10/11 e revisão por SHA pendentes; seguir roteiro e PARAR, sem próxima tarefa.

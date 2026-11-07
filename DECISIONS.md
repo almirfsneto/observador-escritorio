@@ -392,3 +392,9 @@ Entrega encerra após checks finais documentais; não iniciar outra tarefa.
 D-042 / revisão final: além de worker encerrado, exigir health=ready para recusar
 falha sinalizada de SQLite.close antes da CLI. Término de thread não basta para
 excluir erro de fechamento. Somente assert, sem corrigir runtime artificialmente.
+
+D-042 / confirmação final:cfc8fbb/CI42420748971 5/5; health=ready e E2E real nos
+dois Windows,60/30/10, sem skip do controlador. Windows3.11 ignorou comparativo
+WPF/WinForms por foreground:281 executados/3 skips, contra3.12 282/2. Registrar
+lacuna, sem repetir para apagar skip. Commit seguinte apenas registra evidência;
+resultado do HEAD documental final no PR38. Sem continuidade automática.

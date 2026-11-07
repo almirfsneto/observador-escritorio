@@ -7,13 +7,14 @@ AsyncLabQueue→SQLite temporária→CLI analyze→JSON. Mesma entrada verificad
 Invoke, writer/conexão fechados antes de analisar, relatório sem canários da
 fixture, recorrências>=3/duração>=0/revisão humana e hash do banco inalterado.
 
-PR38/códigoc3a6170/CI42420345689:5/5 jobs, logs examinados. Windows3.11/3.12
-cada282 executados/2 skips browser; Linux219/65 cada; Chromium2/0. E2E REAL em
-ambos Windows SEM SKIP:60 eventos/30 Invoke→10 padrões, CLI zero, mesma SQLite
-inalterada, writer parado/conteúdo verificado e filhos encerrados. Falha de
-armazenamento é INJETADA, não falha espontânea. Local219/65; manifesto161
-conferido. Revisão final acrescenta assert health=ready após saída do writer, recusando
-falha sinalizada de SQLite.close. Conferir CI do HEAD final no PR38.
+PR38/códigocfc8fbb/CI42420748971:5/5 jobs, logs examinados. E2E REAL em ambos
+Windows SEM SKIP:60 eventos/30 Invoke→10 padrões,CLI0, SQLite inalterada, writer
+encerrado+health=ready, conteúdo verificado/zero descartes/filhos encerrados.
+Windows3.11:281 executados/3 skips(2 browser+comparativo WPF/WinForms foreground);
+3.12:282/2 browser; Linux219/65 cada; Chromium2/0. Skip comparativo é lacuna,
+não aprovação, e não é o E2E. Falha de armazenamento é INJETADA. Local219/65,
+manifesto161. Atualização final somente documental; resultados/skips da CI própria
+do HEAD no PR38. Não alterar novamente código nem reabrir B1 para essa evidência.
 Não tratar SKIP de desktop como prova de integração. Roteiro humano VM10/11
 separado, arquivos sintéticos locais fora Git. Nenhum runtime/launcher/IPC/
 minerador/adapter/extensão mudou. B1 ENCERRADO; decisão II permanece OFF para
