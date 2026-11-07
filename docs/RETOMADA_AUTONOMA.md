@@ -1,3 +1,19 @@
+# Retomada atual — Issue36 / Gate B1: entrega única e decisão
+
+Base17da1a0fe2ebddb29aca8f2a671a87b3fa814ec6/PR34; branch codex/job-gate-b1.
+Ler Issue36/35 e JOB_GATE_B1_DECISION.md. PR37 / códigoa577fa9 / CI42368430074 passou5/5. Windows3.11/3.12:282 executados/
+2 skips por versão, foco4/0; Linux219/65 cada; Chromium2/0. Matriz8 células: extras
+só nas variantes NO_WINDOW desta amostra, com/sem ancestral controlado; origem
+NÃO provada. Armado suspenso conhecido conteve; após disarm e duas mortes, worker
+sobreviveu e foi limpo pelo observador. Não confundir essa recuperação com garantia.
+B1 ENCERRADO como investigação nesta entrega, decisão FINAL II. Conferir checks do
+HEAD documental final no PR37. Não iniciar novas hipóteses sem nova decisão.
+Decisão II: Job coletivo incerto OFF. Não ampliar investigação depois da decisão,
+não iniciar novas hipóteses nem integrar runtime nesta tarefa. Próxima fatia proposta
+somente teste controlador→mesmaSQLite→analyze→JSON + roteiro de VM; funções já
+existem, zero runtime novo se comprovadas. Plano NÃO implementado. Sem merge,
+rebase, instalação, captura real ou piloto. Histórico anterior abaixo.
+
 # Retomada atual — Issue33 / experimento de supervisão sintética
 
 Base exata PR32/f1fb334bc4b9048c6a604610923e028ecd3ef658, branch filha

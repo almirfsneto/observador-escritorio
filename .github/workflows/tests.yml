@@ -54,6 +54,9 @@ jobs:
       - name: Isolated synthetic process supervision
         if: runner.os == 'Windows'
         run: python -m unittest discover -s tests -p "test_process_supervision*.py" -v
+      - name: Finite Job gate B1
+        if: runner.os == 'Windows'
+        run: python -m unittest discover -s tests -p test_job_gate_b1.py -v
       - run: python -m unittest discover -s tests -v
       - name: Parse Windows laboratory scripts without collection
         if: runner.os == 'Windows'

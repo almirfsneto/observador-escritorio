@@ -1385,3 +1385,52 @@ SYNTHETIC_PROCESS_SUPERVISION.md; não migrar funções/handles/IPC para runtime
 Flags são monotônicas somente em memória nesta tentativa; sem ledger durável.
 API/FS do supervisor ainda pode bloquear. Quarentena armada e dupla morte após
 disarm são riscos distintos e não resolvidos. Aguardar revisão do responsável.
+
+## Issue36 — Gate B1 finito, KISS — 2026-11-07
+
+Base EXATA17da1a0fe2ebddb29aca8f2a671a87b3fa814ec6/PR34, nova codex/job-gate-b1.
+Issues35/36 e parecer34 lidos. Uma matriz fechada8 células com7 fases, duas mortes
+duplas observadas externamente e uma regressão portátil de consulta/lista/race.
+Reutilizar negativos base de disarm negado, CloseHandle protegido e Wait sem sinal,
+sem reinventar mecanismo. Nenhum src/, launcher, adapter ou integração alterado.
+Decisão conservadora explícita: manter OFF Job coletivo incerto (II), sem bulk
+termination nem último close armado incerto. Não iniciar nova rodada da hipótese.
+
+JOB_GATE_B1_DECISION.md registra limites e menor plano de integração não executado:
+zero runtime novo; estender teste do controlador até CLI analyze/relatório da mesma
+SQLite e escrever roteiro de VM sintética. Funções já existem; não criar novo
+supervisor/IPC/adapter/minerador. Uma regressão portátil passou; Windows aguarda CI.
+
+### Issue36 — entrega finita concluída no código a577fa9
+
+PR37 draft, base17da1a0 exata. CI42368430074 success5/5, logs dos cinco consultados.
+Windows3.11/3.12 cada284 descobertos/282 executados/2 skips browser; Linux219/65
+por versão (63 Windows,2 browser), Chromium2/0. Foco novo4/0 nos dois Windows:
+matriz8 células e duas mortes duplas +contrato portátil; não contar subcasos/focos
+como testes únicos extras. Negativos herdados de disarm/close/wait executados.
+
+Matriz idêntica nos dois Pythons: antes de criar0; suspenso/após resume imediato1
+conhecido. Pronto console sem/com descendant:1/2 membros todos conhecidos;
+NO_WINDOW sem/com descendant:2/4 membros,1/2 desconhecidos. Ancestral controlado
+não alterou padrão; ambient_job=present, não alegar host sem ancestor. Leituras
+observadas estáveis/Active concordante, não snapshot atômico. Disarm antes de
+fechar, zero consultado e nenhum TerminateJobObject nas novas células; depois de
+fechar, contagem não consultável, não zero inventado. Não identificar extras por
+correlação nem abrir/terminar PIDs desconhecidos.
+
+Dupla morte armada/suspensa com só conhecido encerrou worker; desarmada/em lock
+com extra desconhecido deixou worker VIVO após ambas raízes. Observador externo
+com capacidade própria limpou e confirmou saída, nunca como prova de contenção
+autônoma. Disarm negado foi somente injetado; Job incerto armado não foi morto.
+
+DECISÃO FINAL II: manter mecanismo coletivo incerto OFF e fora do MVP. Sem nova
+hipótese/ciclo nesta tarefa. Marco B permanece limitado, sem liberação operacional.
+Plano KISS documentado, NÃO implementado: estender teste existente até CLI analyze
+sobre a mesma SQLite +roteiro de VM; zero alterações de runtime se comportamento
+já existente passar. Não criar launcher/IPC/adapter/minerador novo para essa fatia.
+
+Local284/219 executados/65 skips, compileall/manifesto160 conferidos. Runtime,
+ferramentas/C#, extensão e v1/CMD idênticos à base;23 PRs anteriores preservados.
+Nenhum merge/rebase/instalação/captura real/piloto. Última entrega documental terá
+CI própria vinculada ao SHA final. Próximo gate é revisão da decisão e plano,
+não mais exploração do mesmo mecanismo sem decisão expressa.

@@ -340,3 +340,28 @@ recusa AccessDenied5 e positivo publica nome novo. Finally sempre tenta teardown
 mesmo se release/write falhar. Snapshot da primeira falha não permitiu capturar
 WinError; nenhuma causalidade retroativa fabricada. Sem timeout maior/retry cego.
 Não migrar esse desenho para runtime antes de revisão distinta/novas provas.
+
+## D-041 — Encerrar Gate B1 com decisão finita e retirar Job incerto do MVP
+
+Issue36: uma matriz8 células e duas mortes duplas, observador com capacidades
+próprias, sem abrir/terminar PID desconhecido ou matar Job incerto armado.
+Decisão II: manter mecanismo coletivo incerto OFF, salvo propriedade comprovada
+sob premissas explícitas; não inferir origem de extras por correlação/contagem.
+Parar depois desta entrega; nova hipótese exige nova decisão. Nenhuma migração.
+
+KISS para convergência: pipeline WPF/NativeSession→AsyncLabQueue/SQLite→detector
+simples→CLI analyze já existe em partes e testes. Menor entrega futura é teste
+E2E estendido + roteiro de VM, sem runtime novo se comportamento existente passar.
+Não integrar nesta tarefa; não adicionar IPC/autostart/Job como dependência dessa
+fatia. Não confundir viabilidade de ensaio sintético supervisionado com piloto.
+
+D-041 / decisão FINAL após CI42368430074/a577fa9: opção II, Job coletivo incerto
+OFF. Extras se correlacionaram com NO_WINDOW, sem identidade/propriedade provada;
+ancestral controlado não mudou a amostra. Dupla morte após disarm deixou worker
+vivo nos dois Windows, recuperado APENAS pelo observador externo. O caso armado
+suspenso conhecido não autoriza migração geral. CI5/5 valida fatos/recusas, não
+segurança do mecanismo operacional. Encerrar investigação B1 nesta entrega única.
+
+Convergência mínima ao35: teste E2E estendido e roteiro, usando pipeline/CLI já
+existentes sem Job coletivo; alterações runtime propostas: zero se comprovado.
+Não implementar aqui nem apresentar como piloto/garantia de crash ou de driver.
